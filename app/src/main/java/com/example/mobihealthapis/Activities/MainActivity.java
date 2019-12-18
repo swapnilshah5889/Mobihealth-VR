@@ -8,6 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mobihealthapis.Models.Diagnosis;
+import com.example.mobihealthapis.Models.DiagnosticTests;
+import com.example.mobihealthapis.Models.Issues;
 import com.example.mobihealthapis.Models.Med;
 import com.example.mobihealthapis.Models.Vitals;
 import com.example.mobihealthapis.R;
@@ -26,8 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
     TextView tv_main;
     List<Med.Data> medicines;
-
+    List<Diagnosis.Data> DiagnosisList;
     List<Vitals.Data> vitalList;
+    List<Issues.Data> Issuelist;
+    List<DiagnosticTests.Data> DiagnosticTestList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +42,107 @@ public class MainActivity extends AppCompatActivity {
         tv_main = findViewById(R.id.tv_main);
 
         //FetchMEDs();
-
-        FetchIssues();
-
+            FetchDiagnosis();
+       // FetchIssues();
+        // FetchDiagnosticList();
         //FetchVitals();
-        
+
+    }
+
+    private void FetchDiagnosis() {
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put("action","getDiagnosis");
+        NetworkCall ncall = new NetworkCall();
+
+        ncall.setServerUrlWebserviceApi(VR_APIS);
+        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+            @Override
+            public boolean setResponse(String responseStr) {
+
+                try{
+                    Diagnosis obj = new Gson().fromJson(responseStr, Diagnosis.class);
+                    if(obj.isStatus()){
+                        DiagnosisList = new ArrayList<>();
+                        DiagnosisList.addAll(obj.getData());
+
+                        tv_main.setText(obj.getTotal_records()+"|"+DiagnosisList.size());
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this, "Catch : "+e.getMessage(), Toast.LENGTH_LONG).show();
+
+                }
+
+                return false;
+            }
+        });
+    }
+
+    private void FetchDiagnosticList() {
+        HashMap<String,String> params = new HashMap<>();
+        params.put("action","getDiagnosticTests");
+        NetworkCall ncall = new NetworkCall();
+
+        ncall.setServerUrlWebserviceApi(VR_APIS);
+        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+            @Override
+            public boolean setResponse(String responseStr) {
+
+                try{
+                    DiagnosticTests obj = new Gson().fromJson(responseStr, DiagnosticTests.class);
+                    if(obj.isStatus()){
+                        DiagnosticTestList = new ArrayList<>();
+                        DiagnosticTestList.addAll(obj.getData());
+
+                        tv_main.setText(obj.getTotal_records()+"|"+DiagnosticTestList.size());
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this, "Catch : "+e.getMessage(), Toast.LENGTH_LONG).show();
+
+                }
+
+                return false;
+            }
+        });
+
+
     }
 
     private void FetchIssues() {
+        HashMap<String,String> params = new HashMap<>();
+        params.put("action","getIssues");
+        NetworkCall ncall = new NetworkCall();
 
+        ncall.setServerUrlWebserviceApi(VR_APIS);
+        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+            @Override
+            public boolean setResponse(String responseStr) {
 
+                try{
+                    Issues obj = new Gson().fromJson(responseStr, Issues.class);
+                    if(obj.isStatus()){
+                        Issuelist = new ArrayList<>();
+                        Issuelist.addAll(obj.getData());
+
+                        tv_main.setText(obj.getTotal_records()+"|"+Issuelist.size());
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this, "Catch : "+e.getMessage(), Toast.LENGTH_LONG).show();
+
+                }
+
+                return false;
+            }
+        });
 
     }
 
