@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public abstract class DiagnosticTests {
+public  class DiagnosticTests {
 
 
     @SerializedName("data")
