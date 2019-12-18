@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         FetchIssues();
 
         //FetchVitals();
+        
     }
 
     private void FetchIssues() {

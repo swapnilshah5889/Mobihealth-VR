@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+
+
+<!--    Main Data-->
+    <LinearLayout
+        android:layout_marginTop="35dp"
+        android:background="#fff"
+        android:clickable="true"
+        android:id="@+id/ll_data"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:padding="16dp"
+            android:textSize="16dp"
+            android:textColor="#333"
+            android:text="Medicine is the science and practice of establishing the diagnosis, prognosis, treatment, and prevention of disease. Medicine encompasses a variety of health care practices evolved to maintain and restore health by the prevention and treatment of illness. Contemporary medicine applies biomedical sciences, biomedical research, genetics, and medical technology to diagnose, treat, and prevent injury and disease, typically through pharmaceuticals or surgery, but also through therapies as diverse as psychotherapy, external splints and traction, medical devices, biologics, and ionizing radiation, amongst others."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></TextView>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+            android:background="#090"
+            android:weightSum="10"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:padding="10dp"
+                android:layout_weight="2"
+                android:textColor="#fff"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:text="Prescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TextView>
+
+
+            <LinearLayout
+                android:id="@+id/ll_expand"
+                android:padding="5dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:layout_weight="8"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/img_expand"
+                    android:padding="13dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_add_white"></ImageView>
+
+            </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
