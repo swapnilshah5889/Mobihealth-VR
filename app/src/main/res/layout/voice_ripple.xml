@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="bottom|right"
+    android:background="#0000"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:gravity="bottom|right"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.skyfishjy.library.RippleBackground
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/content"
+            app:rb_color="#aaa"
+            android:layout_gravity="bottom|right"
+            app:rb_radius="50dp"
+            app:rb_rippleAmount="4"
+            app:rb_duration="2000"
+            app:rb_scale="7">
+
+        </com.skyfishjy.library.RippleBackground>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:background="@drawable/round_back_white"
+        android:layout_margin="30dp"
+        android:elevation="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:clickable="true"
+            android:id="@+id/img_ripple"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:src="@drawable/ic_voice"
+            android:scaleType="fitCenter"
+            android:layout_width="50dp"
+            android:layout_height="50dp">
+        </ImageView>
+    </LinearLayout>
+
+
+
+
+
+</RelativeLayout>
