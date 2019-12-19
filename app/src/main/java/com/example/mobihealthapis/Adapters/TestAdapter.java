@@ -41,6 +41,19 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
     }
 
     @Override
+    public int getItemViewType(int position) {
+
+        switch (position) {
+            case 0:
+                return Model.Vitals;
+            case 1:
+                return Model.Diagnosis;
+            default:
+                return -1;
+        }
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
 
         final Boolean[] isVisible = {false};
@@ -102,5 +115,13 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             ll_expand = view.findViewById(R.id.ll_expand);
             img_expand = view.findViewById(R.id.img_expand);
         }
+    }
+
+
+    public static class Model {
+
+        public static int Vitals =0,Symptoms =1,Diagnosis = 2,Medicine =3,DiagnosticTest = 4,Advice =5,FollowUp=6;
+
+
     }
 }

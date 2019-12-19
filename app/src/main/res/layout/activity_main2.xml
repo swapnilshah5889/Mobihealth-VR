@@ -9,19 +9,17 @@
     android:background="#eee"
     android:id="@+id/ll_main_activity2">
 
-    <androidx.recyclerview.widget.RecyclerView
+   <!-- <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_main"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-
-    <!--<include layout="@layout/test_layout"></include>
+-->
 
     <include layout="@layout/test_layout"></include>
 
+    <include layout="@layout/test_layout"></include>
 
--->
 
 </LinearLayout>

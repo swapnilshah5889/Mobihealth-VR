@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp">
+
+
+    <LinearLayout
+        android:padding="10dp"
+        android:background="@drawable/patient_list_back_round"
+        android:orientation="horizontal"
+        android:weightSum="20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_weight="9"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_serial_no_patient_list"
+                android:gravity="center"
+                android:text="1"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:weightSum="10"
+            android:layout_weight="3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:background="#ddd"
+                    android:padding="5dp"
+                    android:tint="#555"
+                    android:src="@drawable/ic_profile"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"></ImageView>
+                <ImageView
+                    android:src="@drawable/ic_circular_cutout"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"></ImageView>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:paddingStart="10dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Pihu M"
+                    android:maxLines="1"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="18dp"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></TextView>
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:textSize="15dp"
+                    android:textStyle="normal"
+                    android:textColor="@color/colorPrimary"
+                    android:text="9578465231"
+                    android:maxLines="1"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="13dp"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></TextView>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:paddingRight="10dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="8"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:gravity="end"
+                android:textSize="13dp"
+                android:textStyle="normal"
+                android:textColor="@color/colorPrimary"
+                android:text="230154"
+                android:maxLines="1"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="13dp"
+                android:ellipsize="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TextView>
+
+            <TextView
+                android:gravity="right"
+                android:layout_marginTop="10dp"
+                android:textSize="11dp"
+                android:textStyle="normal"
+                android:textColor="@color/colorPrimary"
+                android:text="Follow Up"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TextView>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
