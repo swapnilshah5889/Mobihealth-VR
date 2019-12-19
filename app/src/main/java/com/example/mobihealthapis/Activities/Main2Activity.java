@@ -1,18 +1,13 @@
 package com.example.mobihealthapis.Activities;
 
+import android.os.Bundle;
+import android.widget.LinearLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.LinearLayout;
-
 import com.example.mobihealthapis.Adapters.TestAdapter;
-import com.example.mobihealthapis.GeneralFunctions.transitions.*;
 import com.example.mobihealthapis.R;
-
-import static com.example.mobihealthapis.GeneralFunctions.transitions.slideDown;
-import static com.example.mobihealthapis.GeneralFunctions.transitions.slideUp;
 
 public class Main2Activity extends AppCompatActivity {
 

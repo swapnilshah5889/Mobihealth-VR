@@ -1,68 +1,636 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
 
-
-
-<!--    Main Data-->
-    <LinearLayout
-        android:layout_marginTop="35dp"
-        android:background="#fff"
-        android:clickable="true"
-        android:id="@+id/ll_data"
-        android:orientation="vertical"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:padding="16dp"
-            android:textSize="16dp"
-            android:textColor="#333"
-            android:text="Medicine is the science and practice of establishing the diagnosis, prognosis, treatment, and prevention of disease. Medicine encompasses a variety of health care practices evolved to maintain and restore health by the prevention and treatment of illness. Contemporary medicine applies biomedical sciences, biomedical research, genetics, and medical technology to diagnose, treat, and prevent injury and disease, typically through pharmaceuticals or surgery, but also through therapies as diverse as psychotherapy, external splints and traction, medical devices, biologics, and ionizing radiation, amongst others."
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></TextView>
-
-    </LinearLayout>
-
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
 
-    <LinearLayout
-            android:background="#090"
-            android:weightSum="10"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:padding="10dp"
-                android:layout_weight="2"
-                android:textColor="#fff"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:text="Prescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"></TextView>
-
-
+            <!--For vitals-->
             <LinearLayout
-                android:id="@+id/ll_expand"
-                android:padding="5dp"
-                android:clickable="true"
-                android:gravity="center"
-                android:layout_weight="8"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/img_expand"
-                    android:padding="13dp"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_add_white"></ImageView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:padding="10dp"
+                        android:text="Vitals"
+                        android:textColor="#6c6c6c"
+                        android:textSize="20dp"
+                        android:textStyle="bold"></TextView>
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_expand_vital"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="8"
+                        android:clickable="true"
+                        android:gravity="top|right"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:id="@+id/img_expand_vital"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_add_white"
+                            android:tint="#4c4c4c"></ImageView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <!--    Main Data-->
+                <LinearLayout
+
+                    android:id="@+id/ll_data_vital"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <TextView
+                            android:id="@+id/tv_vitals"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp"
+                            android:text="Vitals"
+                            android:textColor="#6c6c6c"
+                            android:textSize="35dp"
+                            android:textStyle="bold">
+
+                        </TextView>
+
+
+                        <LinearLayout
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="8"
+                            android:paddingStart="20dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:text="BMI"
+                                android:textColor="#6c6c6c"
+                                android:textSize="20dp"
+                                android:textStyle="normal">
+
+                            </TextView>
+                            <TextView
+                                android:id="@+id/tv_bmi"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:text="23.6"
+                                android:textColor="#6c6c6c"
+                                android:textSize="25dp"
+                                android:textStyle="bold">
+
+                            </TextView>
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:padding="20dp"
+                            android:weightSum="4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:layout_marginBottom="7dp"
+                                    android:text="Height"
+                                    android:textSize="20dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"></TextView>
+
+                                <LinearLayout
+                                    android:background="@drawable/rounded_border"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginBottom="15dp"
+                                        android:layout_marginTop="15dp"
+                                        android:textSize="25dp"
+                                        android:textStyle="bold"
+                                        android:textColor="#4c4c4c"
+                                        android:text="32 cm"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"></TextView>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:layout_marginBottom="7dp"
+                                    android:text="Weight"
+                                    android:textSize="20dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"></TextView>
+
+                                <LinearLayout
+                                    android:background="@drawable/rounded_border"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginBottom="15dp"
+                                        android:layout_marginTop="15dp"
+                                        android:textSize="25dp"
+                                        android:textStyle="bold"
+                                        android:textColor="#4c4c4c"
+                                        android:text="2.6 K.G."
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"></TextView>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:layout_marginBottom="7dp"
+                                    android:text="H.C."
+                                    android:textSize="20dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"></TextView>
+
+                                <LinearLayout
+                                    android:background="@drawable/rounded_border"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginBottom="15dp"
+                                        android:layout_marginTop="15dp"
+                                        android:textSize="25dp"
+                                        android:textStyle="bold"
+                                        android:textColor="#4c4c4c"
+                                        android:text="25 cm"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"></TextView>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_margin="5dp"
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:layout_marginBottom="7dp"
+                                    android:text="Temperature"
+                                    android:autoSizeTextType="uniform"
+                                    android:maxLines="1"
+                                    android:textSize="20dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"></TextView>
+
+                                <LinearLayout
+                                    android:background="@drawable/rounded_border"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginBottom="15dp"
+                                        android:layout_marginTop="15dp"
+                                        android:textSize="25dp"
+                                        android:textStyle="bold"
+                                        android:textColor="#4c4c4c"
+                                        android:text="94 °"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"></TextView>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
 
             </LinearLayout>
-    </LinearLayout>
 
-</RelativeLayout>
+
+            <!--For Symptoms-->
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:padding="10dp"
+                        android:text="Symptoms"
+                        android:textColor="#6c6c6c"
+                        android:textSize="20dp"
+                        android:textStyle="bold"></TextView>
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_expand_symptoms"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="8"
+                        android:clickable="true"
+                        android:gravity="top|right"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:id="@+id/img_expand_symptoms"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_add_white"
+                            android:tint="#4c4c4c"></ImageView>
+
+                    </LinearLayout>
+                </LinearLayout>
+                <!--    Main Data-->
+                <LinearLayout
+
+                    android:id="@+id/ll_data_symptoms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:text="Medicine is the science and practice of establishing the diagnosis, prognosis, treatment, and prevention of disease. Medicine encompasses a variety of health care practices evolved to maintain and restore health by the prevention and treatment of illness. Contemporary medicine applies biomedical sciences, biomedical research, genetics, and medical technology to diagnose, treat, and prevent injury and disease, typically through pharmaceuticals or surgery, but also through therapies as diverse as psychotherapy, external splints and traction, medical devices, biologics, and ionizing radiation, amongst others."
+                        android:textColor="#4c4c4c"
+                        android:textSize="16dp"
+                        android:textStyle="normal"></TextView>
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <!--For Diagnosis-->
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:padding="10dp"
+                        android:text="Diagnosis"
+                        android:textColor="#6c6c6c"
+                        android:textSize="20dp"
+                        android:textStyle="bold"></TextView>
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_expand_diagnosis"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="8"
+                        android:clickable="true"
+                        android:gravity="top|right"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:id="@+id/img_expand_diagnosis"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_add_white"
+                            android:tint="#4c4c4c"></ImageView>
+
+                    </LinearLayout>
+                </LinearLayout>
+                <!--    Main Data-->
+                <LinearLayout
+
+                    android:id="@+id/ll_data_diagnosis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:text="Medicine is the science and practice of establishing the diagnosis, prognosis, treatment, and prevention of disease. Medicine encompasses a variety of health care practices evolved to maintain and restore health by the prevention and treatment of illness. Contemporary medicine applies biomedical sciences, biomedical research, genetics, and medical technology to diagnose, treat, and prevent injury and disease, typically through pharmaceuticals or surgery, but also through therapies as diverse as psychotherapy, external splints and traction, medical devices, biologics, and ionizing radiation, amongst others."
+                        android:textColor="#4c4c4c"
+                        android:textSize="16dp"
+                        android:textStyle="normal"></TextView>
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <!--For Medicine-->
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:padding="10dp"
+                        android:text="Medicine"
+                        android:textColor="#6c6c6c"
+                        android:textSize="20dp"
+                        android:textStyle="bold"></TextView>
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_expand_medicine"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="8"
+                        android:clickable="true"
+                        android:gravity="top|right"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:id="@+id/img_expand_medicine"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_add_white"
+                            android:tint="#4c4c4c"></ImageView>
+
+                    </LinearLayout>
+                </LinearLayout>
+                <!--    Main Data-->
+                <LinearLayout
+
+                    android:id="@+id/ll_data_medicine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:text="Medicine is the science and practice of establishing the diagnosis, prognosis, treatment, and prevention of disease. Medicine encompasses a variety of health care practices evolved to maintain and restore health by the prevention and treatment of illness. Contemporary medicine applies biomedical sciences, biomedical research, genetics, and medical technology to diagnose, treat, and prevent injury and disease, typically through pharmaceuticals or surgery, but also through therapies as diverse as psychotherapy, external splints and traction, medical devices, biologics, and ionizing radiation, amongst others."
+                        android:textColor="#4c4c4c"
+                        android:textSize="16dp"
+                        android:textStyle="normal"></TextView>
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--For Diagnostic test-->
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:padding="10dp"
+                        android:text="Diagnostic test"
+                        android:textColor="#6c6c6c"
+                        android:textSize="20dp"
+                        android:textStyle="bold"></TextView>
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_expand_diagnostictest"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="8"
+                        android:clickable="true"
+                        android:gravity="top|right"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:id="@+id/img_expand_diagnostictest"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_add_white"
+                            android:tint="#4c4c4c"></ImageView>
+
+                    </LinearLayout>
+                </LinearLayout>
+                <!--    Main Data-->
+                <LinearLayout
+
+                    android:id="@+id/ll_data_diagnostictest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:text="Medicine is the science and practice of establishing the diagnosis, prognosis, treatment, and prevention of disease. Medicine encompasses a variety of health care practices evolved to maintain and restore health by the prevention and treatment of illness. Contemporary medicine applies biomedical sciences, biomedical research, genetics, and medical technology to diagnose, treat, and prevent injury and disease, typically through pharmaceuticals or surgery, but also through therapies as diverse as psychotherapy, external splints and traction, medical devices, biologics, and ionizing radiation, amongst others."
+                        android:textColor="#4c4c4c"
+                        android:textSize="16dp"
+                        android:textStyle="normal"></TextView>
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <!--For Advice-->
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:padding="10dp"
+                        android:text="Advice"
+                        android:textColor="#6c6c6c"
+                        android:textSize="20dp"
+                        android:textStyle="bold"></TextView>
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_expand_advice"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="8"
+                        android:clickable="true"
+                        android:gravity="top|right"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:id="@+id/img_expand_advice"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_add_white"
+                            android:tint="#4c4c4c"></ImageView>
+
+                    </LinearLayout>
+                </LinearLayout>
+                <!--    Main Data-->
+                <LinearLayout
+
+                    android:id="@+id/ll_data_advice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:text="Medicine is the science and practice of establishing the diagnosis, prognosis, treatment, and prevention of disease. Medicine encompasses a variety of health care practices evolved to maintain and restore health by the prevention and treatment of illness. Contemporary medicine applies biomedical sciences, biomedical research, genetics, and medical technology to diagnose, treat, and prevent injury and disease, typically through pharmaceuticals or surgery, but also through therapies as diverse as psychotherapy, external splints and traction, medical devices, biologics, and ionizing radiation, amongst others."
+                        android:textColor="#4c4c4c"
+                        android:textSize="16dp"
+                        android:textStyle="normal"></TextView>
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</LinearLayout>

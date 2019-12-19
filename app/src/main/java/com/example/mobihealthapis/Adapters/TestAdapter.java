@@ -98,9 +98,9 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
 
         public MyViewHolder(@NonNull View view) {
             super(view);
-            ll_data = view.findViewById(R.id.ll_data);
-            ll_expand = view.findViewById(R.id.ll_expand);
-            img_expand = view.findViewById(R.id.img_expand);
+            ll_data = view.findViewById(R.id.ll_data_vital);
+            ll_expand = view.findViewById(R.id.ll_expand_vital);
+            img_expand = view.findViewById(R.id.img_expand_vital);
         }
     }
 }
