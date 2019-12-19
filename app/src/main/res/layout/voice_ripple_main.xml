@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:gravity="bottom|right"
+    android:background="#0000"
+    android:layout_height="match_parent">
+
+
+    <com.rodolfonavalon.shaperipplelibrary.ShapeRipple
+        android:id="@+id/ripple"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        custom:ripple_stroke_width="15dp" />
+
+
+
+
+
+</LinearLayout>

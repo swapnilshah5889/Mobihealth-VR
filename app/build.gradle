@@ -19,6 +19,12 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url 'https://dl.bintray.com/poldz123/maven/'
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -46,5 +52,8 @@ dependencies {
     //ripple
     implementation 'com.rodolfonavalon:ShapeRippleLibrary:1.0.0'
 
+
+    implementation 'com.gauravbhola.ripplepulsebackground:library:1.0.0'
+    implementation 'com.rodolfonavalon:ShapeRippleLibrary:1.0.0'
 }
 

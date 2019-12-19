@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:gravity="bottom"
+    android:background="#0000"
+    android:layout_height="match_parent">
+
+
+
+
+
+    <LinearLayout
+        android:background="#0000"
+        android:weightSum="20"
+        android:gravity="bottom|right"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+            <LinearLayout
+
+                android:gravity="center"
+                android:layout_width="155dp"
+                android:layout_height="152dp">
+                <LinearLayout
+                    android:id="@+id/ll_activate_voice"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:background="@drawable/round_back_accent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_margin="30dp"
+                        android:src="@drawable/ic_main_voice"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"></ImageView>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+
+    </LinearLayout>
+</LinearLayout>

@@ -9,34 +9,17 @@
     android:background="#eee"
     android:id="@+id/ll_main_activity2">
 
-<!--    <LinearLayout-->
-<!--        android:background="#fff"-->
-<!--        android:paddingTop="20dp"-->
-<!--        android:paddingRight="20dp"-->
-<!--        android:paddingLeft="20dp"-->
-<!--        android:paddingBottom="20dp"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
-
-<!--        <include layout="@layout/medicine_list_layout"></include>-->
-
-<!--    </LinearLayout>-->
-
-<!--    <include layout="@layout/medicine_list_layout"></include>-->
-
-    <androidx.recyclerview.widget.RecyclerView
+   <!-- <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_main"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-
-    <!--<include layout="@layout/test_layout"></include>
+-->
 
     <include layout="@layout/test_layout"></include>
 
+    <include layout="@layout/test_layout"></include>
 
--->
 
 </LinearLayout>
