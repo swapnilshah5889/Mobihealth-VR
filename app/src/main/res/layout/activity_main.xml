@@ -14,6 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"></TextView>
 
-<!--    <include layout="@layout/voice_ripple"></include>-->
+    <include layout="@layout/voice_ripple"></include>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

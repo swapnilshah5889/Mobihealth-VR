@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:background="@drawable/layout_background"
+            android:orientation="horizontal"
+            android:weightSum="20"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="2"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="10"
+                    >
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_weight="5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:weightSum="10">
+
+
+                            <TextView
+                                android:id="@+id/id_num"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="1."
+                                android:textStyle="bold"
+                                android:textSize="20dp"
+                                android:layout_weight="9"
+                                >
+
+                            </TextView>
+
+                            <TextView
+                                android:id="@+id/id_medname"
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Dolo 500 MG "
+                                android:autoSizeTextType="uniform"
+                                android:maxLines="3"
+                                android:autoSizeMinTextSize="18dp"
+                                android:textSize="20dp"
+                                android:textStyle="bold"
+                                android:layout_weight="1">
+
+                            </TextView>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:padding="5dp"
+
+                            android:orientation="vertical"
+                            >
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="15dp"
+                                android:text="Composition"
+                                android:layout_marginLeft="10dp"
+
+                                ></TextView>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="18dp"
+                                android:text="Paracetamol 300 also good one"
+                                android:layout_marginLeft="10dp"
+                                android:autoSizeTextType="uniform"
+                                android:autoSizeMinTextSize="15dp"
+                                android:maxLines="2"
+
+                                ></TextView>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_weight="5"
+                        android:weightSum="10">
+
+                        <TextView
+                            android:id="@+id/id_medfreq"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="1 0 1"
+                            android:textSize="15dp"
+                            android:textStyle="bold"
+                            android:layout_weight="4"
+
+                            >
+
+                        </TextView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="After Food"
+                            android:textSize="15dp"
+                            android:textStyle="normal"
+                            android:layout_weight="3"
+                            ></TextView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="7 Days/Daily"
+                            android:textStyle="normal"
+                            android:textSize="15dp"
+                            android:layout_weight="3"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="18dp"
+                            android:maxLines="2"
+                            >
+                        </TextView>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="18"
+                android:gravity="center_horizontal"
+                >
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_margin="10dp"
+                    android:tint="#4c4c4c"
+                    android:src="@drawable/ic_multiply"
+                    >
+
+                </ImageView>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+    </LinearLayout>
