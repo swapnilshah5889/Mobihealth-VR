@@ -120,12 +120,12 @@
 
 <!--Shadow-->
     <include layout="@layout/back_shadow"
-        android:visibility="gone"></include>
+        android:visibility="visible"></include>
 
 
 <!--Patient List-->
     <include layout="@layout/main_drawer"
-        android:visibility="invisible"></include>
+        android:visibility="visible"></include>
 
 <!--Main Voice-->
     <include layout="@layout/voice_layout_main"
