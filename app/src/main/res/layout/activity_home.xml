@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e5e5e5"
-    tools:context=".Home">
+    tools:context=".Activities.Home"
+    android:id="@+id/rl_home_main">
 
 
 
@@ -123,13 +124,23 @@
         android:visibility="gone"></include>
 
 
-<!--Patient List-->
-    <include layout="@layout/main_drawer"
-        android:visibility="invisible"></include>
+
+
+
+    <include layout="@layout/patient_details_layout"
+        android:visibility="visible"></include>
+
+
+    <include layout="@layout/voice_background"
+        android:visibility="visible"></include>
+
 
 <!--Main Voice-->
     <include layout="@layout/voice_layout_main"
         android:visibility="visible"></include>
 
+    <!--Patient List-->
+    <include layout="@layout/main_drawer"
+        android:visibility="invisible"></include>
 
 </RelativeLayout>

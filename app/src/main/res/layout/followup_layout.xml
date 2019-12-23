@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:background="@color/White"
-    android:id="@+id/ll_flow_chip"
-    android:layout_marginTop="15dp"
-    android:layout_marginLeft="15dp"
-    android:layout_marginRight="15dp"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
 
     <LinearLayout
-        android:minWidth="100dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -22,35 +17,29 @@
             android:layout_height="wrap_content"
             android:background="@drawable/flow_chip_back"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:weightSum="10">
+
 
             <TextView
-                android:layout_marginLeft="5dp"
-                android:id="@+id/tv_chip_number"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="5"
-                android:gravity="center"
-                android:text="1."
-                android:layout_marginRight="10dp"
-                android:textColor="@color/colorAccent"
-                android:textSize="18dp">
-
-            </TextView>
-
-            <TextView
+                android:paddingStart="15dp"
+                android:layout_weight="1"
                 android:id="@+id/tv_chip_data"
-                android:gravity="center"
-                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="16dp"
+                android:ellipsize="end"
                 android:textColor="@color/colorAccent"
-                android:text="Fever with cold"
-                android:maxLines="1"
-                android:textSize="18dp"></TextView>
+                android:text="Date : 25/12/2019 | Time : 12:30 P.M."
+                android:maxLines="2"
+                android:textSize="20dp"></TextView>
 
             <LinearLayout
+                android:layout_weight="9"
                 android:id="@+id/ll_chip_delete"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center">
 

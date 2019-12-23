@@ -57,10 +57,10 @@ public class Main2Activity extends AppCompatActivity {
     private void InitObjects() {
 
         ll_main_activity2 = findViewById(R.id.ll_main_activity2);
-        ll_expand = findViewById(R.id.ll_expand);
+        /*ll_expand = findViewById(R.id.ll_expand);
         ll_data = findViewById(R.id.ll_data);
         img_expand = findViewById(R.id.img_expand);
-        //rv_main = findViewById(R.id.rv_main);
+        *///rv_main = findViewById(R.id.rv_main);
 
 
 
