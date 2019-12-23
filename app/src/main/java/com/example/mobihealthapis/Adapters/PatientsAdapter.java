@@ -66,6 +66,10 @@ public class PatientsAdapter extends RecyclerView.Adapter<PatientsAdapter.MyView
 
         holder.tv_patient_number.setText(""+p.getContactNumber());
 
+
+
+
+
         holder.ll_patient_main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

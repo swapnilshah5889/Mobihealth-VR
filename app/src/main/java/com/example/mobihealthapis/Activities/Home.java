@@ -1,8 +1,5 @@
 package com.example.mobihealthapis.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -13,6 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobihealthapis.Adapters.AdviceAdapter;
 import com.example.mobihealthapis.Adapters.FollowupAdapter;
@@ -59,6 +59,10 @@ public class Home extends AppCompatActivity implements PatientInterface {
     Boolean[] isExpanded;
     LinearLayout[] ll_expand_main,ll_expand,ll_after_expand,ll_data;
     ImageView[] img_expand;
+    TextView tv_patient_id_2,tv_patient_name,tv_gender_age;
+    LinearLayout ll_previous_rx;
+
+
 
     FlowLayout flow_symptoms,flow_diagnosis,flow_diagnostic;
 
@@ -212,6 +216,15 @@ public class Home extends AppCompatActivity implements PatientInterface {
         ll_after_expand[6] = findViewById(R.id.ll_followup_after_expand);
         img_expand[6] = findViewById(R.id.img_expand_followup);
 
+        tv_patient_id_2=findViewById(R.id.tv_patient_id_2);
+        tv_patient_name=findViewById(R.id.tv_patient_name);
+        tv_gender_age=findViewById(R.id.tv_gender_age);
+        ll_previous_rx=findViewById(R.id.ll_previous_rx);
+
+
+
+
+
         isExpanded = new Boolean[details];
         for(int i = 0; i < details; i++){
             if(ll_data[i].getVisibility() == View.VISIBLE)
@@ -241,6 +254,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
         SetFollowUp();
 
         SetMedicines();
+
+
     }
 
     private void SetMedicines() {
@@ -429,6 +444,64 @@ public class Home extends AppCompatActivity implements PatientInterface {
         ll_patient_drawer.setVisibility(View.GONE);
         ll_main_patient_rx.setVisibility(View.VISIBLE);
         //Toast.makeText(this, SelectedPatient.getFname()+" Selected", Toast.LENGTH_SHORT).show();
+
+        SetPatientDetails();
+
+
+
+    }
+
+    private void SetPatientDetails() {
+
+        tv_patient_name.setText(SelectedPatient.getFname());
+        tv_patient_id_2.setText("ID : "+SelectedPatient.getPatientId());
+        tv_gender_age.setText( SelectedPatient.getGender()+" | " + SelectedPatient.getAge());
+
+
+    }
+
+
+
+    private void FetchVitals() {
+
+        HashMap<String,String> params = new HashMap<>();
+
+        params.put("action","getVitals");
+        params.put("patient_id","23001");
+
+        NetworkCall ncall = new NetworkCall();
+
+        ncall.setServerUrlWebserviceApi(VR_APIS);
+
+
+        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+            @Override
+            public boolean setResponse(String responseStr) {
+
+
+                try {
+                    //tv_main.setText(responseStr);
+                    Vitals obj = new Gson().fromJson(responseStr, Vitals.class);
+
+                    if(obj.isStatus()){
+                        List<Vitals.Data> vitalList = new ArrayList<>();
+                        vitalList.addAll(obj.getData());
+
+                        SelectedPatient.setVitalsList(vitalList);
+
+                        //tv_main.setText(obj.getTotal_records()+"|"+vitalList.size());
+                    }
+
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(Home.this, "Catch : "+e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+                return false;
+            }
+        });
+
     }
 
 }

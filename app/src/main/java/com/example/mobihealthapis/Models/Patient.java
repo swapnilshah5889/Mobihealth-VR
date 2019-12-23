@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Patient {
+public  class Patient {
 
 
     @SerializedName("data")
@@ -41,6 +41,10 @@ public class Patient {
     public static class Data {
         @SerializedName("UserImage")
         private String UserImage;
+        @SerializedName("Gender")
+        private String Gender;
+        @SerializedName("Age")
+        private int Age;
         @SerializedName("LastAppointment")
         private String LastAppointment;
         @SerializedName("NextAppointment")
@@ -53,13 +57,17 @@ public class Patient {
         private String Fname;
         @SerializedName("PatientId")
         private int PatientId;
-        @SerializedName("IssuesList")
-        private List<Issues.Data> IssuesList;
-        @SerializedName("DiagnosisList")
-        private List<Diagnosis.Data> DiagnosisList;
+        @SerializedName("VitalsList")
+        private List<Vitals.Data> VitalsList;
 
 
+        public List<Vitals.Data> getVitalsList() {
+            return VitalsList;
+        }
 
+        public void setVitalsList(List<Vitals.Data> vitalsList) {
+            VitalsList = vitalsList;
+        }
 
         public String getUserImage() {
             return UserImage;
@@ -67,6 +75,22 @@ public class Patient {
 
         public void setUserImage(String UserImage) {
             this.UserImage = UserImage;
+        }
+
+        public String getGender() {
+            return Gender;
+        }
+
+        public void setGender(String Gender) {
+            this.Gender = Gender;
+        }
+
+        public int getAge() {
+            return Age;
+        }
+
+        public void setAge(int Age) {
+            this.Age = Age;
         }
 
         public String getLastAppointment() {
