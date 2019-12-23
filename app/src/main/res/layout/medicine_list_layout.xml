@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:layout_margin="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -14,7 +15,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:padding="10dp"
             android:background="@drawable/layout_background"
             android:orientation="horizontal"
@@ -55,7 +55,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="1."
                                 android:textStyle="bold"
-                                android:textSize="20dp"
+                                android:textSize="18dp"
                                 android:layout_weight="9"
                                 >
 
@@ -70,7 +70,7 @@
                                 android:autoSizeTextType="uniform"
                                 android:maxLines="3"
                                 android:autoSizeMinTextSize="18dp"
-                                android:textSize="20dp"
+                                android:textSize="18dp"
                                 android:textStyle="bold"
                                 android:layout_weight="1">
 
@@ -82,7 +82,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginTop="10dp"
                             android:padding="5dp"
 
                             android:orientation="vertical"
@@ -90,7 +89,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textSize="15dp"
+                                android:textSize="14dp"
                                 android:text="Composition"
                                 android:layout_marginLeft="10dp"
 
@@ -98,8 +97,8 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textSize="18dp"
-                                android:text="Paracetamol 300 also good one"
+                                android:textSize="16dp"
+                                android:text="Paracetamol 300mg + Metformin 500mg"
                                 android:layout_marginLeft="10dp"
                                 android:autoSizeTextType="uniform"
                                 android:autoSizeMinTextSize="15dp"
@@ -121,33 +120,13 @@
                             android:id="@+id/id_medfreq"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="1 0 1"
-                            android:textSize="15dp"
-                            android:textStyle="bold"
-                            android:layout_weight="4"
-
-                            >
-
-                        </TextView>
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="After Food"
-                            android:textSize="15dp"
-                            android:textStyle="normal"
-                            android:layout_weight="3"
-                            ></TextView>
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="7 Days/Daily"
-                            android:textStyle="normal"
-                            android:textSize="15dp"
-                            android:layout_weight="3"
+                            android:text="1 0 1  After Food  7 Days/Daily"
+                            android:textSize="16dp"
+                            android:maxLines="1"
                             android:autoSizeTextType="uniform"
-                            android:autoSizeMinTextSize="18dp"
-                            android:maxLines="2"
-                            >
+                            android:textStyle="bold"
+                            android:layout_weight="4">
+
                         </TextView>
 
                     </LinearLayout>
@@ -166,7 +145,7 @@
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="5dp"
                     android:tint="#4c4c4c"
                     android:src="@drawable/ic_multiply"
                     >
