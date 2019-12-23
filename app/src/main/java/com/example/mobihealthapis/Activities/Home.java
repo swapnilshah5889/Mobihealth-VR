@@ -3,6 +3,7 @@ package com.example.mobihealthapis.Activities;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import com.example.mobihealthapis.Adapters.AdviceAdapter;
 import com.example.mobihealthapis.Adapters.FollowupAdapter;
 import com.example.mobihealthapis.Adapters.MedicineAdapter;
 import com.example.mobihealthapis.Adapters.PatientsAdapter;
+import com.example.mobihealthapis.GeneralFunctions.OnSwipeTouchListener;
 import com.example.mobihealthapis.GeneralFunctions.transitions;
 import com.example.mobihealthapis.Interface.PatientInterface;
 import com.example.mobihealthapis.Models.Patient;
@@ -42,6 +44,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
     TextView tv_home_total_patients,tv_patient_draft,tv_patients_checked_in;
     List<Patient.Data> PatientsList;
+    ImageView img_patient;
 
     RelativeLayout rl_home_main;
     RecyclerView rv_main_drawer,rv_advice_list_main,rv_followup_list_main,rv_medicines_list_main;
@@ -59,7 +62,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
     Boolean[] isExpanded;
     LinearLayout[] ll_expand_main,ll_expand,ll_after_expand,ll_data;
     ImageView[] img_expand;
-    TextView tv_patient_id_2,tv_patient_name,tv_gender_age;
+    TextView tv_patient_id_2,tv_patient_name,tv_gender_age,tv_bmi,tv_weight,tv_height;
     LinearLayout ll_previous_rx;
 
 
@@ -119,7 +122,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
         HashMap<String,String> params = new HashMap<>();
 
-        params.put("action","getPatients");
+        params.put("action","getChildren");
         params.put("drId",""+doctor_id);
 
         NetworkCall ncall = new NetworkCall();
@@ -221,6 +224,11 @@ public class Home extends AppCompatActivity implements PatientInterface {
         tv_gender_age=findViewById(R.id.tv_gender_age);
         ll_previous_rx=findViewById(R.id.ll_previous_rx);
 
+        //Vitals
+        tv_weight = findViewById(R.id.tv_weight);
+        tv_bmi = findViewById(R.id.tv_bmi);
+        tv_height = findViewById(R.id.tv_height);
+
 
 
 
@@ -243,6 +251,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
         }
 
 
+        PatientDetailsClickMethods();
+
         SetSymptoms();
 
         SetDiagnosis();
@@ -255,6 +265,38 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
         SetMedicines();
 
+
+    }
+
+    private void PatientDetailsClickMethods() {
+
+        ll_main_patient_rx.setOnTouchListener(new OnSwipeTouchListener(Home.this){
+
+            @Override
+            public void onSwipeLeft() {
+
+                //Toast.makeText(Home.this, "Left", Toast.LENGTH_SHORT).show();
+                ShowHidePatientList(0);
+
+            }
+
+            @Override
+            public void onSwipeRight() {
+                //Toast.makeText(Home.this, "Right", Toast.LENGTH_SHORT).show();
+                ShowHidePatientList(1);
+                super.onSwipeRight();
+            }
+
+        });
+    }
+
+    private void ShowHidePatientList(int x) {
+
+        if(x == 1 && (ll_patient_drawer.getVisibility() == View.GONE ||
+                ll_patient_drawer.getVisibility() == View.INVISIBLE))
+            ll_patient_drawer.setVisibility(View.VISIBLE);
+        else if(ll_patient_drawer.getVisibility() == View.VISIBLE)
+            ll_patient_drawer.setVisibility(View.GONE);
 
     }
 
@@ -457,6 +499,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         tv_patient_id_2.setText("ID : "+SelectedPatient.getPatientId());
         tv_gender_age.setText( SelectedPatient.getGender()+" | " + SelectedPatient.getAge());
 
+        FetchVitals();
 
     }
 
@@ -466,8 +509,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
         HashMap<String,String> params = new HashMap<>();
 
-        params.put("action","getVitals");
-        params.put("patient_id","23001");
+        params.put("action","getChildVitals");
+        params.put("patient_id", ""+SelectedPatient.getPatientId());
 
         NetworkCall ncall = new NetworkCall();
 
@@ -483,11 +526,15 @@ public class Home extends AppCompatActivity implements PatientInterface {
                     //tv_main.setText(responseStr);
                     Vitals obj = new Gson().fromJson(responseStr, Vitals.class);
 
-                    if(obj.isStatus()){
+                    if(obj.getStatus()){
                         List<Vitals.Data> vitalList = new ArrayList<>();
                         vitalList.addAll(obj.getData());
 
-                        SelectedPatient.setVitalsList(vitalList);
+                        SelectedPatient.setVitals(vitalList.get(0));
+
+                        tv_height.setText(SelectedPatient.getVitals().getHeight()+" cm");
+                        tv_weight.setText(SelectedPatient.getVitals().getWeight()+" k.g.");
+                        tv_bmi.setText(""+SelectedPatient.getVitals().getBMI());
 
                         //tv_main.setText(obj.getTotal_records()+"|"+vitalList.size());
                     }

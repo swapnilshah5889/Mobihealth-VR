@@ -57,16 +57,15 @@ public  class Patient {
         private String Fname;
         @SerializedName("PatientId")
         private int PatientId;
-        @SerializedName("VitalsList")
-        private List<Vitals.Data> VitalsList;
+        @SerializedName("Vitals")
+        private Vitals.Data Vitals;
 
-
-        public List<Vitals.Data> getVitalsList() {
-            return VitalsList;
+        public com.example.mobihealthapis.Models.Vitals.Data getVitals() {
+            return Vitals;
         }
 
-        public void setVitalsList(List<Vitals.Data> vitalsList) {
-            VitalsList = vitalsList;
+        public void setVitals(com.example.mobihealthapis.Models.Vitals.Data vitals) {
+            Vitals = vitals;
         }
 
         public String getUserImage() {

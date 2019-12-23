@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                     //tv_main.setText(responseStr);
                     Vitals obj = new Gson().fromJson(responseStr, Vitals.class);
 
-                    if(obj.isStatus()){
+                    if(obj.getStatus()){
                         vitalList = new ArrayList<>();
                         vitalList.addAll(obj.getData());
 

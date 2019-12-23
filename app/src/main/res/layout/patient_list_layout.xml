@@ -48,9 +48,9 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
+                    android:id="@+id/img_patient"
                     android:background="#ddd"
                     android:padding="5dp"
-                    android:tint="#555"
                     android:src="@drawable/ic_profile"
                     android:layout_width="60dp"
                     android:layout_height="60dp"></ImageView>

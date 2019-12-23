@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mobihealthapis.Interface.PatientInterface;
 import com.example.mobihealthapis.Models.Patient;
 import com.example.mobihealthapis.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.StringTokenizer;
@@ -77,6 +78,8 @@ public class PatientsAdapter extends RecyclerView.Adapter<PatientsAdapter.MyView
             }
         });
 
+        Picasso.with(context).load(p.getUserImage()).into(holder.img_patient);
+
 
     }
 
@@ -87,7 +90,7 @@ public class PatientsAdapter extends RecyclerView.Adapter<PatientsAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        ImageView img_profile;
+        ImageView img_patient;
         LinearLayout ll_patient_main;
         TextView tv_serial_no_patient_list,tv_patient_id,tv_booking_type,tv_patient_fname,tv_patient_number;
 
@@ -99,6 +102,7 @@ public class PatientsAdapter extends RecyclerView.Adapter<PatientsAdapter.MyView
             tv_patient_fname = view.findViewById(R.id.tv_patient_fname);
             tv_patient_number = view.findViewById(R.id.tv_patient_number);
             ll_patient_main = view.findViewById(R.id.ll_patient_main);
+            img_patient = view.findViewById(R.id.img_patient);
 
         }
     }
