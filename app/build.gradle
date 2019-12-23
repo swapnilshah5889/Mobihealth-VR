@@ -49,6 +49,12 @@ dependencies {
 
     implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
 
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    //ripple
+    implementation 'com.rodolfonavalon:ShapeRippleLibrary:1.0.0'
+
     implementation 'com.gauravbhola.ripplepulsebackground:library:1.0.0'
     implementation 'com.rodolfonavalon:ShapeRippleLibrary:1.0.0'
+
 }
+

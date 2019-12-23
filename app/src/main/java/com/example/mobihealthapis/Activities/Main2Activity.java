@@ -1,14 +1,19 @@
 package com.example.mobihealthapis.Activities;
 
+import android.os.Bundle;
+
+import android.view.View;
+import android.widget.ImageView;
+
+import android.widget.LinearLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-
 import com.example.mobihealthapis.Adapters.TestAdapter;
+
+import com.example.mobihealthapis.R;
+
 import com.example.mobihealthapis.GeneralFunctions.transitions;
 import com.example.mobihealthapis.GeneralFunctions.transitions.*;
 import com.example.mobihealthapis.Models.Diagnosis;
