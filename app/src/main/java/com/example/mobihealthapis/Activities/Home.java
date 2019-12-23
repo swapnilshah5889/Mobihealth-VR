@@ -19,22 +19,43 @@ import com.example.mobihealthapis.Adapters.FollowupAdapter;
 import com.example.mobihealthapis.Adapters.MedicineAdapter;
 import com.example.mobihealthapis.Adapters.PatientsAdapter;
 import com.example.mobihealthapis.GeneralFunctions.transitions;
+import com.example.mobihealthapis.Interface.PatientInterface;
+import com.example.mobihealthapis.Models.Patient;
+import com.example.mobihealthapis.Models.Vitals;
 import com.example.mobihealthapis.R;
+import com.example.mobihealthapis.database_call.NetworkCall;
 import com.gauravbhola.ripplepulsebackground.RipplePulseLayout;
+import com.google.gson.Gson;
 import com.nex3z.flowlayout.FlowLayout;
 
-public class Home extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static com.example.mobihealthapis.database_call.utils_string.API_URL.VR_APIS;
+
+public class Home extends AppCompatActivity implements PatientInterface {
+
+
+    //Home
+    private final int doctor_id = 40089;
+
+    TextView tv_home_total_patients,tv_patient_draft,tv_patients_checked_in;
+    List<Patient.Data> PatientsList;
 
     RelativeLayout rl_home_main;
     RecyclerView rv_main_drawer,rv_advice_list_main,rv_followup_list_main,rv_medicines_list_main;
-    LinearLayout ll_activate_voice;
+    LinearLayout ll_activate_voice,ll_patient_drawer;
     RipplePulseLayout mRipplePulseLayout;
 
     int fixedheight,fixedheightcounter = 0;
 
+    int SelectedPatientPosition;
+    Patient.Data SelectedPatient;
+
     //Patient Details
 
-
+    LinearLayout ll_main_patient_rx;
     Boolean[] isExpanded;
     LinearLayout[] ll_expand_main,ll_expand,ll_after_expand,ll_data;
     ImageView[] img_expand;
@@ -61,6 +82,7 @@ public class Home extends AppCompatActivity {
         ll_activate_voice = findViewById(R.id.ll_activate_voice);
         //mRipplePulseLayout = findViewById(R.id.layout_ripplepulse);
 
+        HomeInit();
 
         PatientDetails();
 
@@ -71,13 +93,77 @@ public class Home extends AppCompatActivity {
             }
         });
 
-        ClickMethods();
 
-        SetMainDrawerRecyclerView();
+
+
+    }
+
+    private void HomeInit() {
+
+        tv_home_total_patients = findViewById(R.id.tv_home_total_patients);
+        tv_patients_checked_in = findViewById(R.id.tv_patients_checked_in);
+        tv_patient_draft = findViewById(R.id.tv_patient_draft);
+
+        ll_patient_drawer = findViewById(R.id.ll_patient_drawer);
+
+        FetchPatients();
+
+        HomeClickMethods();
+    }
+
+    private void FetchPatients() {
+
+        HashMap<String,String> params = new HashMap<>();
+
+        params.put("action","getPatients");
+        params.put("drId",""+doctor_id);
+
+        NetworkCall ncall = new NetworkCall();
+
+        ncall.setServerUrlWebserviceApi(VR_APIS);
+
+
+        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+            @Override
+            public boolean setResponse(String responseStr) {
+
+
+                try {
+                    //tv_main.setText(responseStr);
+                    Patient obj = new Gson().fromJson(responseStr, Patient.class);
+
+                    if(obj.getStatus()){
+                        PatientsList = new ArrayList<>();
+                        PatientsList.addAll(obj.getData());
+
+                        tv_home_total_patients.setText("Today's Patients - "+PatientsList.size());
+                        tv_patients_checked_in.setText(""+PatientsList.size());
+                        SetMainDrawerRecyclerView();
+                        //tv_main.setText(obj.getTotal_records()+"|"+vitalList.size());
+                    }
+
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(Home.this, "Catch : "+e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+                return false;
+            }
+        });
+
+
+    }
+
+    private void HomeClickMethods() {
+
+
+
     }
 
     private void PatientDetails() {
 
+        ll_main_patient_rx = findViewById(R.id.ll_main_patient_rx);
         ll_data = new LinearLayout[details];
         ll_expand = new LinearLayout[details];
         ll_after_expand = new LinearLayout[details];
@@ -324,120 +410,25 @@ public class Home extends AppCompatActivity {
     }
 
 
-    private void ClickMethods() {
 
-
-    }
 
 
 
     private void SetMainDrawerRecyclerView() {
 
-        PatientsAdapter adapter = new PatientsAdapter(this);
+        PatientsAdapter adapter = new PatientsAdapter(this,PatientsList);
         rv_main_drawer.setAdapter(adapter);
         rv_main_drawer.setHasFixedSize(true);
 
     }
 
-   /* private boolean toggleLayout(boolean isExpanded, LinearLayout layoutExpand, ImageView img_expand) {
-        if (isExpanded) {
-            transitions.expand(layoutExpand);
-            img_expand.setImageResource(R.drawable.ic_minus);
-
-        } else {
-            transitions.collapse(layoutExpand);
-            img_expand.setImageResource(R.drawable.ic_add_white);
-        }
-        return isExpanded;
-
-    }*/
-
-
-
-    /*
-    private void PatienDetailsClickMethods() {
-
-        //Vitals
-        ll_expand_vital.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleLayout(isVitalsExpanded,ll_data_vital,img_expand_vital);
-                isVitalsExpanded = !isVitalsExpanded;
-            }
-        });
-
-        ll_data_vital.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleLayout(isVitalsExpanded,ll_data_vital,img_expand_vital);
-                isVitalsExpanded = !isVitalsExpanded;
-            }
-        });
-
-
-        //Symptoms
-        ll_expand_symptoms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleLayout(isSymptomsExpanded,ll_data_symptoms,img_expand_symptoms);
-                isSymptomsExpanded = !isSymptomsExpanded;
-            }
-        });
-
-        ll_data_symptoms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleLayout(isSymptomsExpanded,ll_data_symptoms,img_expand_symptoms);
-                isSymptomsExpanded = !isSymptomsExpanded;
-            }
-        });
-
+    @Override
+    public void OnPatientClick(int position) {
+        SelectedPatientPosition = position;
+        SelectedPatient = PatientsList.get(SelectedPatientPosition);
+        ll_patient_drawer.setVisibility(View.GONE);
+        ll_main_patient_rx.setVisibility(View.VISIBLE);
+        //Toast.makeText(this, SelectedPatient.getFname()+" Selected", Toast.LENGTH_SHORT).show();
     }
 
-
-    public void OnDetailsExpandCollapse(LinearLayout temp, Boolean isExpanded){
-
-        final LinearLayout ll_holder = temp;
-        if(fixedheightcounter == 0) {
-            fixedheight = ll_holder.getHeight();
-            fixedheightcounter++;
-        }
-        if(isExpanded){
-            ll_holder.setVisibility(View.INVISIBLE);
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout
-                            .LayoutParams(ll_holder.getWidth(), ll_holder.getHeight()/10);
-                    ll_holder.setLayoutParams(layoutParams);
-
-                }
-            }, 100);
-
-            Toast.makeText(this, ll_holder.getHeight()+" | "+
-                    fixedheight, Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Toast.makeText(this, ll_holder.getHeight()+" | "+
-                    fixedheight, Toast.LENGTH_SHORT).show();
-
-
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    ll_holder.setVisibility(View.VISIBLE);
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout
-                            .LayoutParams(ll_holder.getWidth(), fixedheight);
-                    ll_holder.setLayoutParams(layoutParams);
-                }
-            }, 150);
-
-
-        }
-
-    }
-
-    */
 }
