@@ -24,7 +24,7 @@
 
 <!--    <include layout="@layout/medicine_list_layout"></include>-->
 
-    <androidx.recyclerview.widget.RecyclerView
+<!--    <androidx.recyclerview.widget.RecyclerView-->
 
    <!-- <androidx.recyclerview.widget.RecyclerView
 
