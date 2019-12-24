@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mobihealthapis.GeneralFunctions.StaticData;
 import com.example.mobihealthapis.Interface.PatientInterface;
 import com.example.mobihealthapis.Models.Patient;
 import com.example.mobihealthapis.R;
@@ -74,7 +75,7 @@ public class PatientsAdapter extends RecyclerView.Adapter<PatientsAdapter.MyView
         holder.ll_patient_main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                patientInterface.OnPatientClick(position);
+                patientInterface.OnPatientClick(position, StaticData.Adapter_identifier.patients);
             }
         });
 

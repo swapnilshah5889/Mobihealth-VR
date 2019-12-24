@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mobihealthapis.GeneralFunctions.StaticData;
+import com.example.mobihealthapis.Interface.PatientInterface;
 import com.example.mobihealthapis.Models.Issues;
 import com.example.mobihealthapis.R;
 
@@ -20,11 +22,12 @@ public class MultipleSymptomAdapter   extends RecyclerView.Adapter<MultipleSympt
 
     Context context;
     List<Issues.Data> IssueList;
-
+    PatientInterface patientInterface;
 
     public MultipleSymptomAdapter(Context context, List<Issues.Data> issueList) {
         this.context = context;
         IssueList = issueList;
+        this.patientInterface = (PatientInterface)context;
         hasStableIds();
     }
 
@@ -37,12 +40,18 @@ public class MultipleSymptomAdapter   extends RecyclerView.Adapter<MultipleSympt
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         Issues.Data d = IssueList.get(position);
 
         holder.tv_symptoms_number_dialog.setText((position+1)+".");
 
         holder.tv_symptoms_dialog.setText(""+d.getIssues());
+        holder.tv_symptoms_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                patientInterface.OnPatientClick(position, StaticData.Adapter_identifier.symptoms);
+            }
+        });
     }
 
     @Override

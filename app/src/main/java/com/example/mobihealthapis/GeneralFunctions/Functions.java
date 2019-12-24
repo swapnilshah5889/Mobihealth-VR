@@ -1,6 +1,10 @@
 package com.example.mobihealthapis.GeneralFunctions;
 
+import androidx.annotation.Nullable;
+
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 public class Functions {
 
@@ -94,5 +98,18 @@ public static boolean hasNext(int pos,int size){
             return false;
 
 }
+
+    public static boolean IsInList(int pos, int size){
+        if(size == 0){
+            return false;
+        }
+        if(pos<=size && pos>0)
+            return true;
+        else
+            return false;
+
+    }
+
+
 
 }

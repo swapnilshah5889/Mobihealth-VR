@@ -2,6 +2,7 @@ package com.example.mobihealthapis.Activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
@@ -48,7 +49,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import static com.example.mobihealthapis.GeneralFunctions.Functions.IsInList;
+import static com.example.mobihealthapis.GeneralFunctions.Functions.isNumeric;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VOICE_RECOGNITION_REQUEST_CODE;
+import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MULTIPLE_SYMPTOMS;
+import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_NOMATCH_PROMPT;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.patient_details.advice;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.patient_details.diagnosis;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.patient_details.diagnostic;
@@ -86,7 +91,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
     List<DiagnosticTests.Data> Final_DiagnosticTests;
     List<String> Final_Advice;
     List<Med.Data> Final_Medicines;
-
+    String temp_symptom="";
+    List<Issues.Data> issuesmatched;
     //Patient Details
 
     LinearLayout ll_main_patient_rx;
@@ -264,6 +270,23 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 else if (Functions.CheckData(finalarr[0], StaticData.Vitals) && ExpandedDetail == vitals) {
                     SetVitals(finalarr);
                 }
+                else if(finalarr[0].equals("delete")){
+                    if(finalarr.length>2)
+                    {
+                        if(finalarr[1].equals("symptom")){
+                            if(finalarr[2].equals("number") && finalarr.length>3){
+                                if(isNumeric(finalarr[3]) ){
+                                   int temp= Integer.parseInt(finalarr[3]);
+                                   if(IsInList(temp,Final_Symptoms.size())) {
+                                       temp--;
+                                       DeleteSymptom(temp);
+                                   }
+                               }
+                            }
+                        }
+                    }
+
+                }
                 else if(ExpandedDetail == symptoms)
                 {
                     SetSymptoms(finalarr);
@@ -273,8 +296,58 @@ public class Home extends AppCompatActivity implements PatientInterface {
             }
 
 
+
         }
+        else if(requestCode == VR_NOMATCH_PROMPT && resultCode == RESULT_OK){
+
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            String[] finalarr = GetRawDataFromSpeech(matches);
+            if (finalarr.length > 0){
+
+                if((finalarr[0].equals("yes")||finalarr[0].equals("accept") || finalarr[0].equals("except")) &&
+                        (!temp_symptom.equals("")))
+                {
+                    AddSymptom(temp_symptom);
+                }
+                else if(finalarr[0].equals("no")||finalarr[0].equals("decline"))
+                {
+
+                }
+            }
+        }
+        else if(requestCode == VR_MULTIPLE_SYMPTOMS && resultCode == RESULT_OK) {
+            ll_symptom_dialog.setVisibility(View.GONE);
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            String[] finalarr = GetRawDataFromSpeech(matches);
+            if(finalarr.length>2)
+            {
+                if(finalarr[0].equals("select")){
+                    if(finalarr[1].equals("number")){
+                        if(isNumeric(finalarr[2])){
+                            int pos = Integer.parseInt(finalarr[2]);
+                            if(IsInList(pos,issuesmatched.size())){
+                                pos--;
+                                AddSymptom(issuesmatched.get(pos).getIssues());
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
+
         super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    private void DeleteSymptom(int pos) {
+
+        flow_symptoms.removeViewAt(pos);
+        Final_Symptoms.remove(pos);
+
     }
 
     private void FetchVitals() {
@@ -638,7 +711,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
             List<String> filtered_symptopms = FilterArray(arr);
 
-            List<Issues.Data> issuesmatched = new ArrayList<>();
+             issuesmatched = new ArrayList<>();
 
             for(int i = 0; i < Issuelist.size(); i++){
 
@@ -659,12 +732,13 @@ public class Home extends AppCompatActivity implements PatientInterface {
             else if(issuesmatched.size() == 0){
                 String temp = "";
                 for(int i = 0; i < arr.length; i++){
-                    temp+=arr[i];
+                    temp+=arr[i]+" ";
                 }
                 ShowNoMatchPrompt(temp,"Symptom");
                 Toast.makeText(this, "No Results !", Toast.LENGTH_SHORT).show();
             }
             else if (issuesmatched.size() == 1){
+                AddSymptom(issuesmatched.get(0).getIssues());
                 Toast.makeText(this, ""+issuesmatched.get(0).getIssues(), Toast.LENGTH_SHORT).show();
             }
 
@@ -699,7 +773,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
     private void ShowNoMatchPrompt(final String data, String type) {
 
         tv_promt_data.setText(type+" : "+data);
-
+        temp_symptom=data;
         tv_promt_no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -707,30 +781,38 @@ public class Home extends AppCompatActivity implements PatientInterface {
             }
         });
 
-        final ViewGroup parent = (ViewGroup) rl_home_main;
+
         tv_promt_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AddSymptom(data);
 
-                final View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.dda_list_layout, parent, false);
-                TextView tempdata = itemView.findViewById(R.id.tv_chip_data);
-                LinearLayout ll_chip_delete = itemView.findViewById(R.id.ll_chip_delete);
-                final TextView number = itemView.findViewById(R.id.tv_chip_number);
-                number.setText((Final_Symptoms.size()+1) + ".");
-                Issues.Data dtemp = new Issues.Data(data);
-                Final_Symptoms.add(dtemp);
-                tempdata.setText(dtemp.getIssues());
-                flow_symptoms.addView(itemView);
-                ll__uni_prompt.setVisibility(View.GONE);
-
-                itemView.setClickable(true);
 
             }
         });
 
 
         ll__uni_prompt.setVisibility(View.VISIBLE);
+        Speak(tv_promt_question.getText().toString(),VR_NOMATCH_PROMPT,1000);
+
+    }
+
+    private void AddSymptom(String data) {
+
+        final ViewGroup parent = (ViewGroup) rl_home_main;
+        final View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.dda_list_layout, parent, false);
+        TextView tempdata = itemView.findViewById(R.id.tv_chip_data);
+        LinearLayout ll_chip_delete = itemView.findViewById(R.id.ll_chip_delete);
+        final TextView number = itemView.findViewById(R.id.tv_chip_number);
+        number.setText((Final_Symptoms.size()+1) + ".");
+        Issues.Data dtemp = new Issues.Data(data);
+        Final_Symptoms.add(dtemp);
+        tempdata.setText(dtemp.getIssues());
+        flow_symptoms.addView(itemView);
+        ll__uni_prompt.setVisibility(View.GONE);
+        ll_symptom_dialog.setVisibility(View.GONE);
+        itemView.setClickable(true);
     }
 
     private void ShowSymptomDialog(String symptom_options, List<Issues.Data> issuesmatched) {
@@ -745,7 +827,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         rv_multiple_symptoms.setHasFixedSize(true);
 
         ll_symptom_dialog.setVisibility(View.VISIBLE);
-
+        Speak("Multiple matches found in database.Please select one",VR_MULTIPLE_SYMPTOMS,3000);
     }
 
     private List<Issues.Data> FilterResult(int position,List<String> filtered_symptopms,List<Issues.Data> issueResults) {
@@ -936,14 +1018,23 @@ public class Home extends AppCompatActivity implements PatientInterface {
     }
 
     @Override
-    public void OnPatientClick(int position) {
-        SelectedPatientPosition = position;
-        SelectedPatient = PatientsList.get(SelectedPatientPosition);
-        ll_patient_drawer.setVisibility(View.GONE);
-        ll_main_patient_rx.setVisibility(View.VISIBLE);
-        //Toast.makeText(this, SelectedPatient.getFname()+" Selected", Toast.LENGTH_SHORT).show();
+    public void OnPatientClick(int position,int identifier) {
+        if(identifier== StaticData.Adapter_identifier.patients){
 
-        SetPatientDetails();
+            SelectedPatientPosition = position;
+            SelectedPatient = PatientsList.get(SelectedPatientPosition);
+            ll_patient_drawer.setVisibility(View.GONE);
+            ll_main_patient_rx.setVisibility(View.VISIBLE);
+            //Toast.makeText(this, SelectedPatient.getFname()+" Selected", Toast.LENGTH_SHORT).show();
+
+            SetPatientDetails();
+        }
+        else if(identifier== StaticData.Adapter_identifier.symptoms){
+
+            AddSymptom(issuesmatched.get(position).getIssues());
+
+        }
+
 
 
     }
@@ -955,6 +1046,49 @@ public class Home extends AppCompatActivity implements PatientInterface {
         tv_gender_age.setText(SelectedPatient.getGender() + " | " + SelectedPatient.getAge());
 
         FetchVitals();
+
+    }
+    private void Speak(String text,int VR_CODE,int duration) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            /*textToSpeech.setSpeechRate(0.7f);
+            textToSpeech.setPitch(0.5f);*/
+            textToSpeech.speak(text,TextToSpeech.QUEUE_FLUSH,null,null);
+            isTTSSpeaking(VR_CODE,duration);
+        } else {
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        }
+
+    }
+
+    public void isTTSSpeaking(final int VR_CODE,final int duration){
+
+        final Handler h =new Handler();
+
+        Runnable r = new Runnable() {
+
+            public void run() {
+
+                if (!textToSpeech.isSpeaking()) {
+                    onTTSFinished(VR_CODE);
+                    return;
+
+                }
+
+                h.postDelayed(this, 500);
+            }
+        };
+
+        h.postDelayed(r, duration);
+    }
+
+    private void onTTSFinished(int VR_CODE) {
+
+        if(VR_CODE == VR_NOMATCH_PROMPT || VR_CODE==VR_MULTIPLE_SYMPTOMS ){
+            startVoiceRecognitionActivity(VR_CODE);
+        }
+
+        //startVoiceRecognitionActivity(VR_CODE);
 
     }
 

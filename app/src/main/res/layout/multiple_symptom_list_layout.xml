@@ -23,6 +23,7 @@
     <TextView
         android:id="@+id/tv_symptoms_dialog"
         android:layout_weight="1"
+        android:clickable="true"
         android:layout_width="match_parent"
         android:text="fever with cold"
         android:maxLines="2"
