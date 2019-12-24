@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="10">
+
+
+    <TextView
+        android:id="@+id/tv_symptoms_number_dialog"
+        android:layout_weight="9"
+        android:layout_width="match_parent"
+        android:text="1."
+        android:textColor="@color/colorAccent"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_symptoms_dialog"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:text="fever with cold"
+        android:maxLines="2"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="18dp"
+        android:textColor="@color/colorAccent"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+
+        >
+
+    </TextView>
+
+</LinearLayout>

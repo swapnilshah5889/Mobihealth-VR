@@ -346,6 +346,7 @@
                                     android:layout_height="wrap_content">
 
                                     <TextView
+                                        android:id="@+id/tv_hc"
                                         android:layout_marginLeft="10dp"
                                         android:layout_marginBottom="15dp"
                                         android:layout_marginTop="15dp"
@@ -383,6 +384,7 @@
                                     android:layout_height="wrap_content">
 
                                     <TextView
+                                        android:id="@+id/tv_temperature"
                                         android:layout_marginLeft="10dp"
                                         android:layout_marginBottom="15dp"
                                         android:layout_marginTop="15dp"
