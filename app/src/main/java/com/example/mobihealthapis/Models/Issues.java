@@ -13,6 +13,11 @@ public  class Issues {
     private boolean status;
 
     public static class Data {
+
+        public Data(String issues) {
+            this.issues = issues;
+        }
+
         @SerializedName("issues")
         private String issues;
         @SerializedName("id")

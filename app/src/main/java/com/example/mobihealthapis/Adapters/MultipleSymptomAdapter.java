@@ -38,7 +38,11 @@ public class MultipleSymptomAdapter   extends RecyclerView.Adapter<MultipleSympt
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        Issues.Data d = IssueList.get(position);
 
+        holder.tv_symptoms_number_dialog.setText((position+1)+".");
+
+        holder.tv_symptoms_dialog.setText(""+d.getIssues());
     }
 
     @Override

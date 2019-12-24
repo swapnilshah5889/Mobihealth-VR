@@ -23,13 +23,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mobihealthapis.Adapters.AdviceAdapter;
 import com.example.mobihealthapis.Adapters.FollowupAdapter;
 import com.example.mobihealthapis.Adapters.MedicineAdapter;
+import com.example.mobihealthapis.Adapters.MultipleSymptomAdapter;
 import com.example.mobihealthapis.Adapters.PatientsAdapter;
 import com.example.mobihealthapis.GeneralFunctions.Functions;
 import com.example.mobihealthapis.GeneralFunctions.OnSwipeTouchListener;
 import com.example.mobihealthapis.GeneralFunctions.StaticData;
 import com.example.mobihealthapis.GeneralFunctions.transitions;
 import com.example.mobihealthapis.Interface.PatientInterface;
+import com.example.mobihealthapis.Models.Diagnosis;
+import com.example.mobihealthapis.Models.DiagnosticTests;
 import com.example.mobihealthapis.Models.Issues;
+import com.example.mobihealthapis.Models.Med;
 import com.example.mobihealthapis.Models.Patient;
 import com.example.mobihealthapis.Models.Vitals;
 import com.example.mobihealthapis.R;
@@ -76,6 +80,13 @@ public class Home extends AppCompatActivity implements PatientInterface {
     int SelectedPatientPosition;
     Patient.Data SelectedPatient;
 
+
+    List<Issues.Data> Final_Symptoms;
+    List<Diagnosis.Data> Final_Diagnosis;
+    List<DiagnosticTests.Data> Final_DiagnosticTests;
+    List<String> Final_Advice;
+    List<Med.Data> Final_Medicines;
+
     //Patient Details
 
     LinearLayout ll_main_patient_rx;
@@ -89,6 +100,16 @@ public class Home extends AppCompatActivity implements PatientInterface {
     FlowLayout flow_symptoms, flow_diagnosis, flow_diagnostic;
 
     private int details = 7;
+
+    //Symptom Dialog
+    LinearLayout ll_symptom_dialog;
+    TextView tv_dialog_heading,tv_symptom_close_dialog,tv_dialog_count;
+    RecyclerView rv_multiple_symptoms;
+
+    //no match promopt
+    LinearLayout ll__uni_prompt;
+    TextView tv_promt_question,tv_promt_data,tv_promt_no,tv_promt_yes;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -369,6 +390,14 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
         ll_patient_drawer = findViewById(R.id.ll_patient_drawer);
 
+        Final_Symptoms = new ArrayList<>();
+        Final_Diagnosis= new ArrayList<>();
+        Final_DiagnosticTests = new ArrayList<>();
+        Final_Advice= new ArrayList<>();
+        Final_Medicines= new ArrayList<>();
+
+        flow_symptoms = findViewById(R.id.flow_symptoms);
+
         FetchPatients();
 
         HomeClickMethods();
@@ -485,6 +514,22 @@ public class Home extends AppCompatActivity implements PatientInterface {
         tv_temperature = findViewById(R.id.tv_temperature);
         tv_hc = findViewById(R.id.tv_hc);
 
+        //Symptom Dialog
+        ll_symptom_dialog = findViewById(R.id.ll_symptom_dialog);
+        tv_dialog_heading = findViewById(R.id.tv_dialog_heading);
+        tv_symptom_close_dialog = findViewById(R.id.tv_symptom_close_dialog);
+        tv_dialog_count = findViewById(R.id.tv_dialog_count);
+        rv_multiple_symptoms = findViewById(R.id.rv_multiple_symptoms);
+
+        //no match prompt
+        ll__uni_prompt = findViewById(R.id.ll__uni_prompt);
+        tv_promt_question = findViewById(R.id.tv_promt_question);
+        tv_promt_data = findViewById(R.id.tv_promt_data);
+        tv_promt_no = findViewById(R.id.tv_promt_no);
+        tv_promt_yes = findViewById(R.id.tv_promt_yes);
+
+
+
         isExpanded = new Boolean[details];
         for (int i = 0; i < details; i++) {
             if (ll_data[i].getVisibility() == View.VISIBLE)
@@ -540,7 +585,17 @@ public class Home extends AppCompatActivity implements PatientInterface {
             }
 
         });
+
+        tv_symptom_close_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ll_symptom_dialog.setVisibility(View.GONE);
+            }
+        });
+
+
     }
+
 
     private void ShowHidePatientList(int x) {
 
@@ -592,18 +647,28 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 }
             }
 
-            if(filtered_symptopms.size()>1 && issuesmatched.size()>1){
-                issuesmatched = FilterResult(1,filtered_symptopms,issuesmatched);
+            //More than one filters and more than one issues
+            if(issuesmatched.size()>1){
+                if(filtered_symptopms.size() > 1)
+                    issuesmatched = FilterResult(1,filtered_symptopms,issuesmatched);
+
+                ShowSymptomDialog("Symptom Options",issuesmatched);
                 Toast.makeText(this, ""+issuesmatched.size(), Toast.LENGTH_SHORT).show();
             }
+            //no issues matched
             else if(issuesmatched.size() == 0){
+                String temp = "";
+                for(int i = 0; i < arr.length; i++){
+                    temp+=arr[i];
+                }
+                ShowNoMatchPrompt(temp,"Symptom");
                 Toast.makeText(this, "No Results !", Toast.LENGTH_SHORT).show();
             }
-            else{
+            else if (issuesmatched.size() == 1){
                 Toast.makeText(this, ""+issuesmatched.get(0).getIssues(), Toast.LENGTH_SHORT).show();
             }
 
-            flow_symptoms = findViewById(R.id.flow_symptoms);
+
             ViewGroup parent = (ViewGroup) rl_home_main;
 
             for (int i = 0; i < 6; i++) {
@@ -628,6 +693,58 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
         }
 
+
+    }
+
+    private void ShowNoMatchPrompt(final String data, String type) {
+
+        tv_promt_data.setText(type+" : "+data);
+
+        tv_promt_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ll__uni_prompt.setVisibility(View.GONE);
+            }
+        });
+
+        final ViewGroup parent = (ViewGroup) rl_home_main;
+        tv_promt_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final View itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.dda_list_layout, parent, false);
+                TextView tempdata = itemView.findViewById(R.id.tv_chip_data);
+                LinearLayout ll_chip_delete = itemView.findViewById(R.id.ll_chip_delete);
+                final TextView number = itemView.findViewById(R.id.tv_chip_number);
+                number.setText((Final_Symptoms.size()+1) + ".");
+                Issues.Data dtemp = new Issues.Data(data);
+                Final_Symptoms.add(dtemp);
+                tempdata.setText(dtemp.getIssues());
+                flow_symptoms.addView(itemView);
+                ll__uni_prompt.setVisibility(View.GONE);
+
+                itemView.setClickable(true);
+
+            }
+        });
+
+
+        ll__uni_prompt.setVisibility(View.VISIBLE);
+    }
+
+    private void ShowSymptomDialog(String symptom_options, List<Issues.Data> issuesmatched) {
+
+        tv_dialog_count.setText(issuesmatched.size()+" Symptoms Matched In The Database");
+
+        tv_dialog_heading.setText(symptom_options);
+
+        MultipleSymptomAdapter adapter = new MultipleSymptomAdapter(this,issuesmatched);
+
+        rv_multiple_symptoms.setAdapter(adapter);
+        rv_multiple_symptoms.setHasFixedSize(true);
+
+        ll_symptom_dialog.setVisibility(View.VISIBLE);
 
     }
 

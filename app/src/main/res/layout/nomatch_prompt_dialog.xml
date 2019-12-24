@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:gravity="center"
+    android:padding="30dp"
+    android:background="#a000"
+    android:layout_height="match_parent"
+    android:id="@+id/ll__uni_prompt">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@drawable/patient_list_back_round"
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_promt_question"
+            android:textSize="23dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"
+            android:text="No Match Found In The Database. Do You Want To ADD This Symptom ?"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></TextView>
+
+        <TextView
+            android:id="@+id/tv_promt_data"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="@color/DrawerBack"
+            android:padding="20dp"
+            android:text="Symptom : Fever With Cold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></TextView>
+
+        <LinearLayout
+            android:weightSum="2"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:weightSum="2"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:padding="5dp"
+                        android:id="@+id/tv_promt_no"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:textSize="20dp"
+                        android:textColor="@color/colorAccent"
+                        android:textStyle="bold"
+                        android:text="No"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"></TextView>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:padding="5dp"
+                        android:id="@+id/tv_promt_yes"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:textSize="20dp"
+                        android:textColor="@color/colorAccent"
+                        android:textStyle="bold"
+                        android:text="Yes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"></TextView>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>
