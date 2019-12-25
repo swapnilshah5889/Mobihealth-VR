@@ -559,83 +559,6 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
     }
 
-    private void FetchVitals() {
-
-        HashMap<String, String> params = new HashMap<>();
-
-        params.put("action", "getChildVitals");
-        params.put("patient_id", "" + SelectedPatient.getPatientId());
-
-        NetworkCall ncall = new NetworkCall();
-
-        ncall.setServerUrlWebserviceApi(VR_APIS);
-
-
-        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
-            @Override
-            public boolean setResponse(String responseStr) {
-
-
-                try {
-                    //tv_main.setText(responseStr);
-                    Vitals obj = new Gson().fromJson(responseStr, Vitals.class);
-
-                    if (obj.getStatus()) {
-                        List<Vitals.Data> vitalList = new ArrayList<>();
-                        vitalList.addAll(obj.getData());
-
-                        SelectedPatient.setVitals(vitalList.get(0));
-
-                        tv_height.setText(SelectedPatient.getVitals().getHeight() + " cm");
-                        tv_weight.setText(SelectedPatient.getVitals().getWeight() + " k.g.");
-                        tv_bmi.setText("" + SelectedPatient.getVitals().getBMI());
-
-                        //tv_main.setText(obj.getTotal_records()+"|"+vitalList.size());
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(Home.this, "Catch : " + e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-                return false;
-            }
-        });
-
-    }
-
-    private void SetVitals(String[] data) {
-
-        HashMap<String, Double> rawVitals = Functions.getVitals(data);
-        if (rawVitals.size() > 0) {
-            for (String key : rawVitals.keySet()) {
-                Double a=0.0;
-                switch (key) {
-                    case "height":
-                         a= rawVitals.get(key);
-                        tv_height.setText(a+" CM");
-                        break;
-                    case "weight":
-                         a= rawVitals.get(key);
-                        tv_weight.setText(a+" KG");
-                        break;
-                    case "head":
-                        a= rawVitals.get(key);
-                        tv_hc.setText(a+" CM");
-                        break;
-                    case "temperature":
-                        a= rawVitals.get(key);
-                        tv_temperature.setText(a+" °");
-                        break;
-
-                }
-            }
-        }
-
-
-
-
-    }
 
 
 
@@ -685,48 +608,6 @@ public class Home extends AppCompatActivity implements PatientInterface {
         HomeClickMethods();
     }
 
-    private void FetchPatients() {
-
-        HashMap<String, String> params = new HashMap<>();
-
-        params.put("action", "getChildren");
-        params.put("drId", "" + doctor_id);
-
-        NetworkCall ncall = new NetworkCall();
-
-        ncall.setServerUrlWebserviceApi(VR_APIS);
-
-
-        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
-            @Override
-            public boolean setResponse(String responseStr) {
-
-
-                try {
-                    //tv_main.setText(responseStr);
-                    Patient obj = new Gson().fromJson(responseStr, Patient.class);
-
-                    if (obj.getStatus()) {
-                        PatientsList = new ArrayList<>();
-                        PatientsList.addAll(obj.getData());
-
-                        tv_home_total_patients.setText("Today's Patients - " + PatientsList.size());
-                        tv_patients_checked_in.setText("" + PatientsList.size());
-                        SetMainDrawerRecyclerView();
-                        //tv_main.setText(obj.getTotal_records()+"|"+vitalList.size());
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(Home.this, "Catch : " + e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-                return false;
-            }
-        });
-
-
-    }
 
     private void HomeClickMethods() {
 
@@ -927,7 +808,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
             for(int i = 0; i < Issuelist.size(); i++){
 
-                if(Issuelist.get(i).getIssues().contains(filtered_symptopms.get(0))){
+                if(Issuelist.get(i).getIssues().toLowerCase().contains(filtered_symptopms.get(0))){
                     issuesmatched.add(Issuelist.get(i));
                 }
             }
@@ -979,6 +860,131 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
         }
 
+
+    }
+    private void SetVitals(String[] data) {
+
+        HashMap<String, Double> rawVitals = Functions.getVitals(data);
+        if (rawVitals.size() > 0) {
+            for (String key : rawVitals.keySet()) {
+                Double a=0.0;
+                switch (key) {
+                    case "height":
+                        a= rawVitals.get(key);
+                        tv_height.setText(a+" CM");
+                        break;
+                    case "weight":
+                        a= rawVitals.get(key);
+                        tv_weight.setText(a+" KG");
+                        break;
+                    case "head":
+                        a= rawVitals.get(key);
+                        tv_hc.setText(a+" CM");
+                        break;
+                    case "temperature":
+                        a= rawVitals.get(key);
+                        tv_temperature.setText(a+" °");
+                        break;
+
+                }
+            }
+        }
+
+
+
+
+    }
+    private void SetDiagnosis(String[] arr) {
+
+
+        if(DiagnosisList.size()>0) {
+            flow_diagnosis = findViewById(R.id.flow_diagnosis);
+            ViewGroup parent = (ViewGroup) rl_home_main;
+
+            List<String> filtered_diagnosis = FilterArray(arr);
+
+            diagnosismatched = new ArrayList<>();
+
+            for(int i = 0; i < DiagnosisList.size(); i++){
+
+                if(DiagnosisList.get(i).getDiagnosis().toLowerCase().contains(filtered_diagnosis.get(0))){
+                    diagnosismatched.add(DiagnosisList.get(i));
+                }
+            }
+
+            //More than one filters and more than one issues
+            if(diagnosismatched.size()>1){
+                if(filtered_diagnosis.size() > 1)
+                    diagnosismatched = FilterDiagnosis(1,filtered_diagnosis,diagnosismatched);
+
+                ShowDiagnosisDialog("Diagnosis Options",diagnosismatched);
+                Toast.makeText(this, ""+diagnosismatched.size(), Toast.LENGTH_SHORT).show();
+            }
+            //no issues matched
+            else if(diagnosismatched.size() == 0){
+                String temp = "";
+                for(int i = 0; i < arr.length; i++){
+                    temp+=arr[i]+" ";
+                }
+                ShowNoMatchPrompt(temp,"Diagnosis");
+                Toast.makeText(this, "No Results !", Toast.LENGTH_SHORT).show();
+            }
+            else if (diagnosismatched.size() == 1){
+                AddDiagnosis(diagnosismatched.get(0).getDiagnosis());
+                Toast.makeText(this, ""+diagnosismatched.get(0).getDiagnosis(), Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+
+
+
+
+
+
+    }
+
+    private void SetDiagnosticTests(String[] arr) {
+
+        if(DiagnosticTestList.size()>0) {
+            flow_diagnostic = findViewById(R.id.flow_diagnostic);
+            ViewGroup parent = (ViewGroup) rl_home_main;
+
+            List<String> filtered_diagnosis = FilterArray(arr);
+
+            diagnostictestsmatched = new ArrayList<>();
+
+            for(int i = 0; i < DiagnosticTestList.size(); i++){
+
+                if(DiagnosticTestList.get(i).getTest_name().toLowerCase().contains(filtered_diagnosis.get(0))){
+                    diagnostictestsmatched.add(DiagnosticTestList.get(i));
+                }
+            }
+
+            //More than one filters and more than one issues
+            if(diagnostictestsmatched.size()>1){
+                if(filtered_diagnosis.size() > 1)
+                    diagnostictestsmatched = FilterDiagnosticTest(1,filtered_diagnosis,diagnostictestsmatched);
+
+                ShowDiagnosticTestDialog("Diagnosis Options",diagnostictestsmatched);
+                Toast.makeText(this, ""+diagnostictestsmatched.size(), Toast.LENGTH_SHORT).show();
+            }
+            //no issues matched
+            else if(diagnostictestsmatched.size() == 0){
+                String temp = "";
+                for(int i = 0; i < arr.length; i++){
+                    temp+=arr[i]+" ";
+                }
+                ShowNoMatchPrompt(temp,"Diagnostic");
+                Toast.makeText(this, "No Results !", Toast.LENGTH_SHORT).show();
+            }
+            else if (diagnostictestsmatched.size() == 1){
+                AddDiagnosticTest(diagnostictestsmatched.get(0).getTest_name());
+                Toast.makeText(this, ""+diagnostictestsmatched.get(0).getTest_name(), Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
 
     }
 
@@ -1261,99 +1267,6 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
 
 
-    private void SetDiagnosis(String[] arr) {
-
-
-        if(DiagnosisList.size()>0) {
-            flow_diagnosis = findViewById(R.id.flow_diagnosis);
-            ViewGroup parent = (ViewGroup) rl_home_main;
-
-            List<String> filtered_diagnosis = FilterArray(arr);
-
-            diagnosismatched = new ArrayList<>();
-
-            for(int i = 0; i < DiagnosisList.size(); i++){
-
-                if(DiagnosisList.get(i).getDiagnosis().contains(filtered_diagnosis.get(0))){
-                    diagnosismatched.add(DiagnosisList.get(i));
-                }
-            }
-
-            //More than one filters and more than one issues
-            if(diagnosismatched.size()>1){
-                if(filtered_diagnosis.size() > 1)
-                    diagnosismatched = FilterDiagnosis(1,filtered_diagnosis,diagnosismatched);
-
-                ShowDiagnosisDialog("Diagnosis Options",diagnosismatched);
-                Toast.makeText(this, ""+diagnosismatched.size(), Toast.LENGTH_SHORT).show();
-            }
-            //no issues matched
-            else if(diagnosismatched.size() == 0){
-                String temp = "";
-                for(int i = 0; i < arr.length; i++){
-                    temp+=arr[i]+" ";
-                }
-                ShowNoMatchPrompt(temp,"Diagnosis");
-                Toast.makeText(this, "No Results !", Toast.LENGTH_SHORT).show();
-            }
-            else if (diagnosismatched.size() == 1){
-                AddDiagnosis(diagnosismatched.get(0).getDiagnosis());
-                Toast.makeText(this, ""+diagnosismatched.get(0).getDiagnosis(), Toast.LENGTH_SHORT).show();
-            }
-
-
-        }
-
-
-
-
-
-
-    }
-
-    private void SetDiagnosticTests(String[] arr) {
-
-        if(DiagnosticTestList.size()>0) {
-            flow_diagnostic = findViewById(R.id.flow_diagnostic);
-            ViewGroup parent = (ViewGroup) rl_home_main;
-
-            List<String> filtered_diagnosis = FilterArray(arr);
-
-            diagnostictestsmatched = new ArrayList<>();
-
-            for(int i = 0; i < DiagnosticTestList.size(); i++){
-
-                if(DiagnosticTestList.get(i).getTest_name().contains(filtered_diagnosis.get(0))){
-                    diagnostictestsmatched.add(DiagnosticTestList.get(i));
-                }
-            }
-
-            //More than one filters and more than one issues
-            if(diagnostictestsmatched.size()>1){
-                if(filtered_diagnosis.size() > 1)
-                    diagnostictestsmatched = FilterDiagnosticTest(1,filtered_diagnosis,diagnostictestsmatched);
-
-                ShowDiagnosticTestDialog("Diagnosis Options",diagnostictestsmatched);
-                Toast.makeText(this, ""+diagnostictestsmatched.size(), Toast.LENGTH_SHORT).show();
-            }
-            //no issues matched
-            else if(diagnostictestsmatched.size() == 0){
-                String temp = "";
-                for(int i = 0; i < arr.length; i++){
-                    temp+=arr[i]+" ";
-                }
-                ShowNoMatchPrompt(temp,"Diagnostic");
-                Toast.makeText(this, "No Results !", Toast.LENGTH_SHORT).show();
-            }
-            else if (diagnostictestsmatched.size() == 1){
-                AddDiagnosis(diagnosismatched.get(0).getDiagnosis());
-                Toast.makeText(this, ""+diagnosismatched.get(0).getDiagnosis(), Toast.LENGTH_SHORT).show();
-            }
-
-
-        }
-
-    }
 
     private void FetchSymptoms() {
         HashMap<String,String> params = new HashMap<>();
@@ -1418,6 +1331,48 @@ public class Home extends AppCompatActivity implements PatientInterface {
             }
         });
     }
+    private void FetchPatients() {
+
+        HashMap<String, String> params = new HashMap<>();
+
+        params.put("action", "getChildren");
+        params.put("drId", "" + doctor_id);
+
+        NetworkCall ncall = new NetworkCall();
+
+        ncall.setServerUrlWebserviceApi(VR_APIS);
+
+
+        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+            @Override
+            public boolean setResponse(String responseStr) {
+
+
+                try {
+                    //tv_main.setText(responseStr);
+                    Patient obj = new Gson().fromJson(responseStr, Patient.class);
+
+                    if (obj.getStatus()) {
+                        PatientsList = new ArrayList<>();
+                        PatientsList.addAll(obj.getData());
+
+                        tv_home_total_patients.setText("Today's Patients - " + PatientsList.size());
+                        tv_patients_checked_in.setText("" + PatientsList.size());
+                        SetMainDrawerRecyclerView();
+                        //tv_main.setText(obj.getTotal_records()+"|"+vitalList.size());
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(Home.this, "Catch : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+                return false;
+            }
+        });
+
+
+    }
 
     private void FetchDiagnosticList() {
         HashMap<String,String> params = new HashMap<>();
@@ -1449,6 +1404,51 @@ public class Home extends AppCompatActivity implements PatientInterface {
             }
         });
 
+
+    }
+
+    private void FetchVitals() {
+
+        HashMap<String, String> params = new HashMap<>();
+
+        params.put("action", "getChildVitals");
+        params.put("patient_id", "" + SelectedPatient.getPatientId());
+
+        NetworkCall ncall = new NetworkCall();
+
+        ncall.setServerUrlWebserviceApi(VR_APIS);
+
+
+        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+            @Override
+            public boolean setResponse(String responseStr) {
+
+
+                try {
+                    //tv_main.setText(responseStr);
+                    Vitals obj = new Gson().fromJson(responseStr, Vitals.class);
+
+                    if (obj.getStatus()) {
+                        List<Vitals.Data> vitalList = new ArrayList<>();
+                        vitalList.addAll(obj.getData());
+
+                        SelectedPatient.setVitals(vitalList.get(0));
+
+                        tv_height.setText(SelectedPatient.getVitals().getHeight() + " cm");
+                        tv_weight.setText(SelectedPatient.getVitals().getWeight() + " k.g.");
+                        tv_bmi.setText("" + SelectedPatient.getVitals().getBMI());
+
+                        //tv_main.setText(obj.getTotal_records()+"|"+vitalList.size());
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(Home.this, "Catch : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+                return false;
+            }
+        });
 
     }
 

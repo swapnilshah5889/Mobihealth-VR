@@ -122,7 +122,7 @@ public static boolean hasNext(int pos,int size){
 
             for(int i = 0; i < issueResults.size(); i++){
 
-                if(!issueResults.get(i).getIssues().contains(filtered_symptopms.get(position))){
+                if(!issueResults.get(i).getIssues().toLowerCase().contains(filtered_symptopms.get(position))){
                     issueResults.remove(issueResults.get(i));
                 }
 
@@ -140,7 +140,7 @@ public static boolean hasNext(int pos,int size){
 
             for(int i = 0; i < issueResults.size(); i++){
 
-                if(!issueResults.get(i).getDiagnosis().contains(filtered_symptopms.get(position))){
+                if(!issueResults.get(i).getDiagnosis().toLowerCase().contains(filtered_symptopms.get(position))){
                     issueResults.remove(issueResults.get(i));
                 }
 
@@ -159,7 +159,7 @@ public static boolean hasNext(int pos,int size){
 
             for(int i = 0; i < issueResults.size(); i++){
 
-                if(!issueResults.get(i).getTest_name().contains(filtered_symptopms.get(position))){
+                if(!issueResults.get(i).getTest_name().toLowerCase().contains(filtered_symptopms.get(position))){
                     issueResults.remove(issueResults.get(i));
                 }
 
