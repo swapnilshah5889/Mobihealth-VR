@@ -5,8 +5,14 @@ public class StaticData {
 
 
    public static int  VOICE_RECOGNITION_REQUEST_CODE=123;
-   public static int  VR_NOMATCH_PROMPT=124;
+
+   public static int  VR_NOMATCH_PROMPT_SYMPTOM=124;
+   public static int  VR_NOMATCH_PROMPT_DIAGNOSIS=127;
+   public static int  VR_NOMATCH_PROMPT_DIAGNOSTIC_TEST=129;
+
    public static int  VR_MULTIPLE_SYMPTOMS=125;
+   public static int  VR_MULTIPLE_DIAGNOSIS=126;
+   public static int  VR_MULTIPLE_DIAGNOSTIC_TEST=128;
 
 
     public static String[] Vitals={"height","weight","wait","head","circumference","temperature","hc"};

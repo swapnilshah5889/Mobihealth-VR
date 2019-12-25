@@ -2,6 +2,10 @@ package com.example.mobihealthapis.GeneralFunctions;
 
 import androidx.annotation.Nullable;
 
+import com.example.mobihealthapis.Models.Diagnosis;
+import com.example.mobihealthapis.Models.DiagnosticTests;
+import com.example.mobihealthapis.Models.Issues;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -111,5 +115,57 @@ public static boolean hasNext(int pos,int size){
     }
 
 
+    public static List<Issues.Data> FilterIssues(int position, List<String> filtered_symptopms, List<Issues.Data> issueResults) {
 
+        while(position < (filtered_symptopms.size())){
+
+
+            for(int i = 0; i < issueResults.size(); i++){
+
+                if(!issueResults.get(i).getIssues().contains(filtered_symptopms.get(position))){
+                    issueResults.remove(issueResults.get(i));
+                }
+
+            }
+            position++;
+        }
+        return issueResults;
+    }
+
+
+    public static List<Diagnosis.Data> FilterDiagnosis(int position, List<String> filtered_symptopms, List<Diagnosis.Data> issueResults) {
+
+        while(position < (filtered_symptopms.size())){
+
+
+            for(int i = 0; i < issueResults.size(); i++){
+
+                if(!issueResults.get(i).getDiagnosis().contains(filtered_symptopms.get(position))){
+                    issueResults.remove(issueResults.get(i));
+                }
+
+            }
+            position++;
+        }
+        return issueResults;
+    }
+
+
+
+    public static List<DiagnosticTests.Data> FilterDiagnosticTest(int position, List<String> filtered_symptopms, List<DiagnosticTests.Data> issueResults) {
+
+        while(position < (filtered_symptopms.size())){
+
+
+            for(int i = 0; i < issueResults.size(); i++){
+
+                if(!issueResults.get(i).getTest_name().contains(filtered_symptopms.get(position))){
+                    issueResults.remove(issueResults.get(i));
+                }
+
+            }
+            position++;
+        }
+        return issueResults;
+    }
 }

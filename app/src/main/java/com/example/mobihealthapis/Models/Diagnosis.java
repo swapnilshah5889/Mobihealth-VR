@@ -20,6 +20,11 @@ public  class Diagnosis {
         @SerializedName("id")
         private int id;
 
+
+        public Data(String diagnosis) {
+            this.diagnosis = diagnosis;
+        }
+
         public String getDiagnosis() {
             return diagnosis;
         }
