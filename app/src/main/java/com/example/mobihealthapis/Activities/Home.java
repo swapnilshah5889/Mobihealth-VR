@@ -273,6 +273,19 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 else if(finalarr[0].equals("delete")){
                     if(finalarr.length>2)
                     {
+                        //if symptoms expanded
+                        if(ExpandedDetail == symptoms){
+                            if(finalarr[1].equals("number") && finalarr.length>2){
+                                if(isNumeric(finalarr[2]) ){
+                                    int temp= Integer.parseInt(finalarr[2]);
+                                    if(IsInList(temp,Final_Symptoms.size())) {
+                                        temp--;
+                                        DeleteSymptom(temp);
+                                    }
+                                }
+                            }
+                        }
+                        //global delete
                         if(finalarr[1].equals("symptom")){
                             if(finalarr[2].equals("number") && finalarr.length>3){
                                 if(isNumeric(finalarr[3]) ){
@@ -289,6 +302,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 }
                 else if(ExpandedDetail == symptoms)
                 {
+
                     SetSymptoms(finalarr);
 
                 }
@@ -347,6 +361,14 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
         flow_symptoms.removeViewAt(pos);
         Final_Symptoms.remove(pos);
+
+        for (int i = 0; i < flow_symptoms.getChildCount(); i++) {
+            View view1 = flow_symptoms.getChildAt(i);
+            //if (view1.getId()>temp_pos) {
+            final TextView number = view1.findViewById(R.id.tv_chip_number);
+            number.setText((i + 1) + ".");
+            //}
+        }
 
     }
 
@@ -745,7 +767,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
             ViewGroup parent = (ViewGroup) rl_home_main;
 
-            for (int i = 0; i < 6; i++) {
+            /*for (int i = 0; i < 6; i++) {
                 final View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.dda_list_layout, parent, false);
                 TextView data = itemView.findViewById(R.id.tv_chip_data);
@@ -763,7 +785,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
                         Toast.makeText(Home.this, "" + number.getText(), Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
+            }*/
 
         }
 
@@ -804,10 +826,36 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 .inflate(R.layout.dda_list_layout, parent, false);
         TextView tempdata = itemView.findViewById(R.id.tv_chip_data);
         LinearLayout ll_chip_delete = itemView.findViewById(R.id.ll_chip_delete);
+        itemView.setId(Final_Symptoms.size());
+        ll_chip_delete.setClickable(true);
+        //final int temp_pos = Final_Symptoms.size();
+
+        final Issues.Data dtemp = new Issues.Data(data);
         final TextView number = itemView.findViewById(R.id.tv_chip_number);
         number.setText((Final_Symptoms.size()+1) + ".");
-        Issues.Data dtemp = new Issues.Data(data);
         Final_Symptoms.add(dtemp);
+
+        ll_chip_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int temp_pos = itemView.getId();
+                Final_Symptoms.remove(dtemp);
+                flow_symptoms.removeView(itemView);
+                //DeleteSymptom(temp_pos);
+
+                for (int i = 0; i < flow_symptoms.getChildCount(); i++) {
+                    View view1 = flow_symptoms.getChildAt(i);
+                    //if (view1.getId()>temp_pos) {
+                        final TextView number = view1.findViewById(R.id.tv_chip_number);
+                        number.setText((i + 1) + ".");
+                    //}
+                }
+
+            }
+        });
+
+
+
         tempdata.setText(dtemp.getIssues());
         flow_symptoms.addView(itemView);
         ll__uni_prompt.setVisibility(View.GONE);
