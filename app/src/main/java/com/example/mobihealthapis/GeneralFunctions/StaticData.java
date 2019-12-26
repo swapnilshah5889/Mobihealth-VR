@@ -1,5 +1,8 @@
 package com.example.mobihealthapis.GeneralFunctions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StaticData {
 
 
@@ -51,5 +54,24 @@ public class StaticData {
     public static String[] Dosage_Timing = {"before","after"};
     public static String[] Timings = {"morning","noon","afternoon","evening","after noon"};
 
+
+
+    public static String[] DateFilters = {"today","tomorrow"};
+    public static List<String> MonthsFilters = new ArrayList<>();
+    public static List<String> months(){
+        MonthsFilters.add("january");
+        MonthsFilters.add("february");
+        MonthsFilters.add("march");
+        MonthsFilters.add("april");
+        MonthsFilters.add("may");
+        MonthsFilters.add("june");
+        MonthsFilters.add("july");
+        MonthsFilters.add("august");
+        MonthsFilters.add("september");
+        MonthsFilters.add("october");
+        MonthsFilters.add("november");
+        MonthsFilters.add("december");
+        return MonthsFilters;
+    }
 }
 

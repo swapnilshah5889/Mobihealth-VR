@@ -9,13 +9,11 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobihealthapis.Adapters.AdviceAdapter;
-import com.example.mobihealthapis.Adapters.FollowupAdapter;
 import com.example.mobihealthapis.Adapters.MedicineAdapter;
 import com.example.mobihealthapis.Adapters.MultipleDiagnosisAdapter;
 import com.example.mobihealthapis.Adapters.MultipleDiagnosticTestAdapter;
@@ -48,8 +45,12 @@ import com.gauravbhola.ripplepulsebackground.RipplePulseLayout;
 import com.google.gson.Gson;
 import com.nex3z.flowlayout.FlowLayout;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,7 +63,6 @@ import static com.example.mobihealthapis.GeneralFunctions.Functions.FilterIssues
 import static com.example.mobihealthapis.GeneralFunctions.Functions.IsInList;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.getDailyTimings;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.getDuration;
-import static com.example.mobihealthapis.GeneralFunctions.Functions.getMedDosage;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.getMedTimings;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.getfrequency;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.isNumeric;
@@ -125,7 +125,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
     Boolean[] isExpanded;
     LinearLayout[] ll_expand_main, ll_expand, ll_after_expand, ll_data;
     ImageView[] img_expand;
-    TextView tv_patient_id_2, tv_patient_name, tv_gender_age, tv_bmi, tv_weight, tv_height, tv_temperature, tv_hc;
+    TextView tv_patient_id_2, tv_patient_name, tv_gender_age, tv_bmi, tv_weight, tv_height, tv_temperature,tv_followup_datetime, tv_hc;
     LinearLayout ll_previous_rx;
     List<Issues.Data> Issuelist;
     List<Diagnosis.Data> DiagnosisList;
@@ -145,6 +145,13 @@ public class Home extends AppCompatActivity implements PatientInterface {
     LinearLayout ll__uni_prompt;
     TextView tv_promt_question, tv_promt_data, tv_promt_no, tv_promt_yes;
 
+
+    //followup date
+    String default_date = "21-01-2020";
+    int[] default_time = {5,0,1};
+
+    String f_date = "";
+    int[] f_time = {-1,-1,-1};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,7 +241,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
             if (finalarr.length > 0) {
                 if (finalarr[0].equals("write") || finalarr[0].equals("right")
-                        || finalarr[0].equals("set") || finalarr[0].equals("add") || finalarr[0].equals("start")) {
+                        || finalarr[0].equals("set") || finalarr[0].equals("add") || finalarr[0].equals("start"))
+                {
 
                     if (finalarr.length > 1) {
                         switch (finalarr[1]) {
@@ -425,6 +433,10 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 else if (ExpandedDetail == medicine)
                 {
                     SetMedicines(finalarr);
+                }
+                else if (ExpandedDetail == followup)
+                {
+                    SetFollowUp(finalarr);
                 }
 
             }
@@ -746,6 +758,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
         tv_promt_no = findViewById(R.id.tv_promt_no);
         tv_promt_yes = findViewById(R.id.tv_promt_yes);
 
+        //followup
+        tv_followup_datetime = findViewById(R.id.tv_followup_datetime);
 
         isExpanded = new Boolean[details];
         for (int i = 0; i < details; i++) {
@@ -775,7 +789,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
         SetAdvice();
 
-        SetFollowUp();
+       // SetFollowUp();
 
         //  SetMedicines();
 
@@ -916,14 +930,210 @@ public class Home extends AppCompatActivity implements PatientInterface {
     }
 
 
-    private void SetFollowUp() {
 
-        rv_followup_list_main = findViewById(R.id.rv_followup_list_main);
-        FollowupAdapter followupAdapter = new FollowupAdapter(this);
-        rv_followup_list_main.setAdapter(followupAdapter);
-        rv_followup_list_main.setHasFixedSize(true);
+
+    private void SetFollowUp(String[] finalarr) {
+        //if(f_date.equals(""))
+            f_date = GetDate(finalarr);
+        //if(f_time[0] == -1 && f_time[1] == -1 && f_time[2] == -1)
+            f_time = GetTime(finalarr);
+
+        String ampm = "";
+        if(f_time[2] == 0)
+            ampm = "A.M.";
+        else
+            ampm = "P.M.";
+        String time_1 = "";
+        if(f_time[1]>=0 && f_time[1]<10)
+            time_1 = "Time : "+f_time[0]+":0"+f_time[1]+" "+ampm;
+        else
+            time_1 = "Time : "+f_time[0]+":"+f_time[1]+" "+ampm;
+
+        String date_1 = "";
+        date_1 = "Date : "+f_date;
+
+        tv_followup_datetime.setText(date_1+" | "+time_1);
+
 
     }
+    private int[] GetTime(String[] finalarr) {
+
+        int[] t = {-1,-1,-1};
+
+        String time = "";
+        for(int i = 0; i<finalarr.length; i++){
+            if(finalarr[i].equals("at")){
+                if(i<finalarr.length-1){
+                    time = finalarr[i+1];
+                    StringTokenizer st = new StringTokenizer(time,":");
+                    if(st.countTokens()>0){
+                        try{
+                            t[0] = Integer.parseInt(st.nextToken());
+                            t[1] = Integer.parseInt(st.nextToken());
+
+                        }catch (Exception e){e.printStackTrace();}
+                    }
+                }
+            }
+
+            if(finalarr[i].equals("a.m.")){
+                t[2]=0;
+            }
+
+            if(finalarr[i].equals("p.m.")){
+                t[2]=1;
+            }
+        }
+
+        return t;
+    }
+
+    private String GetDate(String[] finalarr) {
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String App_Date = "";
+        int final_day = -1;
+        int final_mon = -1;
+        int final_year = -1;
+        int current_mon = Calendar.getInstance().get(Calendar.MONTH)+1;
+        int current_year = Calendar.getInstance().get(Calendar.YEAR);
+
+        String rawdata = "";
+        int on_pos = -1;
+        int after_pos = -1;
+        for(int i = 0;i<finalarr.length; i++){
+            rawdata+=finalarr[i]+" ";
+            if(finalarr[i].equals("on")){
+                on_pos = i;
+            }
+            if(finalarr[i].equals("after")){
+                after_pos = i;
+            }
+        }
+
+        //Today Tomorrow
+        if(after_pos == -1 && on_pos == -1){
+
+            for(int j = 0; j< StaticData.DateFilters.length; j++){
+                if(rawdata.contains(StaticData.DateFilters[j])){
+
+
+                    switch (StaticData.DateFilters[j]){
+                        case "today":
+
+                            App_Date = dateFormat.format(today);
+                            return App_Date;
+
+                        case "tomorrow":
+
+
+                            calendar.add(Calendar.DAY_OF_YEAR, 1);
+                            Date tomorrow = calendar.getTime();
+
+                            App_Date = dateFormat.format(tomorrow);
+                            return App_Date;
+                    }
+
+                }
+            }
+
+        }
+        //on 21/21st January; after (1 month)/(5 days)/(3 weeks)
+        else{
+            //on
+            if(on_pos != -1){
+                String day = finalarr[on_pos+1];
+                if(day.contains("st") || day.contains("th")|| day.contains("rd") || day.contains("nd")){
+
+                    day = day.replace("st","");
+                    day = day.replace("rd","");
+                    day = day.replace("th","");
+                    day = day.replace("nd","");
+
+                }
+
+                try{
+
+                    List<String> months = StaticData.months();
+                    final_day = Integer.parseInt(day);
+                    int temp = months.indexOf(finalarr[on_pos+2])+1;
+                    if(temp>0 && temp <=12){
+                        final_mon = temp;
+                        if(final_mon<current_mon){
+                            final_year = current_year+1;
+                        }
+                        else
+                            final_year = current_year;
+                    }
+
+                    App_Date = final_day+"-"+final_mon+"-"+final_year;
+                    return App_Date;
+
+
+                }catch (Exception e){}
+
+            }
+            //after
+            else{
+                String value = finalarr[after_pos+1];
+                String specifier = finalarr[after_pos+2];
+
+                try{
+                    int value1 = -1;
+                    if(value.equals("a")){
+                        value1 = 1;
+                    }
+                    else {
+                        value1 = Integer.parseInt(value);
+                    }
+                    if(value1!=-1){
+                        switch (specifier){
+
+                            case "day":
+                            case "days":
+                            {
+                                calendar.add(Calendar.DAY_OF_YEAR, value1);
+                                Date tomorrow = calendar.getTime();
+
+                                App_Date = dateFormat.format(tomorrow);
+                                return App_Date;
+                            }
+
+                            case "week":
+                            case "weeks":
+                            {
+                                calendar.add(Calendar.WEEK_OF_MONTH, value1);
+                                Date tomorrow = calendar.getTime();
+                                App_Date = dateFormat.format(tomorrow);
+                                return App_Date;
+                            }
+
+                            case "month":
+                            case "months":
+                            {
+                                calendar.add(Calendar.MONTH, value1);
+                                Date tomorrow = calendar.getTime();
+                                App_Date = dateFormat.format(tomorrow);
+                                return App_Date;
+                            }
+
+                        }
+                    }
+
+
+                }catch (Exception e){}
+            }
+        }
+
+
+
+
+
+        return App_Date;
+    }
+
+
 
     private void SetAdvice() {
         rv_advice_list_main = findViewById(R.id.rv_advice_list_main);
