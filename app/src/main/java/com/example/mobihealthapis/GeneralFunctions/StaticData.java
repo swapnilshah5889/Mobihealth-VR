@@ -9,10 +9,12 @@ public class StaticData {
    public static int  VR_NOMATCH_PROMPT_SYMPTOM=124;
    public static int  VR_NOMATCH_PROMPT_DIAGNOSIS=127;
    public static int  VR_NOMATCH_PROMPT_DIAGNOSTIC_TEST=129;
+    public static  int VR_NOMATCH_PROMPT_MEDICINES =131;
 
    public static int  VR_MULTIPLE_SYMPTOMS=125;
    public static int  VR_MULTIPLE_DIAGNOSIS=126;
    public static int  VR_MULTIPLE_DIAGNOSTIC_TEST=128;
+    public  static  int VR_MULTIPLE_MEDICINES = 130;
 
 
     public static String[] Vitals={"height","weight","wait","head","circumference","temperature","hc"};
@@ -36,13 +38,18 @@ public class StaticData {
         public static int vitals = 0;
         public static int diagnosis = 2;
         public static int symptoms = 1;
-        public static int medicine = 3;
+        public static int medicine_add = 3;
         public static int diagnostic = 4;
         public static int advice = 5;
         public static int followup = 6;
         public static int patients = 7;
 
+        public static int medicine_delete = 8;
+
     }
+    public static String[] Dosage_freq={"daily","alternate","alternative","alternatively","weekly","monthly","15","fifteen" };
+    public static String[] Dosage_Timing = {"before","after"};
+    public static String[] Timings = {"morning","noon","afternoon","evening","after noon"};
 
 }
 
