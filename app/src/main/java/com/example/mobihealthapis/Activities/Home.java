@@ -186,6 +186,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
     }//VOICE_RECOGNITION_REQUEST_CODE
 
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
