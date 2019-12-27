@@ -18,6 +18,7 @@ public class StaticData {
    public static int  VR_MULTIPLE_DIAGNOSIS=126;
    public static int  VR_MULTIPLE_DIAGNOSTIC_TEST=128;
     public  static  int VR_MULTIPLE_MEDICINES = 130;
+    public  static  int VR_MULTIPLE_ADVICES = 132;
 
 
     public static String[] Vitals={"height","weight","wait","head","circumference","temperature","hc"};
@@ -46,6 +47,7 @@ public class StaticData {
         public static int advice = 5;
         public static int followup = 6;
         public static int patients = 7;
+        public static int advice_add = 9;
 
         public static int medicine_delete = 8;
 

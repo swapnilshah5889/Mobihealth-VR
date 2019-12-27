@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobihealthapis.Adapters.AdviceAdapter;
 import com.example.mobihealthapis.Adapters.MedicineAdapter;
+import com.example.mobihealthapis.Adapters.MultipleAdviceAdapter;
 import com.example.mobihealthapis.Adapters.MultipleDiagnosisAdapter;
 import com.example.mobihealthapis.Adapters.MultipleDiagnosticTestAdapter;
 import com.example.mobihealthapis.Adapters.MultipleMedicineAdapter;
@@ -32,6 +33,7 @@ import com.example.mobihealthapis.GeneralFunctions.OnSwipeTouchListener;
 import com.example.mobihealthapis.GeneralFunctions.StaticData;
 import com.example.mobihealthapis.GeneralFunctions.transitions;
 import com.example.mobihealthapis.Interface.PatientInterface;
+import com.example.mobihealthapis.Models.Advice;
 import com.example.mobihealthapis.Models.Diagnosis;
 import com.example.mobihealthapis.Models.DiagnosticTests;
 import com.example.mobihealthapis.Models.Issues;
@@ -67,6 +69,7 @@ import static com.example.mobihealthapis.GeneralFunctions.Functions.getMedTiming
 import static com.example.mobihealthapis.GeneralFunctions.Functions.getfrequency;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.isNumeric;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VOICE_RECOGNITION_REQUEST_CODE;
+import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MULTIPLE_ADVICES;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MULTIPLE_DIAGNOSIS;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MULTIPLE_DIAGNOSTIC_TEST;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MULTIPLE_MEDICINES;
@@ -112,13 +115,14 @@ public class Home extends AppCompatActivity implements PatientInterface {
     List<Issues.Data> Final_Symptoms;
     List<Diagnosis.Data> Final_Diagnosis;
     List<DiagnosticTests.Data> Final_DiagnosticTests;
-    List<String> Final_Advice;
+    List<Advice> Final_Advice;
     List<Medicine> Final_Medicines;
     String temp_symptom = "";
     List<Issues.Data> issuesmatched;
     List<Diagnosis.Data> diagnosismatched;
     List<DiagnosticTests.Data> diagnostictestsmatched;
     List<Med.Data> medicinematched;
+
     //Patient Details
 
     LinearLayout ll_main_patient_rx;
@@ -130,6 +134,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
     List<Issues.Data> Issuelist;
     List<Diagnosis.Data> DiagnosisList;
     List<Med.Data> MedicineList;
+    List<Advice> AdviceList;
     Medicine multiplemedobj;
     List<DiagnosticTests.Data> DiagnosticTestList;
     FlowLayout flow_symptoms, flow_diagnosis, flow_diagnostic;
@@ -300,6 +305,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
                             case ("advice"):
                             case ("advise"): {
                                 OnExpandClicked(advice);
+                                SetAdvice();
                                 break;
                             }
 
@@ -355,6 +361,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
                                 }
                             }
                         }
+
                         else if (ExpandedDetail == medicine) {
                             if (finalarr[1].equals("number") && finalarr.length > 2) {
                                 if (isNumeric(finalarr[2])) {
@@ -362,6 +369,18 @@ public class Home extends AppCompatActivity implements PatientInterface {
                                     if (IsInList(temp, Final_Medicines.size())) {
                                         temp--;
                                         DeleteMedicine(temp);
+                                    }
+                                }
+                            }
+                        }
+
+                        else if (ExpandedDetail == advice) {
+                            if (finalarr[1].equals("number") && finalarr.length > 2) {
+                                if (isNumeric(finalarr[2])) {
+                                    int temp = Integer.parseInt(finalarr[2]);
+                                    if (IsInList(temp, Final_Advice.size())) {
+                                        temp--;
+                                        DeleteAdvice(temp);
                                     }
                                 }
                             }
@@ -410,6 +429,17 @@ public class Home extends AppCompatActivity implements PatientInterface {
                                 }
                             }
                         }
+                        else if (finalarr[1].equals("advice") || finalarr[1].equals("advise")) {
+                            if (finalarr[2].equals("number") && finalarr.length > 3) {
+                                if (isNumeric(finalarr[3])) {
+                                    int temp = Integer.parseInt(finalarr[3]);
+                                    if (IsInList(temp, Final_Advice.size())) {
+                                        temp--;
+                                        DeleteAdvice(temp);
+                                    }
+                                }
+                            }
+                        }
 
 
 
@@ -437,6 +467,10 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 else if (ExpandedDetail == followup)
                 {
                     SetFollowUp(finalarr);
+                }
+                else if (ExpandedDetail == advice)
+                {
+                    SetAdvice();
                 }
 
             }
@@ -576,7 +610,26 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 }
             }
         }
+        else if(requestCode == VR_MULTIPLE_ADVICES && resultCode == RESULT_OK)
+        {
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
+            String[] finalarr = GetRawDataFromSpeech(matches);
+            if (finalarr.length > 2) {
+                if (finalarr[0].equals("select")) {
+                    if (finalarr[1].equals("number")) {
+                        if (isNumeric(finalarr[2])) {
+                            int pos = Integer.parseInt(finalarr[2]);
+                            if (IsInList(pos, AdviceList.size())) {
+                                pos--;
+                                AddAdvice(AdviceList.get(pos));
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
 
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -666,6 +719,9 @@ public class Home extends AppCompatActivity implements PatientInterface {
         Final_DiagnosticTests = new ArrayList<>();
         Final_Advice = new ArrayList<>();
         Final_Medicines = new ArrayList<>();
+
+
+
         setMedicineRecyclerView();
 
         flow_symptoms = findViewById(R.id.flow_symptoms);
@@ -787,7 +843,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
         //SetDiagnosticTests();
 
-        SetAdvice();
+        //SetAdvice();
 
        // SetFollowUp();
 
@@ -1136,11 +1192,25 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
 
     private void SetAdvice() {
+        AdviceList = new ArrayList<>();
+
+
+
+        //Final_Advice.addAll();
+        Fetch_Advice();
+
+    }
+
+
+
+    private  void SetAdviceRecyclerView()
+    {
         rv_advice_list_main = findViewById(R.id.rv_advice_list_main);
-        AdviceAdapter adviceAdapter = new AdviceAdapter(this);
+        AdviceAdapter adviceAdapter = new AdviceAdapter(this,Final_Advice);
         rv_advice_list_main.setAdapter(adviceAdapter);
         rv_advice_list_main.setHasFixedSize(true);
     }
+
 
     private void SetSymptoms(String[] arr) {
 
@@ -1536,6 +1606,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
         ll_symptom_dialog.setVisibility(View.GONE);
         itemView.setClickable(true);
     }
+
+
     private void AddMedicine1(Med.Data data, Medicine multiplemedobj)
     {
         ll_symptom_dialog.setVisibility(View.GONE);
@@ -1546,6 +1618,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
         //medicineAdapter.notifyItemInserted(Final_Medicines.size()-1);
         setMedicineRecyclerView();
     }
+
+
     private void AddMedicine(Med.Data data, String[] arr) {
 
         LinkedList<String> linkedlist = new LinkedList<>(Arrays.asList(arr));
@@ -1565,6 +1639,13 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
     }
 
+
+    private void AddAdvice(Advice advice) {
+        ll_symptom_dialog.setVisibility(View.GONE);
+        Final_Advice.add(advice);
+        SetAdviceRecyclerView();
+
+    }
     private void setMedicineRecyclerView()
     {
         rv_medicines_list_main = findViewById(R.id.rv_medicines_list_main);
@@ -1604,7 +1685,21 @@ public class Home extends AppCompatActivity implements PatientInterface {
         Speak("Multiple matches found in database.Please select one", VR_MULTIPLE_MEDICINES, 3000);
     }
 
+    private  void ShowAdviceDialog(String symptom_option,List<Advice> advice)
+    {
+        tv_dialog_heading.setText(symptom_option);
 
+        MultipleAdviceAdapter adapter = new MultipleAdviceAdapter(this,advice);
+
+
+        rv_multiple_symptoms.setAdapter(adapter);
+        rv_multiple_symptoms.setHasFixedSize(true);
+        ll_symptom_dialog.setVisibility(View.VISIBLE);
+
+        Speak("Please select one advice", VR_MULTIPLE_ADVICES, 3000);
+
+
+    }
 
     private void ShowDiagnosisDialog(String diagnosis_option, List<Diagnosis.Data> diagnosismatched) {
 
@@ -1816,7 +1911,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
     }
 
-    private void FetchMedicine(final String[] arr, final int pos) {
+    private void FetchMedicine(final String[] arr, final int pos)
+    {
         medicinematched = new ArrayList<>();
         MedicineList = new ArrayList<>();
         HashMap<String, String> params = new HashMap<>();
@@ -1848,6 +1944,24 @@ public class Home extends AppCompatActivity implements PatientInterface {
             }
         });
 
+
+    }
+
+    private void Fetch_Advice()
+    {
+        AdviceList.add(new Advice("1","Stay hydrated",Integer.parseInt("10")));
+        AdviceList.add(new Advice("2","Make time for good sleep",Integer.parseInt("20")));
+        AdviceList.add(new Advice("3"," If you need to…lose weight",Integer.parseInt("30")));
+        AdviceList.add(new Advice("4"," Move more",Integer.parseInt("5")));
+        AdviceList.add(new Advice("5","Stop smoking",Integer.parseInt("1")));
+        AdviceList.add(new Advice("6","Take your medication correctly",Integer.parseInt("6")));
+        AdviceList.add(new Advice("7","Wash your hands",Integer.parseInt("79")));
+        AdviceList.add(new Advice("8"," Cover up in the sun",Integer.parseInt("11")));
+        AdviceList.add(new Advice("9","Relax",Integer.parseInt("4")));
+        AdviceList.add(new Advice("10","Eat well",Integer.parseInt("2")));
+
+        //List<Advice> sortedList = new ArrayList<>();
+        ShowAdviceDialog("advice",AdviceList);
 
     }
 
@@ -1963,8 +2077,21 @@ public class Home extends AppCompatActivity implements PatientInterface {
         else if (identifier == StaticData.Adapter_identifier.medicine_delete) {
             DeleteMedicine(position);
         }
+        else if (identifier == StaticData.Adapter_identifier.advice)
+        {
+            DeleteAdvice(position);
+        }
+        else if (identifier == StaticData.Adapter_identifier.advice_add)
+        {
+            AddAdvice(AdviceList.get(position));
+        }
 
 
+    }
+
+    private void DeleteAdvice(int position) {
+        Final_Advice.remove(position);
+        SetAdviceRecyclerView();
     }
 
     private void DeleteMedicine(int position) {
@@ -2022,7 +2149,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
         if (VR_CODE == VR_NOMATCH_PROMPT_SYMPTOM || VR_CODE == VR_MULTIPLE_SYMPTOMS || VR_CODE == VR_MULTIPLE_DIAGNOSIS ||
                 VR_CODE == VR_NOMATCH_PROMPT_DIAGNOSIS || VR_CODE == VR_MULTIPLE_DIAGNOSTIC_TEST || VR_CODE == VR_NOMATCH_PROMPT_DIAGNOSTIC_TEST
-        || VR_CODE == VR_MULTIPLE_MEDICINES || VR_CODE ==VR_NOMATCH_PROMPT_MEDICINES
+        || VR_CODE == VR_MULTIPLE_MEDICINES || VR_CODE ==VR_NOMATCH_PROMPT_MEDICINES || VR_CODE == VR_MULTIPLE_ADVICES
         ) {
             startVoiceRecognitionActivity(VR_CODE);
         }
