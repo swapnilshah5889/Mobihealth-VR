@@ -20,6 +20,10 @@ public  class DiagnosticTests {
         @SerializedName("test_id")
         private int test_id;
 
+        public Data(String test_name) {
+            this.test_name = test_name;
+        }
+
         public String getTest_name() {
             return test_name;
         }

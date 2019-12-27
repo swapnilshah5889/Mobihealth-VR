@@ -50,7 +50,7 @@
 
 
                             <TextView
-                                android:id="@+id/id_num"
+                                android:id="@+id/tv_num"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="1."
@@ -62,7 +62,7 @@
                             </TextView>
 
                             <TextView
-                                android:id="@+id/id_medname"
+                                android:id="@+id/tv_medname"
 
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -95,6 +95,7 @@
 
                                 ></TextView>
                             <TextView
+                                android:id="@+id/tv_genericname"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="16dp"
@@ -117,7 +118,7 @@
                         android:weightSum="10">
 
                         <TextView
-                            android:id="@+id/id_medfreq"
+                            android:id="@+id/tv_medfreq"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="1 0 1  After Food  7 Days/Daily"
@@ -137,6 +138,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_deleted"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="18"
