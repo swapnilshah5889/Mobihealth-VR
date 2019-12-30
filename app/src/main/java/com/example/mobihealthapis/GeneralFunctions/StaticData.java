@@ -19,6 +19,7 @@ public class StaticData {
    public static int  VR_MULTIPLE_DIAGNOSTIC_TEST=128;
     public  static  int VR_MULTIPLE_MEDICINES = 130;
     public  static  int VR_MULTIPLE_ADVICES = 132;
+    public  static  int VR_UPDATE_ADVICE = 133;
 
 
     public static String[] Vitals={"height","weight","wait","head","circumference","temperature","hc"};

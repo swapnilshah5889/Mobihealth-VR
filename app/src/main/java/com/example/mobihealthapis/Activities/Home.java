@@ -79,6 +79,7 @@ import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_NOMATCH_
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_NOMATCH_PROMPT_DIAGNOSTIC_TEST;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_NOMATCH_PROMPT_MEDICINES;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_NOMATCH_PROMPT_SYMPTOM;
+import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_UPDATE_ADVICE;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.patient_details.advice;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.patient_details.diagnosis;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.patient_details.diagnostic;
@@ -123,6 +124,11 @@ public class Home extends AppCompatActivity implements PatientInterface {
     List<Diagnosis.Data> diagnosismatched;
     List<DiagnosticTests.Data> diagnostictestsmatched;
     List<Med.Data> medicinematched;
+
+    //UPDATE POSITIONS
+
+    int update_advice_position;
+
 
     //Patient Details
 
@@ -328,16 +334,15 @@ public class Home extends AppCompatActivity implements PatientInterface {
                     {
                         if(ExpandedDetail == medicine)
                         {
-                            if(finalarr[1].equals("medicine"))
-                            {
-                                if(finalarr[2].equals("number"))
+
+                                if(finalarr[1].equals("number"))
                                 {
-                                    if (isNumeric(finalarr[3]))
+                                    if (isNumeric(finalarr[2]))
                                     {
-                                    int pos = Integer.parseInt(finalarr[3]);
-                                    String[] arr = new String[finalarr.length - 4];
+                                    int pos = Integer.parseInt(finalarr[2]);
+                                    String[] arr = new String[finalarr.length - 3];
                                     int j=0;
-                                    for(int i =4;i<finalarr.length;i++)
+                                    for(int i =3;i<finalarr.length;i++)
                                     {
                                         arr[j] = finalarr[i];
                                         j++;
@@ -346,7 +351,44 @@ public class Home extends AppCompatActivity implements PatientInterface {
                                     updateMedicine(arr, pos);
                                     }
                                 }
+
+                        }
+
+                        if(ExpandedDetail == advice)
+                        {
+
+                                if(finalarr[1].equals("number"))
+                                {
+                                    if(isNumeric(finalarr[2]))
+                                    {
+                                        update_advice_position = Integer.parseInt(finalarr[2]);
+                                        if (IsInList(update_advice_position, Final_Advice.size())) {
+                                            update_advice_position--;
+                                            ShowAdviceDialog("advice",AdviceList,VR_UPDATE_ADVICE);
+
+                                        }
+
+                                    }
+                                }
+
+                        }
+
+                        if(ExpandedDetail == symptoms)
+                        {
+                            if(finalarr[1].equals("number"))
+                            {
+                                if(isNumeric(finalarr[2]))
+                                {
+                                    update_advice_position = Integer.parseInt(finalarr[2]);
+                                    if (IsInList(update_advice_position, Final_Symptoms.size())) {
+                                        update_advice_position--;
+                                       // updateSymptoms("",update_advice_position);
+
+                                    }
+
+                                }
                             }
+
                         }
                     }
                 }
@@ -476,28 +518,36 @@ public class Home extends AppCompatActivity implements PatientInterface {
                     }
 
                 }
+
+
+                //add  symptoms
                 else if (ExpandedDetail == symptoms)
                 {
 
                     SetSymptoms(finalarr);
 
                 }
+                //add diagnosis
                 else if (ExpandedDetail == diagnosis)
                 {
                     SetDiagnosis(finalarr);
                 }
+                //add diagnostic
                 else if (ExpandedDetail == diagnostic)
                 {
                     SetDiagnosticTests(finalarr);
                 }
+                //add medicine
                 else if (ExpandedDetail == medicine)
                 {
                     SetMedicines(finalarr);
                 }
+                //add followup
                 else if (ExpandedDetail == followup)
                 {
                     SetFollowUp(finalarr);
                 }
+                //add advice
                 else if (ExpandedDetail == advice)
                 {
                     SetAdvice();
@@ -661,11 +711,34 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 }
             }
         }
+        else if(requestCode == VR_UPDATE_ADVICE && resultCode == RESULT_OK)
+        {
+            ll_symptom_dialog.setVisibility(View.GONE);
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
+            String[] finalarr = GetRawDataFromSpeech(matches);
+
+            if (finalarr.length > 2)
+            {
+                if (finalarr[0].equals("select")) {
+                    if (finalarr[1].equals("number")) {
+                        if (isNumeric(finalarr[2])) {
+                            int pos = Integer.parseInt(finalarr[2]);
+                            if (IsInList(pos, AdviceList.size())) {
+                                pos--;
+                                updateAdvice(pos);
+                            }
+
+                        }
+                    }
+                }
+
+            }
+
+        }
         super.onActivityResult(requestCode, resultCode, data);
 
     }
-
 
 
 
@@ -1721,6 +1794,16 @@ public class Home extends AppCompatActivity implements PatientInterface {
         SetAdviceRecyclerView();
 
     }
+
+
+    private void updateAdvice(int pos) {
+
+       String advicenew  = AdviceList.get(pos).getAdvice_data();
+        Final_Advice.get(update_advice_position).setAdvice_data(advicenew);
+        SetAdviceRecyclerView();
+
+    }
+
     private void setMedicineRecyclerView()
     {
         rv_medicines_list_main = findViewById(R.id.rv_medicines_list_main);
@@ -1760,7 +1843,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         Speak("Multiple matches found in database.Please select one", VR_MULTIPLE_MEDICINES, 3000);
     }
 
-    private  void ShowAdviceDialog(String symptom_option,List<Advice> advice)
+    private  void ShowAdviceDialog(String symptom_option,List<Advice> advice,int VR_CODE)
     {
         tv_dialog_heading.setText(symptom_option);
 
@@ -1771,7 +1854,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         rv_multiple_symptoms.setHasFixedSize(true);
         ll_symptom_dialog.setVisibility(View.VISIBLE);
 
-        Speak("Please select one advice", VR_MULTIPLE_ADVICES, 3000);
+        Speak("Please select one advice", VR_CODE, 3000);
 
 
     }
@@ -2036,7 +2119,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         AdviceList.add(new Advice("10","Eat well",Integer.parseInt("2")));
 
         //List<Advice> sortedList = new ArrayList<>();
-        ShowAdviceDialog("advice",AdviceList);
+        ShowAdviceDialog("advice",AdviceList,VR_MULTIPLE_ADVICES);
 
     }
 
@@ -2225,6 +2308,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         if (VR_CODE == VR_NOMATCH_PROMPT_SYMPTOM || VR_CODE == VR_MULTIPLE_SYMPTOMS || VR_CODE == VR_MULTIPLE_DIAGNOSIS ||
                 VR_CODE == VR_NOMATCH_PROMPT_DIAGNOSIS || VR_CODE == VR_MULTIPLE_DIAGNOSTIC_TEST || VR_CODE == VR_NOMATCH_PROMPT_DIAGNOSTIC_TEST
         || VR_CODE == VR_MULTIPLE_MEDICINES || VR_CODE ==VR_NOMATCH_PROMPT_MEDICINES || VR_CODE == VR_MULTIPLE_ADVICES
+       || VR_CODE == VR_UPDATE_ADVICE
         ) {
             startVoiceRecognitionActivity(VR_CODE);
         }
