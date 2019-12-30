@@ -22,6 +22,7 @@ import android.print.pdf.PrintedPdfDocument;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.example.mobihealthapis.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,7 +33,7 @@ import java.io.IOException;
 public class pdf_preview extends AppCompatActivity {
 
 
-    LinearLayout rl_generate_pdf;
+    ScrollView rl_generate_pdf;
     ImageView bmImage;
     FloatingActionButton fab_print;
 
@@ -45,7 +46,7 @@ public class pdf_preview extends AppCompatActivity {
         rl_generate_pdf = findViewById(R.id.ll_main_pdfp);
         fab_print = findViewById(R.id.fab_print);
 
-        rl_generate_pdf.setDrawingCacheEnabled(true);
+        /*rl_generate_pdf.setDrawingCacheEnabled(true);
         rl_generate_pdf.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
 
@@ -57,7 +58,7 @@ public class pdf_preview extends AppCompatActivity {
 
         //bmImage = findViewById(R.id.bmImage);
         bmImage = new ImageView(this);
-        bmImage.setImageBitmap(b);
+        bmImage.setImageBitmap(b);*/
 
         fab_print.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,9 +143,9 @@ public class pdf_preview extends AppCompatActivity {
                             WriteResultCallback callback) {
 
             //A4
-            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(595, 842, 1).create();
+            //PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(595, 842, 1).create();
             // Start the page
-            PdfDocument.Page page = mDocument.startPage(pageInfo);
+            PdfDocument.Page page = mDocument.startPage(1);
             // Create a bitmap and put it a canvas for the view to draw to. Make it the size of the view
             Bitmap bitmap = Bitmap.createBitmap(mView.getWidth(), mView.getHeight(),
                     Bitmap.Config.ARGB_8888);
