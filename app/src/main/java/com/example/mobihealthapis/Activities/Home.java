@@ -68,6 +68,7 @@ import static com.example.mobihealthapis.GeneralFunctions.Functions.getDuration;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.getMedTimings;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.getfrequency;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.isNumeric;
+import static com.example.mobihealthapis.GeneralFunctions.Functions.updatefrequency;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VOICE_RECOGNITION_REQUEST_CODE;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MULTIPLE_ADVICES;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MULTIPLE_DIAGNOSIS;
@@ -321,10 +322,38 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 else if (Functions.CheckData(finalarr[0], StaticData.Vitals) && ExpandedDetail == vitals) {
                     SetVitals(finalarr);
                 }
-
-                // delete
-                else if (finalarr[0].equals("delete"))
+                else if(finalarr[0].equals("update"))
                 {
+                    if(finalarr.length>2)
+                    {
+                        if(ExpandedDetail == medicine)
+                        {
+                            if(finalarr[1].equals("medicine"))
+                            {
+                                if(finalarr[2].equals("number"))
+                                {
+                                    if (isNumeric(finalarr[3]))
+                                    {
+                                    int pos = Integer.parseInt(finalarr[3]);
+                                    String[] arr = new String[finalarr.length - 4];
+                                    int j=0;
+                                    for(int i =4;i<finalarr.length;i++)
+                                    {
+                                        arr[j] = finalarr[i];
+                                        j++;
+                                    }
+                                    pos--;
+                                    updateMedicine(arr, pos);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                // delete
+                else if (finalarr[0].equals("delete") )
+                {
+
                     if (finalarr.length > 2) {
                         //if symptoms expanded
                         if (ExpandedDetail == symptoms) {
@@ -484,7 +513,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
             ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
             String[] finalarr = GetRawDataFromSpeech(matches);
-            if (finalarr.length > 0) {
+            if (finalarr.length > 0)
+            {
 
                 if ((finalarr[0].equals("yes") || finalarr[0].equals("accept") || finalarr[0].equals("except")) &&
                         (!temp_symptom.equals(""))) {
@@ -1639,7 +1669,51 @@ public class Home extends AppCompatActivity implements PatientInterface {
         setMedicineRecyclerView();
 
     }
+    private void updateMedicine(String[] arr, int pos) {
 
+        LinkedList<String> linkedlistnew = new LinkedList<>(Arrays.asList(arr));
+
+        Medicine objnew = Final_Medicines.get(pos);
+
+        String freq   =   updatefrequency(linkedlistnew);
+        String duration =    getDuration(linkedlistnew);
+        String MedTimings=   getMedTimings(linkedlistnew);
+        double[]  dailytimes  = getDailyTimings(linkedlistnew);
+
+        if(freq != null)
+        {
+            if(!freq.equals(objnew.getFrequency()))
+            {
+               objnew.setFrequency(freq);
+            }
+        }
+        if(duration != null)
+        {
+            if(!duration.equals(objnew.getDuration()))
+            {
+                objnew.setDuration(duration);
+            }
+        }
+        if(MedTimings != null)
+        {
+            if(!MedTimings.equals(objnew.getAfbf()))
+            {
+                objnew.setAfbf(MedTimings);
+            }
+        }
+        if(!(dailytimes[0]==0 && dailytimes[1]==0 && dailytimes[2]==0))
+        {
+            double temp[] = objnew.getDailytimings();
+            if(!(dailytimes[0]==temp[0] && dailytimes[1]==temp[1] && dailytimes[2]==temp[2]))
+            {
+                objnew.setDailytimings(dailytimes);
+            }
+
+        }
+        Final_Medicines.set(pos,objnew);
+        medicineAdapter.notifyItemChanged(pos);
+
+    }
 
     private void AddAdvice(Advice advice) {
         ll_symptom_dialog.setVisibility(View.GONE);

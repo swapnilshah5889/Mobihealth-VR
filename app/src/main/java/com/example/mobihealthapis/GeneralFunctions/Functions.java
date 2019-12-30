@@ -215,6 +215,51 @@ public static boolean hasNext(int pos,int size){
 
     }
 
+    public static String updatefrequency(LinkedList linkedList){
+
+        ListIterator li = linkedList.listIterator(0);
+
+        while (li.hasNext()) {
+
+            String result1 = CheckDataLL(li.next().toString(), StaticData.Dosage_freq);
+
+            //"daily","alternate","alternative","alternatively","weekly","monthly","15","fifteen"
+
+            if(result1!= null){
+                switch (result1){
+
+                    case "15":
+                        if(li.hasNext()){
+                            if(li.next().toString().equals("days") &&
+                                    !li.previous().toString().equals("for")){
+                                return result1;
+                            }
+                            else
+                                return null;
+                        }
+
+
+                    case "fifteen":
+                        if(li.hasNext()){
+                            if(li.next().toString().equals("days") &&
+                                    !li.previous().toString().equals("for")){
+                                return result1;
+                            }
+                            else
+                                return null;
+                        }
+                    default:
+                        return result1;
+                }
+            }
+
+
+        }
+
+        return null;
+
+    }
+
     public static String getDuration(LinkedList rawPrescriptions) {
         ListIterator li = rawPrescriptions.listIterator(0);
 
@@ -375,13 +420,13 @@ public static boolean hasNext(int pos,int size){
                         return "After Food";
 
                     default:
-                        return "";
+                        return null;
                 }
 
             }
 
         }
-        return "";
+        return null;
     }
 
 

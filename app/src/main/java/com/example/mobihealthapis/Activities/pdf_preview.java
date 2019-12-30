@@ -45,7 +45,7 @@ public class pdf_preview extends AppCompatActivity {
         rl_generate_pdf = findViewById(R.id.ll_main_pdfp);
         fab_print = findViewById(R.id.fab_print);
 
-        rl_generate_pdf.setDrawingCacheEnabled(true);
+     /*   rl_generate_pdf.setDrawingCacheEnabled(true);
         rl_generate_pdf.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
 
@@ -58,7 +58,7 @@ public class pdf_preview extends AppCompatActivity {
         //bmImage = findViewById(R.id.bmImage);
         bmImage = new ImageView(this);
         bmImage.setImageBitmap(b);
-
+*/
         fab_print.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
