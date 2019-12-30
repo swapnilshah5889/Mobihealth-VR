@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/White"
+
+    tools:context=".Activities.pdf_preview">
+
+
+    <LinearLayout
+        android:id="@+id/ll_main_pdfp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
+
+
+            <!--Extra Space-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="130dp"></LinearLayout>
+
+            <!--vitals-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="BP : "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="bold"></TextView>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
+                        android:text="130/150"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="normal"></TextView>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pulse : "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="bold"></TextView>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
+                        android:text="78 bpm"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="normal"></TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Height : "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="bold"></TextView>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
+                        android:text="130 C.M."
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="normal"></TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Weight : "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="bold"></TextView>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
+                        android:text="15 K.G."
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="normal"></TextView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <!--Issues/Symptoms-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Complaints : "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="bold"></TextView>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
+                        android:text="Generalized Weakness, Nausea "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="normal"></TextView>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <!--Diagnosis-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Diagnosis : "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="bold"></TextView>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
+                        android:text="DIABETES MELLITUS TYPE-2, HYPERTENSION, HYPERLIPIDEMIA "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="normal"></TextView>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <!--Medicine-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/light_grey"
+                    android:weightSum="20">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:autoSizeTextType="uniform"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:text="Medicine"
+                            android:textColor="@color/Black"
+                            android:textSize="@dimen/med_heading"
+                            android:textStyle="bold">
+
+                        </TextView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="9">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:autoSizeTextType="uniform"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:text="Dose"
+                            android:textColor="@color/Black"
+                            android:textSize="@dimen/med_heading"
+                            android:textStyle="bold">
+
+                        </TextView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:autoSizeTextType="uniform"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:text="Timing/Duration"
+                            android:textColor="@color/Black"
+                            android:textSize="@dimen/med_heading"
+                            android:textStyle="bold">
+
+                        </TextView>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/medicine_layout_pdf"></include>
+
+
+                    <include layout="@layout/medicine_layout_pdf_1"></include>
+
+
+                    <include layout="@layout/medicine_layout_pdf_2"></include>
+
+
+                    <include layout="@layout/medicine_layout_pdf_3"></include>
+
+
+                    <include layout="@layout/medicine_layout_pdf_4"></include>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <!--Advice-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Advice : "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="bold"></TextView>
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
+                        android:text="Include more green leafy vegetables in daily diet. Avoid oily food. "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/vitals_size"
+                        android:textStyle="normal"></TextView>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <!--Tests-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tests Prescribed : "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/test_size"
+                        android:textStyle="bold"></TextView>
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
+                        android:text="HBA1C, FBS, PBS, LIPID PROFILE  "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/test_size"
+                        android:textStyle="normal"></TextView>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <!--Follow UP-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Follow Up Appointment : "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/test_size"
+                        android:textStyle="bold"></TextView>
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
+                        android:text="01/01/2020 12:15 (Wednesday)"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/test_size"
+                        android:textStyle="normal"></TextView>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_print"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right">
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

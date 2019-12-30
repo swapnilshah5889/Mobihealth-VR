@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="vitals_size">14dp</dimen>
+    <dimen name="med_heading">20dp</dimen>
+    <dimen name="test_size">17dp</dimen>
+
+</resources>
