@@ -80,6 +80,7 @@ import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_NOMATCH_
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_NOMATCH_PROMPT_MEDICINES;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_NOMATCH_PROMPT_SYMPTOM;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_UPDATE_ADVICE;
+import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_UPDATE_SYMPTOMS;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.patient_details.advice;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.patient_details.diagnosis;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.patient_details.diagnostic;
@@ -164,6 +165,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
     String f_date = "";
     int[] f_time = {-1,-1,-1};
+
+    int symptom_update_flag = 0, diagnosis_update_flag=0,test_update_flag=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -354,7 +357,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
                         }
 
-                        if(ExpandedDetail == advice)
+                        else if(ExpandedDetail == advice)
                         {
 
                                 if(finalarr[1].equals("number"))
@@ -373,7 +376,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
                         }
 
-                        if(ExpandedDetail == symptoms)
+                        else if(ExpandedDetail == symptoms)
                         {
                             if(finalarr[1].equals("number"))
                             {
@@ -382,7 +385,18 @@ public class Home extends AppCompatActivity implements PatientInterface {
                                     update_advice_position = Integer.parseInt(finalarr[2]);
                                     if (IsInList(update_advice_position, Final_Symptoms.size())) {
                                         update_advice_position--;
-                                       // updateSymptoms("",update_advice_position);
+                                        String[] newsymptom = new String[finalarr.length-3];
+                                        if(finalarr.length > 3){
+                                            int x=0;
+                                            for(int i=3; i < finalarr.length;i++ ){
+                                                newsymptom[x] = finalarr[i];
+                                                x++;
+                                            }
+
+                                            updateSymptoms(update_advice_position,newsymptom);
+
+
+                                        }
 
                                     }
 
@@ -390,6 +404,66 @@ public class Home extends AppCompatActivity implements PatientInterface {
                             }
 
                         }
+
+                        else if(ExpandedDetail == diagnosis)
+                        {
+                            if(finalarr[1].equals("number"))
+                            {
+                                if(isNumeric(finalarr[2]))
+                                {
+                                    update_advice_position = Integer.parseInt(finalarr[2]);
+                                    if (IsInList(update_advice_position, Final_Diagnosis.size())) {
+                                        update_advice_position--;
+                                        String[] newsymptom = new String[finalarr.length-3];
+                                        if(finalarr.length > 3){
+                                            int x=0;
+                                            for(int i=3; i < finalarr.length;i++ ){
+                                                newsymptom[x] = finalarr[i];
+                                                x++;
+                                            }
+
+                                            updateDiagnosis(update_advice_position,newsymptom);
+
+
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+                        }
+
+                        else if(ExpandedDetail == diagnostic)
+                        {
+                            if(finalarr[1].equals("number"))
+                            {
+                                if(isNumeric(finalarr[2]))
+                                {
+                                    update_advice_position = Integer.parseInt(finalarr[2]);
+                                    if (IsInList(update_advice_position, Final_DiagnosticTests.size())) {
+                                        update_advice_position--;
+                                        String[] newsymptom = new String[finalarr.length-3];
+                                        if(finalarr.length > 3){
+                                            int x=0;
+                                            for(int i=3; i < finalarr.length;i++ ){
+                                                newsymptom[x] = finalarr[i];
+                                                x++;
+                                            }
+
+                                            updateDiagnosticTest(update_advice_position,newsymptom);
+
+
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+                        }
+
+
                     }
                 }
                 // delete
@@ -568,8 +642,22 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
                 if ((finalarr[0].equals("yes") || finalarr[0].equals("accept") || finalarr[0].equals("except")) &&
                         (!temp_symptom.equals(""))) {
-                    AddSymptom(temp_symptom);
-                } else if (finalarr[0].equals("no") || finalarr[0].equals("decline")) {
+                    if(symptom_update_flag == 1 ){
+                        if(IsInList(update_advice_position,Final_Symptoms.size())) {
+                            Final_Symptoms.get(update_advice_position).setIssues(temp_symptom);
+                            View itemview = flow_symptoms.getChildAt(update_advice_position);
+                            TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                            temp.setText(temp_symptom);
+                            ll__uni_prompt.setVisibility(View.GONE);
+                            ll_symptom_dialog.setVisibility(View.GONE);
+                            symptom_update_flag = 0;
+                        }
+                    }
+                    else
+                        AddSymptom(temp_symptom);
+
+                }
+                else if (finalarr[0].equals("no") || finalarr[0].equals("decline")) {
 
                 }
             }
@@ -587,7 +675,17 @@ public class Home extends AppCompatActivity implements PatientInterface {
                             int pos = Integer.parseInt(finalarr[2]);
                             if (IsInList(pos, issuesmatched.size())) {
                                 pos--;
-                                AddSymptom(issuesmatched.get(pos).getIssues());
+                                if(symptom_update_flag ==1){
+                                    Final_Symptoms.get(update_advice_position).setIssues(issuesmatched.get(pos).getIssues());
+                                    View itemview = flow_symptoms.getChildAt(update_advice_position);
+                                    TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                                    temp.setText(issuesmatched.get(pos).getIssues());
+                                    ll__uni_prompt.setVisibility(View.GONE);
+                                    ll_symptom_dialog.setVisibility(View.GONE);
+                                    symptom_update_flag = 0;
+                                }
+                                else
+                                    AddSymptom(issuesmatched.get(pos).getIssues());
                             }
 
                         }
@@ -605,8 +703,22 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
                 if ((finalarr[0].equals("yes") || finalarr[0].equals("accept") || finalarr[0].equals("except")) &&
                         (!temp_symptom.equals(""))) {
-                    AddDiagnosis(temp_symptom);
-                } else if (finalarr[0].equals("no") || finalarr[0].equals("decline")) {
+
+                    if(diagnosis_update_flag == 1){
+                        Log.e("error",Final_Diagnosis.size()+"|"+diagnosismatched.size());
+                        Final_Diagnosis.get(update_advice_position).setDiagnosis(temp_symptom);
+                        View itemview = flow_diagnosis.getChildAt(update_advice_position);
+                        TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                        temp.setText(temp_symptom);
+                        ll__uni_prompt.setVisibility(View.GONE);
+                        ll_symptom_dialog.setVisibility(View.GONE);
+                        diagnosis_update_flag = 0;
+                    }
+                    else
+                        AddDiagnosis(temp_symptom);
+                }
+
+                else if (finalarr[0].equals("no") || finalarr[0].equals("decline")) {
 
                 }
             }
@@ -624,7 +736,17 @@ public class Home extends AppCompatActivity implements PatientInterface {
                             int pos = Integer.parseInt(finalarr[2]);
                             if (IsInList(pos, diagnosismatched.size())) {
                                 pos--;
-                                AddDiagnosis(diagnosismatched.get(pos).getDiagnosis());
+                                if(diagnosis_update_flag ==1){
+                                    Final_Diagnosis.get(update_advice_position).setDiagnosis(diagnosismatched.get(pos).getDiagnosis());
+                                    View itemview = flow_diagnosis.getChildAt(update_advice_position);
+                                    TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                                    temp.setText(diagnosismatched.get(pos).getDiagnosis());
+                                    ll__uni_prompt.setVisibility(View.GONE);
+                                    ll_symptom_dialog.setVisibility(View.GONE);
+                                    diagnosis_update_flag = 0;
+                                }
+                                else
+                                    AddDiagnosis(diagnosismatched.get(pos).getDiagnosis());
                             }
 
                         }
@@ -642,8 +764,23 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
                 if ((finalarr[0].equals("yes") || finalarr[0].equals("accept") || finalarr[0].equals("except")) &&
                         (!temp_symptom.equals(""))) {
-                    AddDiagnosticTest(temp_symptom);
-                } else if (finalarr[0].equals("no") || finalarr[0].equals("decline")) {
+
+                    if(test_update_flag == 1){
+                        //Log.e("error",Final_DiagnosticTests.size()+"|"+diagnosismatched.size());
+                        Final_DiagnosticTests.get(update_advice_position).setTest_name(temp_symptom);
+                        View itemview = flow_diagnostic.getChildAt(update_advice_position);
+                        TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                        temp.setText(temp_symptom);
+                        ll__uni_prompt.setVisibility(View.GONE);
+                        ll_symptom_dialog.setVisibility(View.GONE);
+                        test_update_flag = 0;
+                    }
+
+                    else
+                        AddDiagnosticTest(temp_symptom);
+
+                }
+                else if (finalarr[0].equals("no") || finalarr[0].equals("decline")) {
 
                 }
             }
@@ -661,7 +798,17 @@ public class Home extends AppCompatActivity implements PatientInterface {
                             int pos = Integer.parseInt(finalarr[2]);
                             if (IsInList(pos, diagnostictestsmatched.size())) {
                                 pos--;
-                                AddDiagnosticTest(diagnostictestsmatched.get(pos).getTest_name());
+                                if(test_update_flag ==1){
+                                    Final_DiagnosticTests.get(update_advice_position).setTest_name(diagnostictestsmatched.get(pos).getTest_name());
+                                    View itemview = flow_diagnostic.getChildAt(update_advice_position);
+                                    TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                                    temp.setText(diagnostictestsmatched.get(pos).getTest_name());
+                                    ll__uni_prompt.setVisibility(View.GONE);
+                                    ll_symptom_dialog.setVisibility(View.GONE);
+                                    test_update_flag = 0;
+                                }
+                                else
+                                    AddDiagnosticTest(diagnostictestsmatched.get(pos).getTest_name());
                             }
 
                         }
@@ -736,10 +883,184 @@ public class Home extends AppCompatActivity implements PatientInterface {
             }
 
         }
+
         super.onActivityResult(requestCode, resultCode, data);
 
     }
 
+    private void updateDiagnosticTest(int update_advice_position, String[] arr) {
+
+        if (DiagnosticTestList.size() > 0) {
+            flow_diagnostic = findViewById(R.id.flow_diagnostic);
+            ViewGroup parent = (ViewGroup) rl_home_main;
+
+            List<String> filtered_diagnosis = FilterArray(arr);
+
+            diagnostictestsmatched = new ArrayList<>();
+
+            for (int i = 0; i < DiagnosticTestList.size(); i++) {
+
+                if (DiagnosticTestList.get(i).getTest_name().toLowerCase().contains(filtered_diagnosis.get(0))) {
+                    diagnostictestsmatched.add(DiagnosticTestList.get(i));
+                }
+            }
+
+            //More than one filters and more than one issues
+            if (diagnostictestsmatched.size() > 1) {
+                if (filtered_diagnosis.size() > 1)
+                    diagnostictestsmatched = FilterDiagnosticTest(1, filtered_diagnosis, diagnostictestsmatched);
+                test_update_flag = 1;
+                ShowDiagnosticTestDialog("Diagnosis Options", diagnostictestsmatched);
+                Toast.makeText(this, "" + diagnostictestsmatched.size(), Toast.LENGTH_SHORT).show();
+            }
+            //no issues matched
+            else if (diagnostictestsmatched.size() == 0) {
+                test_update_flag = 1;
+                String temp = "";
+                for (int i = 0; i < arr.length; i++) {
+                    temp += arr[i] + " ";
+                }
+                ShowNoMatchPrompt(temp, "Diagnostic");
+                Toast.makeText(this, "No Results !", Toast.LENGTH_SHORT).show();
+            }
+            //Exact Match
+            else if (diagnostictestsmatched.size() == 1) {
+                test_update_flag = 0;
+                Final_DiagnosticTests.get(update_advice_position).setTest_name(diagnostictestsmatched.get(0).getTest_name());
+                View itemview = flow_diagnostic.getChildAt(update_advice_position);
+                TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                temp.setText(diagnostictestsmatched.get(0).getTest_name());
+                Toast.makeText(this, "" + diagnostictestsmatched.get(0).getTest_name(), Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+
+    }
+
+    private void updateDiagnosis(int update_advice_position, String[] arr) {
+
+
+        if (DiagnosisList.size() > 0) {
+            flow_diagnosis = findViewById(R.id.flow_diagnosis);
+            ViewGroup parent = (ViewGroup) rl_home_main;
+
+            List<String> filtered_diagnosis = FilterArray(arr);
+
+            diagnosismatched = new ArrayList<>();
+
+            for (int i = 0; i < DiagnosisList.size(); i++) {
+
+                if (DiagnosisList.get(i).getDiagnosis().toLowerCase().contains(filtered_diagnosis.get(0))) {
+                    diagnosismatched.add(DiagnosisList.get(i));
+                }
+            }
+
+            //More than one filters and more than one issues
+            if (diagnosismatched.size() > 1) {
+                if (filtered_diagnosis.size() > 1)
+                    diagnosismatched = FilterDiagnosis(1, filtered_diagnosis, diagnosismatched);
+
+                diagnosis_update_flag = 1;
+                ShowDiagnosisDialog("Diagnosis Options", diagnosismatched);
+                Toast.makeText(this, "" + diagnosismatched.size(), Toast.LENGTH_SHORT).show();
+            }
+            //no issues matched
+            else if (diagnosismatched.size() == 0) {
+                diagnosis_update_flag = 1;
+                String temp = "";
+                for (int i = 0; i < arr.length; i++) {
+                    temp += arr[i] + " ";
+                }
+                ShowNoMatchPrompt(temp, "Diagnosis");
+                Toast.makeText(this, "No Results !", Toast.LENGTH_SHORT).show();
+            }
+            //Exact Match
+            else if (diagnosismatched.size() == 1) {
+                diagnosis_update_flag = 0;
+                Final_Diagnosis.get(update_advice_position).setDiagnosis(diagnosismatched.get(0).getDiagnosis());
+                View itemview = flow_diagnosis.getChildAt(update_advice_position);
+                TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                temp.setText(diagnosismatched.get(0).getDiagnosis());
+                Toast.makeText(this, "" + diagnosismatched.get(0).getDiagnosis(), Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+
+    }
+
+    private void updateSymptoms(int update_advice_position,String arr[]) {
+
+        if (Issuelist.size() > 0) {
+
+            List<String> filtered_symptopms = FilterArray(arr);
+
+            issuesmatched = new ArrayList<>();
+
+            for (int i = 0; i < Issuelist.size(); i++) {
+
+                if (Issuelist.get(i).getIssues().toLowerCase().contains(filtered_symptopms.get(0))) {
+                    issuesmatched.add(Issuelist.get(i));
+                }
+
+            }
+
+            //More than one filters and more than one issues
+            if (issuesmatched.size() > 1) {
+                if (filtered_symptopms.size() > 1)
+                    issuesmatched = FilterIssues(1, filtered_symptopms, issuesmatched);
+
+                symptom_update_flag = 1;
+                ShowSymptomDialog("Symptom Options", issuesmatched,VR_MULTIPLE_SYMPTOMS);
+                Toast.makeText(this, "" + issuesmatched.size(), Toast.LENGTH_SHORT).show();
+            }
+            //no issues matched
+            else if (issuesmatched.size() == 0) {
+                symptom_update_flag = 1;
+                String temp = "";
+                for (int i = 0; i < arr.length; i++) {
+                    temp += arr[i] + " ";
+                }
+                ShowNoMatchPrompt(temp, "Symptom");
+                Toast.makeText(this, "No Results !", Toast.LENGTH_SHORT).show();
+            }
+            //Exact issue matched
+            else if (issuesmatched.size() == 1) {
+                symptom_update_flag = 0;
+                Final_Symptoms.get(update_advice_position).setIssues(issuesmatched.get(0).getIssues());
+                View itemview = flow_symptoms.getChildAt(update_advice_position);
+                TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                temp.setText(issuesmatched.get(0).getIssues());
+                Toast.makeText(this, "" + issuesmatched.get(0).getIssues(), Toast.LENGTH_SHORT).show();
+            }
+
+
+            ViewGroup parent = (ViewGroup) rl_home_main;
+
+            /*for (int i = 0; i < 6; i++) {
+                final View itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.dda_list_layout, parent, false);
+                TextView data = itemView.findViewById(R.id.tv_chip_data);
+                LinearLayout ll_chip_delete = itemView.findViewById(R.id.ll_chip_delete);
+                final TextView number = itemView.findViewById(R.id.tv_chip_number);
+                number.setText((i + 1) + ".");
+                data.setText("Fever with cold");
+                //flow_symptoms.addView(itemView);
+
+                itemView.setClickable(true);
+                ll_chip_delete.setClickable(true);
+                ll_chip_delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(Home.this, "" + number.getText(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }*/
+
+        }
+
+    }
 
 
     private void DeleteDiagnosis(int pos) {
@@ -1336,7 +1657,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 if (filtered_symptopms.size() > 1)
                     issuesmatched = FilterIssues(1, filtered_symptopms, issuesmatched);
 
-                ShowSymptomDialog("Symptom Options", issuesmatched);
+                ShowSymptomDialog("Symptom Options", issuesmatched,VR_MULTIPLE_SYMPTOMS);
                 Toast.makeText(this, "" + issuesmatched.size(), Toast.LENGTH_SHORT).show();
             }
             //no issues matched
@@ -1347,7 +1668,9 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 }
                 ShowNoMatchPrompt(temp, "Symptom");
                 Toast.makeText(this, "No Results !", Toast.LENGTH_SHORT).show();
-            } else if (issuesmatched.size() == 1) {
+            }
+            //Exact issue matched
+            else if (issuesmatched.size() == 1) {
                 AddSymptom(issuesmatched.get(0).getIssues());
                 Toast.makeText(this, "" + issuesmatched.get(0).getIssues(), Toast.LENGTH_SHORT).show();
             }
@@ -1510,6 +1833,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 @Override
                 public void onClick(View view) {
                     ll__uni_prompt.setVisibility(View.GONE);
+                    symptom_update_flag = 0;
                 }
             });
 
@@ -1517,7 +1841,18 @@ public class Home extends AppCompatActivity implements PatientInterface {
             tv_promt_yes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AddSymptom(data);
+
+                    if(symptom_update_flag == 1){
+                        Final_Symptoms.get(update_advice_position).setIssues(temp_symptom);
+                        View itemview = flow_symptoms.getChildAt(update_advice_position);
+                        TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                        temp.setText(temp_symptom);
+                        ll__uni_prompt.setVisibility(View.GONE);
+                        ll_symptom_dialog.setVisibility(View.GONE);
+                        symptom_update_flag = 0;
+                    }
+                    else
+                        AddSymptom(data);
 
 
                 }
@@ -1525,16 +1860,22 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
 
             ll__uni_prompt.setVisibility(View.VISIBLE);
-            Speak(tv_promt_question.getText().toString(), VR_NOMATCH_PROMPT_SYMPTOM, 1000);
+            if(symptom_update_flag ==1){
+                Speak("No Match found. Do you want to update this symptom ?", VR_NOMATCH_PROMPT_SYMPTOM, 1000);
+            }
+            else
+                Speak(tv_promt_question.getText().toString(), VR_NOMATCH_PROMPT_SYMPTOM, 1000);
 
 
-        } else if (type.equals("Diagnosis")) {
+        }
+        else if (type.equals("Diagnosis")) {
             tv_promt_data.setText(type + " : " + data);
             temp_symptom = data;
             tv_promt_no.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     ll__uni_prompt.setVisibility(View.GONE);
+                    diagnosis_update_flag = 0;
                 }
             });
 
@@ -1542,7 +1883,17 @@ public class Home extends AppCompatActivity implements PatientInterface {
             tv_promt_yes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AddDiagnosis(data);
+                    if(symptom_update_flag == 1){
+                        Final_Diagnosis.get(update_advice_position).setDiagnosis(temp_symptom);
+                        View itemview = flow_diagnosis.getChildAt(update_advice_position);
+                        TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                        temp.setText(temp_symptom);
+                        ll__uni_prompt.setVisibility(View.GONE);
+                        ll_symptom_dialog.setVisibility(View.GONE);
+                        diagnosis_update_flag = 0;
+                    }
+                    else
+                        AddDiagnosis(data);
 
 
                 }
@@ -1553,13 +1904,16 @@ public class Home extends AppCompatActivity implements PatientInterface {
             Speak("No Matches Found in Database.Do you want to add this Diagnosis?", VR_NOMATCH_PROMPT_DIAGNOSIS, 1000);
 
 
-        } else if (type.equals("Diagnostic")) {
+        }
+
+        else if (type.equals("Diagnostic")) {
             tv_promt_data.setText(type + " : " + data);
             temp_symptom = data;
             tv_promt_no.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     ll__uni_prompt.setVisibility(View.GONE);
+                    test_update_flag = 0;
                 }
             });
 
@@ -1567,7 +1921,18 @@ public class Home extends AppCompatActivity implements PatientInterface {
             tv_promt_yes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AddDiagnosticTest(data);
+
+                    if(test_update_flag == 1){
+                        Final_DiagnosticTests.get(update_advice_position).setTest_name(temp_symptom);
+                        View itemview = flow_diagnostic.getChildAt(update_advice_position);
+                        TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                        temp.setText(temp_symptom);
+                        ll__uni_prompt.setVisibility(View.GONE);
+                        ll_symptom_dialog.setVisibility(View.GONE);
+                        test_update_flag = 0;
+                    }
+                    else
+                        AddDiagnosticTest(data);
 
 
                 }
@@ -1812,7 +2177,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         rv_medicines_list_main.setHasFixedSize(true);
     }
 
-    private void ShowSymptomDialog(String symptom_options, List<Issues.Data> issuesmatched) {
+    private void  ShowSymptomDialog(String symptom_options, List<Issues.Data> issuesmatched,int VR_CODE) {
 
         tv_dialog_count.setText(issuesmatched.size() + " Symptoms Matched In The Database");
 
@@ -1824,7 +2189,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         rv_multiple_symptoms.setHasFixedSize(true);
 
         ll_symptom_dialog.setVisibility(View.VISIBLE);
-        Speak("Multiple matches found in database.Please select one", VR_MULTIPLE_SYMPTOMS, 3000);
+        Speak("Multiple matches found in database.Please select one", VR_CODE, 3000);
     }
 
     private void ShowMedicineDialog(String symptom_options, List<Med.Data> medicinematched)
@@ -2219,14 +2584,49 @@ public class Home extends AppCompatActivity implements PatientInterface {
         }
         else if (identifier == StaticData.Adapter_identifier.symptoms) {
 
-            AddSymptom(issuesmatched.get(position).getIssues());
+
+            if(symptom_update_flag == 1){
+                Final_Symptoms.get(update_advice_position).setIssues(issuesmatched.get(position).getIssues());
+                View itemview = flow_symptoms.getChildAt(update_advice_position);
+                TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                temp.setText(issuesmatched.get(position).getIssues());
+                ll__uni_prompt.setVisibility(View.GONE);
+                ll_symptom_dialog.setVisibility(View.GONE);
+                symptom_update_flag = 0;
+            }
+            else
+                AddSymptom(issuesmatched.get(position).getIssues());
 
         }
         else if (identifier == StaticData.Adapter_identifier.diagnosis) {
-            AddDiagnosis(diagnosismatched.get(position).getDiagnosis());
+
+            if(diagnosis_update_flag == 1){
+                Final_Diagnosis.get(update_advice_position).setDiagnosis(diagnosismatched.get(position).getDiagnosis());
+                View itemview = flow_diagnosis.getChildAt(update_advice_position);
+                TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                temp.setText(diagnosismatched.get(position).getDiagnosis());
+                ll__uni_prompt.setVisibility(View.GONE);
+                ll_symptom_dialog.setVisibility(View.GONE);
+                diagnosis_update_flag = 0;
+            }
+            else
+                AddDiagnosis(diagnosismatched.get(position).getDiagnosis());
         }
         else if (identifier == StaticData.Adapter_identifier.diagnostic) {
-            AddDiagnosticTest(diagnostictestsmatched.get(position).getTest_name());
+
+            if(test_update_flag == 1){
+                Final_DiagnosticTests.get(update_advice_position).setTest_name(diagnostictestsmatched.get(position).getTest_name());
+                View itemview = flow_diagnostic.getChildAt(update_advice_position);
+                TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                temp.setText(diagnostictestsmatched.get(position).getTest_name());
+                ll__uni_prompt.setVisibility(View.GONE);
+                ll_symptom_dialog.setVisibility(View.GONE);
+                test_update_flag = 0;
+            }
+
+            else
+                AddDiagnosticTest(diagnostictestsmatched.get(position).getTest_name());
+
         }
 
         else if (identifier == StaticData.Adapter_identifier.medicine_add) {
@@ -2308,7 +2708,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         if (VR_CODE == VR_NOMATCH_PROMPT_SYMPTOM || VR_CODE == VR_MULTIPLE_SYMPTOMS || VR_CODE == VR_MULTIPLE_DIAGNOSIS ||
                 VR_CODE == VR_NOMATCH_PROMPT_DIAGNOSIS || VR_CODE == VR_MULTIPLE_DIAGNOSTIC_TEST || VR_CODE == VR_NOMATCH_PROMPT_DIAGNOSTIC_TEST
         || VR_CODE == VR_MULTIPLE_MEDICINES || VR_CODE ==VR_NOMATCH_PROMPT_MEDICINES || VR_CODE == VR_MULTIPLE_ADVICES
-       || VR_CODE == VR_UPDATE_ADVICE
+       || VR_CODE == VR_UPDATE_ADVICE || VR_CODE == VR_UPDATE_SYMPTOMS
         ) {
             startVoiceRecognitionActivity(VR_CODE);
         }
