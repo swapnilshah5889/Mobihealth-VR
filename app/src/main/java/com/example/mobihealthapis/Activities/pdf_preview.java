@@ -2,8 +2,11 @@ package com.example.mobihealthapis.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.print.PrintHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -24,11 +27,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.example.mobihealthapis.Models.PatientFinal;
 import com.example.mobihealthapis.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import static com.example.mobihealthapis.GeneralFunctions.StaticData.PREF_PATIENT;
 
 public class pdf_preview extends AppCompatActivity {
 
@@ -36,15 +43,40 @@ public class pdf_preview extends AppCompatActivity {
     ScrollView rl_generate_pdf;
     ImageView bmImage;
     FloatingActionButton fab_print;
+    RecyclerView rv_medicines;
+
+    Intent getintent;
+    String patient_id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdf_preview);
 
+        getintent = getIntent();
+        if(getintent.hasExtra("patient_id")){
+            patient_id = getintent.getStringExtra("patient_id");
+            SharedPreferences prefs = getSharedPreferences(PREF_PATIENT, MODE_PRIVATE);
+
+            String ngo_json = prefs.getString(patient_id,null);
+
+            if(ngo_json !=null ){
+
+                Gson gson = new Gson();
+                PatientFinal Final_Patient = gson.fromJson(ngo_json, PatientFinal.class);
+
+            }
+        }
+
 
         rl_generate_pdf = findViewById(R.id.ll_main_pdfp);
         fab_print = findViewById(R.id.fab_print);
+        rv_medicines = findViewById(R.id.rv_medicines);
+
+        SetRecyclerView();
+
+
+
 
         /*rl_generate_pdf.setDrawingCacheEnabled(true);
         rl_generate_pdf.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
@@ -67,6 +99,12 @@ public class pdf_preview extends AppCompatActivity {
                 printPDF(rl_generate_pdf);
             }
         });
+
+
+    }
+
+    private void SetRecyclerView() {
+
 
 
     }

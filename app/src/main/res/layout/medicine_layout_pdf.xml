@@ -40,7 +40,7 @@
 
 
                             <TextView
-                                android:id="@+id/tv_num"
+                                android:id="@+id/tv_num_pdf"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="28"
@@ -52,7 +52,7 @@
                             </TextView>
 
                             <TextView
-                                android:id="@+id/tv_medname"
+                                android:id="@+id/tv_medname_pdf"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="2"
@@ -76,17 +76,9 @@
 
                             android:padding="5dp">
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:text="Composition"
-                                android:textSize="14dp"
-
-                                ></TextView>
 
                             <TextView
-                                android:id="@+id/tv_genericname"
+                                android:id="@+id/tv_genericname_pdf"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
@@ -113,6 +105,7 @@
                 android:layout_weight="9">
 
                 <TextView
+                    android:id="@+id/tv_dailytimings_pdf"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -127,6 +120,7 @@
                 </TextView>
 
                 <TextView
+                    android:id="@+id/tv_afbf_pdf"
                     android:autoSizeMaxTextSize="@dimen/vitals_size"
                     android:autoSizeTextType="uniform"
                     android:gravity="center"
@@ -145,6 +139,7 @@
                 android:layout_weight="6">
 
                 <TextView
+                    android:id="@+id/tv_duration_freq_pdf"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"

@@ -49,6 +49,26 @@ public class Vitals {
         private String patient_id;
         @SerializedName("id")
         private int id;
+        @SerializedName("Head")
+        private double Head;
+        @SerializedName("Temperature")
+        private int Temperature;
+
+        public double getHead() {
+            return Head;
+        }
+
+        public void setHead(double head) {
+            Head = head;
+        }
+
+        public int getTemperature() {
+            return Temperature;
+        }
+
+        public void setTemperature(int temperature) {
+            Temperature = temperature;
+        }
 
         public float getBMI() {
             return BMI;

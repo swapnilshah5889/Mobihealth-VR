@@ -57,6 +57,7 @@
 
 
                         <TextView
+                            android:id="@+id/tv_bp_pdf"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingStart="5dp"
@@ -315,47 +316,15 @@
                     android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
-                    <include layout="@layout/medicine_layout_pdf"></include>
 
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_medicines"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:overScrollMode="never">
+                    </androidx.recyclerview.widget.RecyclerView>
 
-                    <include layout="@layout/medicine_layout_pdf_1"></include>
-
-
-                    <include layout="@layout/medicine_layout_pdf_2"></include>
-
-
-                    <include layout="@layout/medicine_layout_pdf_3"></include>
-
-
-                    <include layout="@layout/medicine_layout_pdf_4"></include>
-
-                        <include layout="@layout/medicine_layout_pdf"></include>
-
-
-                        <include layout="@layout/medicine_layout_pdf_1"></include>
-
-
-                        <include layout="@layout/medicine_layout_pdf_2"></include>
-
-
-                        <include layout="@layout/medicine_layout_pdf_3"></include>
-
-
-                        <include layout="@layout/medicine_layout_pdf_4"></include>
-
-                        <include layout="@layout/medicine_layout_pdf"></include>
-
-
-                        <include layout="@layout/medicine_layout_pdf_1"></include>
-
-
-                        <include layout="@layout/medicine_layout_pdf_2"></include>
-
-
-                        <include layout="@layout/medicine_layout_pdf_3"></include>
-
-
-                        <include layout="@layout/medicine_layout_pdf_4"></include>
 
 
                 </LinearLayout>

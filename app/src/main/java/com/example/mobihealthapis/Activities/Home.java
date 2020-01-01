@@ -1,6 +1,7 @@
 package com.example.mobihealthapis.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import com.example.mobihealthapis.Models.Issues;
 import com.example.mobihealthapis.Models.Med;
 import com.example.mobihealthapis.Models.Medicine;
 import com.example.mobihealthapis.Models.Patient;
+import com.example.mobihealthapis.Models.PatientFinal;
 import com.example.mobihealthapis.Models.Vitals;
 import com.example.mobihealthapis.R;
 import com.example.mobihealthapis.database_call.NetworkCall;
@@ -69,6 +71,7 @@ import static com.example.mobihealthapis.GeneralFunctions.Functions.getMedTiming
 import static com.example.mobihealthapis.GeneralFunctions.Functions.getfrequency;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.isNumeric;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.updatefrequency;
+import static com.example.mobihealthapis.GeneralFunctions.StaticData.PREF_PATIENT;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VOICE_RECOGNITION_REQUEST_CODE;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MULTIPLE_ADVICES;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MULTIPLE_DIAGNOSIS;
@@ -114,7 +117,9 @@ public class Home extends AppCompatActivity implements PatientInterface {
     int SelectedPatientPosition;
     Patient.Data SelectedPatient;
 
+    PatientFinal Final_Patient;
 
+    Vitals.Data Final_Vitals;
     List<Issues.Data> Final_Symptoms;
     List<Diagnosis.Data> Final_Diagnosis;
     List<DiagnosticTests.Data> Final_DiagnosticTests;
@@ -132,6 +137,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
 
     //Patient Details
+
 
     LinearLayout ll_main_patient_rx;
     Boolean[] isExpanded;
@@ -168,6 +174,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
     int symptom_update_flag = 0, diagnosis_update_flag=0,test_update_flag=0;
 
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,6 +198,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         DiagnosisList = new ArrayList<>();
         Issuelist = new ArrayList<>();
         MedicineList = new ArrayList<>();
+
         HomeInit();
 
         PatientDetails();
@@ -328,9 +337,11 @@ public class Home extends AppCompatActivity implements PatientInterface {
                     }
                 }
                 //setting vitals when expanded
-                else if (Functions.CheckData(finalarr[0], StaticData.Vitals) && ExpandedDetail == vitals) {
+                else if (Functions.CheckData(finalarr[0], StaticData.Vitals) && ExpandedDetail == vitals)
+                {
                     SetVitals(finalarr);
                 }
+                //Update
                 else if(finalarr[0].equals("update"))
                 {
                     if(finalarr.length>2)
@@ -638,8 +649,13 @@ public class Home extends AppCompatActivity implements PatientInterface {
                     }
 
                 }
+                else if (finalarr[0].equals("generate")){
 
+                    if(finalarr[1].equals("prescription")){
+                        GeneratePrescription();
+                    }
 
+                }
                 //add  symptoms
                 else if (ExpandedDetail == symptoms)
                 {
@@ -934,6 +950,61 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
     }
 
+    private void GeneratePrescription() {
+
+        Final_Patient = new PatientFinal(SelectedPatient);
+
+
+
+        if(Final_Vitals != null){
+            Final_Patient.setVitals(Final_Vitals);
+        }
+
+
+        if(Final_Symptoms != null){
+            if(Final_Symptoms.size()>0)
+                Final_Patient.setFinal_Symptoms(Final_Symptoms);
+        }
+
+        if(Final_Diagnosis != null){
+            if(Final_Diagnosis.size()>0)
+                Final_Patient.setFinal_Diagnosis(Final_Diagnosis);
+        }
+
+
+        if(Final_DiagnosticTests != null){
+            if(Final_DiagnosticTests.size()>0)
+                Final_Patient.setFinal_DiagnosticTests(Final_DiagnosticTests);
+        }
+
+
+        if(Final_Medicines != null){
+            if(Final_Medicines.size()>0)
+                Final_Patient.setFinal_Medicines(Final_Medicines);
+        }
+
+
+        if(Final_Advice != null){
+            if(Final_Advice.size()>0)
+                Final_Patient.setFinal_Advice(Final_Advice);
+        }
+
+
+        if(!f_date.equals(""))
+            Final_Patient.setF_date(f_date);
+
+        if((f_time[0] != -1)){
+            Final_Patient.setF_time(f_time);
+        }
+
+        String patientjson = new Gson().toJson(Final_Patient);
+
+        editor = getSharedPreferences(PREF_PATIENT, MODE_PRIVATE).edit();
+        editor.putString(""+Final_Patient.getPatientDetails().getPatientId(), patientjson);
+        editor.commit();
+
+    }
+
     private void updateDiagnosticTest(int update_advice_position, String[] arr) {
 
         if (DiagnosticTestList.size() > 0) {
@@ -1190,7 +1261,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         Final_DiagnosticTests = new ArrayList<>();
         Final_Advice = new ArrayList<>();
         Final_Medicines = new ArrayList<>();
-
+        Final_Vitals = new Vitals.Data();
 
 
         setMedicineRecyclerView();
@@ -1768,20 +1839,25 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 Double a = 0.0;
                 switch (key) {
                     case "height":
-                        a = rawVitals.get(key);
-                        tv_height.setText(a + " CM");
+                        int height = (int)Math.round(rawVitals.get(key));
+                        tv_height.setText(height + " CM");
+                        Final_Vitals.setHeight(height);
+
                         break;
                     case "weight":
-                        a = rawVitals.get(key);
-                        tv_weight.setText(a + " KG");
+                        double weight = rawVitals.get(key);
+                        tv_weight.setText(weight + " KG");
+                        Final_Vitals.setWeight(weight);
                         break;
                     case "head":
                         a = rawVitals.get(key);
                         tv_hc.setText(a + " CM");
+                        Final_Vitals.setHead(a);
                         break;
                     case "temperature":
-                        a = rawVitals.get(key);
-                        tv_temperature.setText(a + " °");
+                        int temp = (int)Math.round(rawVitals.get(key));
+                        tv_temperature.setText(temp + " °");
+                        Final_Vitals.setTemperature(temp);
                         break;
 
                 }
