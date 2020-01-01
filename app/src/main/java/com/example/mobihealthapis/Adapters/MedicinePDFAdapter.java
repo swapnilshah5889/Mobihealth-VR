@@ -57,6 +57,7 @@ public class MedicinePDFAdapter extends RecyclerView.Adapter<MedicinePDFAdapter.
 
     @Override
     public int getItemCount() {
+
         return medicineList.size();
     }
 

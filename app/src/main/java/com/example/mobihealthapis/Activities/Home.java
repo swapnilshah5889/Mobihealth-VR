@@ -1000,8 +1000,14 @@ public class Home extends AppCompatActivity implements PatientInterface {
         String patientjson = new Gson().toJson(Final_Patient);
 
         editor = getSharedPreferences(PREF_PATIENT, MODE_PRIVATE).edit();
-        editor.putString(""+Final_Patient.getPatientDetails().getPatientId(), patientjson);
+       // editor.putString(""+Final_Patient.getPatientDetails().getPatientId(), patientjson);
+        editor.putString(""+SelectedPatient.getPatientId(), patientjson);
+
         editor.commit();
+
+        Intent i = new Intent(Home.this,pdf_preview.class);
+        i.putExtra("patient_id",""+SelectedPatient.getPatientId());
+        startActivity(i);
 
     }
 
@@ -1485,7 +1491,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
         for (int i = x; i < arr.length; i++) {
 
-            if (MedicineList.size() > 0) {
+            if (MedicineList.size() > 0)
+            {
                 medicinematched = new ArrayList<>();
                 for (int j = 0; j < MedicineList.size(); j++) {
                     String temp1 = MedicineList.get(j).getMedicine_name().toLowerCase().trim();
@@ -1597,7 +1604,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
     private String GetDate(String[] finalarr) {
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String App_Date = "";
         int final_day = -1;
         int final_mon = -1;
@@ -2549,6 +2556,9 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
                         SelectedPatient.setVitals(vitalList.get(0));
 
+                        Final_Vitals.setHeight(SelectedPatient.getVitals().getHeight());
+                        Final_Vitals.setWeight(SelectedPatient.getVitals().getWeight());
+                        Final_Vitals.setBMI(SelectedPatient.getVitals().getBMI());
                         tv_height.setText(SelectedPatient.getVitals().getHeight() + " cm");
                         tv_weight.setText(SelectedPatient.getVitals().getWeight() + " k.g.");
                         tv_bmi.setText("" + SelectedPatient.getVitals().getBMI());

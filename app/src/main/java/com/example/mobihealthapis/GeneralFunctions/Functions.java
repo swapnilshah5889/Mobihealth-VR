@@ -265,8 +265,8 @@ public static boolean hasNext(int pos,int size){
 
         while (li.hasNext()) {
 
-
-            if (li.next().toString().equals("for") ||  li.next().toString().equals("duration"))  {
+            String next = li.next().toString();
+            if (next.equals("for") ||  next.equals("duration"))  {
                 String temp=li.next().toString();
                 if (temp.equals("a")) {
                     String value = li.next().toString();

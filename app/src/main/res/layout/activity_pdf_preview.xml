@@ -2,14 +2,14 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
+    android:id="@+id/ll_main_pdf"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/White"
 
     tools:context=".Activities.pdf_preview">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
 
         android:id="@+id/ll_main_pdfp"
         android:layout_width="match_parent"
@@ -34,127 +34,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="130dp"></LinearLayout>
 
-                <!--vitals-->
-                <LinearLayout
+
+                <com.nex3z.flowlayout.FlowLayout
+                    android:id="@+id/flow_vitals"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    app:flChildSpacingForLastRow="align">
 
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
 
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="BP : "
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/vitals_size"
-                            android:textStyle="bold"></TextView>
+                </com.nex3z.flowlayout.FlowLayout>
 
-
-                        <TextView
-                            android:id="@+id/tv_bp_pdf"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingStart="5dp"
-                            android:text="130/150"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/vitals_size"
-                            android:textStyle="normal"></TextView>
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingStart="10dp">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Pulse : "
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/vitals_size"
-                            android:textStyle="bold"></TextView>
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingStart="5dp"
-                            android:text="78 bpm"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/vitals_size"
-                            android:textStyle="normal"></TextView>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingStart="10dp">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Height : "
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/vitals_size"
-                            android:textStyle="bold"></TextView>
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingStart="5dp"
-                            android:text="130 C.M."
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/vitals_size"
-                            android:textStyle="normal"></TextView>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingStart="10dp">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Weight : "
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/vitals_size"
-                            android:textStyle="bold"></TextView>
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingStart="5dp"
-                            android:text="15 K.G."
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/vitals_size"
-                            android:textStyle="normal"></TextView>
-
-                    </LinearLayout>
-
-                </LinearLayout>
 
 
                 <!--Issues/Symptoms-->
                 <LinearLayout
+                    android:id="@+id/ll_symptoms_pdf"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -177,10 +74,11 @@
 
 
                     <TextView
+                        android:id="@+id/tv_symptoms_pdf"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="5dp"
-                        android:text="Generalized Weakness, Nausea "
+                        android:text=""
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/vitals_size"
                         android:textStyle="normal"></TextView>
@@ -193,6 +91,7 @@
 
             <!--Diagnosis-->
             <LinearLayout
+                android:id="@+id/ll_diagnosis_pdf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -215,10 +114,11 @@
 
 
                     <TextView
+                        android:id="@+id/tv_diagnosis_pdf"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="5dp"
-                        android:text="DIABETES MELLITUS TYPE-2, HYPERTENSION, HYPERLIPIDEMIA "
+
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/vitals_size"
                         android:textStyle="normal"></TextView>
@@ -319,6 +219,7 @@
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_medicines"
+                        android:nestedScrollingEnabled="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -342,6 +243,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/ll_advice_pdf"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -357,10 +259,10 @@
 
 
                     <TextView
+                        android:id="@+id/tv_advice_pdf"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingStart="5dp"
-                        android:text="Include more green leafy vegetables in daily diet. Avoid oily food. "
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/vitals_size"
                         android:textStyle="normal"></TextView>
@@ -380,6 +282,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/ll_test_pdf"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -395,10 +298,10 @@
 
 
                     <TextView
+                        android:id="@+id/tv_test_pdf"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingStart="5dp"
-                        android:text="HBA1C, FBS, PBS, LIPID PROFILE  "
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/test_size"
                         android:textStyle="normal"></TextView>
@@ -418,6 +321,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/ll_followup_pdf"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -433,10 +337,10 @@
 
 
                     <TextView
+                        android:id="@+id/tv_followup_pdf"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingStart="5dp"
-                        android:text="01/01/2020 12:15 (Wednesday)"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/test_size"
                         android:textStyle="normal"></TextView>
@@ -450,7 +354,7 @@
 
 
     </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_print"
