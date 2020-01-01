@@ -342,16 +342,62 @@ public class Home extends AppCompatActivity implements PatientInterface {
                                 {
                                     if (isNumeric(finalarr[2]))
                                     {
-                                    int pos = Integer.parseInt(finalarr[2]);
-                                    String[] arr = new String[finalarr.length - 3];
-                                    int j=0;
-                                    for(int i =3;i<finalarr.length;i++)
-                                    {
-                                        arr[j] = finalarr[i];
-                                        j++;
+                                        int pos = Integer.parseInt(finalarr[2]);
+                                        if(IsInList(pos,Final_Medicines.size())){
+                                            pos--;
+                                            String[] arr = new String[finalarr.length - 3];
+                                            int j=0;
+                                            for(int i =3;i<finalarr.length;i++)
+                                            {
+                                                arr[j] = finalarr[i];
+                                                j++;
+                                            }
+
+                                            updateMedicine(arr, pos);
+                                        }
+                                        else{
+                                            Toast.makeText(this, "Position Out Of Bounds", Toast.LENGTH_SHORT).show();
+                                        }
+
                                     }
-                                    pos--;
-                                    updateMedicine(arr, pos);
+                                    else if(finalarr[2].equals("one")){
+
+                                        int pos = 1;
+                                        if(IsInList(pos,Final_Medicines.size())){
+                                            pos--;
+                                            String[] arr = new String[finalarr.length - 3];
+                                            int j=0;
+                                            for(int i =3;i<finalarr.length;i++)
+                                            {
+                                                arr[j] = finalarr[i];
+                                                j++;
+                                            }
+
+                                            updateMedicine(arr, pos);
+                                        }
+                                        else{
+                                            Toast.makeText(this, "Position Out Of Bounds", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+                                    else if (finalarr[2].equals("two") || finalarr[2].equals("to")
+                                            || finalarr[2].equals("do")){
+                                        int pos = 2;
+                                        if(IsInList(pos,Final_Medicines.size())){
+                                            pos--;
+                                            String[] arr = new String[finalarr.length - 3];
+                                            int j=0;
+                                            for(int i =3;i<finalarr.length;i++)
+                                            {
+                                                arr[j] = finalarr[i];
+                                                j++;
+                                            }
+
+                                            updateMedicine(arr, pos);
+                                        }
+                                        else{
+                                            Toast.makeText(this, "Position Out Of Bounds", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 }
 
@@ -1365,7 +1411,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
         } else
             x = 1;
 
-        for (int i = x; i < 5; i++) {
+
+        for (int i = x; i < arr.length; i++) {
 
             if (MedicineList.size() > 0) {
                 medicinematched = new ArrayList<>();
@@ -1381,6 +1428,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
                     MedicineList.addAll(medicinematched);
                 } else
                     break;
+
 
             }
         }
@@ -1415,9 +1463,15 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
     private void SetFollowUp(String[] finalarr) {
         //if(f_date.equals(""))
-            f_date = GetDate(finalarr);
+        String t_date = GetDate(finalarr);;
+        int[] t_time = GetTime(finalarr);
+        if(!t_date.equals(""))
+            f_date = t_date;
+
+        if(!(t_time[0] == -1 ))
+            f_time = t_time;
+
         //if(f_time[0] == -1 && f_time[1] == -1 && f_time[2] == -1)
-            f_time = GetTime(finalarr);
 
         String ampm = "";
         if(f_time[2] == 0)
@@ -1524,35 +1578,38 @@ public class Home extends AppCompatActivity implements PatientInterface {
         else{
             //on
             if(on_pos != -1){
-                String day = finalarr[on_pos+1];
-                if(day.contains("st") || day.contains("th")|| day.contains("rd") || day.contains("nd")){
+                if((on_pos+1) < finalarr.length){
+                    String day = finalarr[on_pos+1];
+                    if(day.contains("st") || day.contains("th")|| day.contains("rd") || day.contains("nd")){
 
-                    day = day.replace("st","");
-                    day = day.replace("rd","");
-                    day = day.replace("th","");
-                    day = day.replace("nd","");
+                        day = day.replace("st","");
+                        day = day.replace("rd","");
+                        day = day.replace("th","");
+                        day = day.replace("nd","");
 
-                }
-
-                try{
-
-                    List<String> months = StaticData.months();
-                    final_day = Integer.parseInt(day);
-                    int temp = months.indexOf(finalarr[on_pos+2])+1;
-                    if(temp>0 && temp <=12){
-                        final_mon = temp;
-                        if(final_mon<current_mon){
-                            final_year = current_year+1;
-                        }
-                        else
-                            final_year = current_year;
                     }
 
-                    App_Date = final_day+"-"+final_mon+"-"+final_year;
-                    return App_Date;
+                    try{
+
+                        List<String> months = StaticData.months();
+                        final_day = Integer.parseInt(day);
+                        int temp = months.indexOf(finalarr[on_pos+2])+1;
+                        if(temp>0 && temp <=12){
+                            final_mon = temp;
+                            if(final_mon<current_mon){
+                                final_year = current_year+1;
+                            }
+                            else
+                                final_year = current_year;
+                        }
+
+                        App_Date = final_day+"-"+final_mon+"-"+final_year;
+                        return App_Date;
 
 
-                }catch (Exception e){}
+                    }catch (Exception e){}
+
+                }
 
             }
             //after
