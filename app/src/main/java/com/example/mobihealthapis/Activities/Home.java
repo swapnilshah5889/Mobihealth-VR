@@ -1,5 +1,6 @@
 package com.example.mobihealthapis.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -59,6 +60,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import static com.example.mobihealthapis.GeneralFunctions.Functions.FilterDiagnosis;
@@ -2482,6 +2485,19 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
                         tv_home_total_patients.setText("Today's Patients - " + PatientsList.size());
                         tv_patients_checked_in.setText("" + PatientsList.size());
+
+
+                        SharedPreferences prefs = getSharedPreferences(PREF_PATIENT, Context.MODE_PRIVATE);
+                        Map<String,?> entries = prefs.getAll();
+                        Set<String> keys = entries.keySet();
+
+
+                        tv_patient_draft.setText(prefs.getAll().size());
+
+                        for (String key : keys) {
+                            Toast.makeText(Home.this, ""+key, Toast.LENGTH_SHORT).show();
+                        }
+
                         SetMainDrawerRecyclerView();
                         //tv_main.setText(obj.getTotal_records()+"|"+vitalList.size());
                     }

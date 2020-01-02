@@ -142,7 +142,7 @@
 
     <!--Patient List-->
     <include layout="@layout/main_drawer"
-        android:visibility="visible"></include>
+        android:visibility="gone"></include>
 
     <include layout="@layout/multiple_symptoms_dialog"
         android:visibility="gone"></include>
