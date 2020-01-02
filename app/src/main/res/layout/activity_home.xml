@@ -39,6 +39,7 @@
 
 
         <LinearLayout
+            android:id="@+id/ll_checkedin_patients"
             android:layout_margin="15dp"
             android:padding="20dp"
             android:orientation="vertical"
@@ -79,6 +80,7 @@
 
 
         <LinearLayout
+            android:id="@+id/ll_draft_patients"
             android:layout_margin="15dp"
             android:padding="20dp"
             android:orientation="vertical"

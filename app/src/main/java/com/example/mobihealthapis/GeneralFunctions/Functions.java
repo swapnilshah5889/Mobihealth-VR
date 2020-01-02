@@ -513,4 +513,124 @@ public static boolean hasNext(int pos,int size){
         return null;
 
     }
+
+
+
+    public static class Soundex
+    {
+        public static String getGode(String s,int limit)
+        {
+            char[] x = s.toUpperCase().toCharArray();
+
+
+            char firstLetter = x[0];
+
+            //RULE [ 2 ]
+            //Convert letters to numeric code
+            for (int i = 0; i < x.length; i++) {
+                switch (x[i]) {
+                    case 'B':
+                    case 'F':
+                    case 'P':
+                    case 'V': {
+                        x[i] = '1';
+                        break;
+                    }
+
+                    case 'C':
+                    case 'G':
+                    case 'J':
+                    case 'K':
+                    case 'Q':
+                    case 'S':
+                    case 'X':
+                    case 'Z': {
+                        x[i] = '2';
+                        break;
+                    }
+
+                    case 'D':
+                    case 'T': {
+                        x[i] = '3';
+                        break;
+                    }
+
+                    case 'L': {
+                        x[i] = '4';
+                        break;
+                    }
+
+                    case 'M':
+                    case 'N': {
+                        x[i] = '5';
+                        break;
+                    }
+
+                    case 'R': {
+                        x[i] = '6';
+                        break;
+                    }
+
+                    default: {
+                        x[i] = '0';
+                        break;
+                    }
+                }
+            }
+
+            //Remove duplicates
+            //RULE [ 1 ]
+            String output = "" + firstLetter;
+
+            //RULE [ 3 ]
+            for (int i = 1; i < x.length; i++)
+                if (x[i] != x[i - 1] && x[i] != '0')
+                    output += x[i];
+
+            //RULE [ 4 ]
+            //Pad with 0's or truncate
+            for(int i = 0; i<limit;i++)
+                output += "0";
+            return output.substring(0, limit);
+        }
+
+        public static int StringCompareCoarse(String s1,String s2,int limit){
+            int diff = 0;
+
+            String code1 = Soundex.getGode(s1,limit);
+            String code2 = Soundex.getGode(s2,limit);
+
+            int c1 = Integer.parseInt(code1.substring(1,limit));
+            int c2 = Integer.parseInt(code2.substring(1,limit));
+
+            diff = c1-c2;
+
+            if(diff<0)
+                diff *=-1;
+
+            return diff;
+        }
+
+        public static int StringCompareFine(String s1,String s2,int limit){
+            int diff = -1;
+
+            String code1 = Soundex.getGode(s1,limit);
+            String code2 = Soundex.getGode(s2,limit);
+
+            if( code1.charAt(0) == code2.charAt(0)){
+                int c1 = Integer.parseInt(code1.substring(1,limit));
+                int c2 = Integer.parseInt(code2.substring(1,limit));
+
+
+                diff = c1-c2;
+
+                if(diff<0)
+                    diff *=-1;
+            }
+
+
+            return diff;
+        }
+
+    }
 }

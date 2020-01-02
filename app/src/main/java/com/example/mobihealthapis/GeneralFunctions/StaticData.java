@@ -24,6 +24,11 @@ public class StaticData {
 
     public static String PREF_PATIENT = "PREF_PATIENT";
 
+    public static final String checkedin="checkedin";
+    public static final String draft="draft";
+    public static final String allpatients="allpatients";
+
+
 
     public static String[] Vitals = {"height", "weight", "wait", "head", "circumference", "temperature", "hc"};
 
