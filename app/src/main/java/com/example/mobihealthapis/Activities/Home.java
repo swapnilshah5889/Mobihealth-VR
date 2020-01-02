@@ -2491,10 +2491,12 @@ public class Home extends AppCompatActivity implements PatientInterface {
                         Map<String,?> entries = prefs.getAll();
                         Set<String> keys = entries.keySet();
 
+                        prefs.edit().remove("1").commit();
 
                         tv_patient_draft.setText(prefs.getAll().size());
 
                         for (String key : keys) {
+                            Log.i("id",key);
                             Toast.makeText(Home.this, ""+key, Toast.LENGTH_SHORT).show();
                         }
 
