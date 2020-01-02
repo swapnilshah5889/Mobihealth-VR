@@ -304,6 +304,51 @@ public class Home extends AppCompatActivity implements PatientInterface {
                         {
                             if(finalarr[1].equals("prescription") || finalarr[1].equals("description"))
                             {
+                                Final_Patient = new PatientFinal(SelectedPatient);
+
+
+                                if (Final_Vitals != null) {
+                                    Final_Patient.setVitals(Final_Vitals);
+                                }
+
+
+                                if (Final_Symptoms != null) {
+                                    if (Final_Symptoms.size() > 0)
+                                        Final_Patient.setFinal_Symptoms(Final_Symptoms);
+                                }
+
+                                if (Final_Diagnosis != null) {
+                                    if (Final_Diagnosis.size() > 0)
+                                        Final_Patient.setFinal_Diagnosis(Final_Diagnosis);
+                                }
+
+
+                                if (Final_DiagnosticTests != null) {
+                                    if (Final_DiagnosticTests.size() > 0)
+                                        Final_Patient.setFinal_DiagnosticTests(Final_DiagnosticTests);
+                                }
+
+
+                                if (Final_Medicines != null) {
+                                    if (Final_Medicines.size() > 0)
+                                        Final_Patient.setFinal_Medicines(Final_Medicines);
+                                }
+
+
+                                if (Final_Advice != null) {
+                                    if (Final_Advice.size() > 0)
+                                        Final_Patient.setFinal_Advice(Final_Advice);
+                                }
+
+
+                                if (!f_date.equals(""))
+                                    Final_Patient.setF_date(f_date);
+
+                                if ((f_time[0] != -1)) {
+                                    Final_Patient.setF_time(f_time);
+                                }
+
+
                                 final String patientjson = new Gson().toJson(Final_Patient);
 
                                 HashMap<String,String> params = new HashMap<>();
