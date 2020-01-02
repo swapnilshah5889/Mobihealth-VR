@@ -43,12 +43,15 @@ import com.example.mobihealthapis.Models.Med;
 import com.example.mobihealthapis.Models.Medicine;
 import com.example.mobihealthapis.Models.Patient;
 import com.example.mobihealthapis.Models.PatientFinal;
+import com.example.mobihealthapis.Models.PatientJson;
 import com.example.mobihealthapis.Models.Vitals;
 import com.example.mobihealthapis.R;
 import com.example.mobihealthapis.database_call.NetworkCall;
 import com.gauravbhola.ripplepulsebackground.RipplePulseLayout;
 import com.google.gson.Gson;
 import com.nex3z.flowlayout.FlowLayout;
+
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -94,6 +97,10 @@ import static com.example.mobihealthapis.GeneralFunctions.StaticData.patient_det
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.patient_details.medicine;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.patient_details.symptoms;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.patient_details.vitals;
+import static com.example.mobihealthapis.GeneralFunctions.StaticData.patienttype.allpatients;
+import static com.example.mobihealthapis.GeneralFunctions.StaticData.patienttype.checkedin;
+import static com.example.mobihealthapis.GeneralFunctions.StaticData.patienttype.completed;
+import static com.example.mobihealthapis.GeneralFunctions.StaticData.patienttype.draft;
 import static com.example.mobihealthapis.database_call.utils_string.API_URL.SEARCH_MED;
 import static com.example.mobihealthapis.database_call.utils_string.API_URL.VR_APIS;
 
@@ -268,25 +275,77 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
             if (finalarr.length > 0) {
 
-                if (finalarr[0].equals("show")) {
+                if (finalarr[0].equals("show"))
+                {
                     if (finalarr.length > 1) {
-
-                        if (Functions.Soundex.StringCompareCoarse("checked", finalarr[1], 3) < 15) {
-                            flag_for_patients = StaticData.checkedin;
+                        int temp = Functions.Soundex.StringCompareFine("checked", finalarr[1], 3);
+                        int temp1 = Functions.Soundex.StringCompareCoarse("draft", finalarr[1], 3);
+                        if ( temp < 5 && temp>=0) {
+                            flag_for_patients = checkedin;
                             SetMainDrawerRecyclerView(PatientsList);
 
-                        } else if (Functions.Soundex.StringCompareCoarse("draft", finalarr[1], 3) < 7) {
+                        } else if ( temp1 < 7 && temp1 >= 0) {
 
-                            flag_for_patients = StaticData.draft;
+                            flag_for_patients = draft;
                             ShowDraftPatients();
                         }
+
                     }
+
                 }
 
 
-                if (ll_main_patient_rx.getVisibility() == View.VISIBLE) {
 
-                    if (finalarr[0].equals("write") || finalarr[0].equals("right")
+               else if (ll_main_patient_rx.getVisibility() == View.VISIBLE) {
+
+                    if(finalarr[0].equals("stop"))
+                    {
+                        if(finalarr.length>1)
+                        {
+                            if(finalarr[1].equals("prescription") || finalarr[1].equals("description"))
+                            {
+                                final String patientjson = new Gson().toJson(Final_Patient);
+
+                                HashMap<String,String> params = new HashMap<>();
+                                params.put("action","insertPrescription");
+                                params.put("patient_id",SelectedPatient.getPatientId()+"");
+                                params.put("rx_json",patientjson);
+                                params.put("patient_type",draft);
+
+
+                                NetworkCall ncall = new NetworkCall();
+                                ncall.setServerUrlWebserviceApi(VR_APIS);
+
+                                ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+                                    @Override
+                                    public boolean setResponse(String responseStr) {
+                                        try{
+                                            JSONObject reader = new JSONObject(responseStr);
+                                            if(reader.getString("status").equals("true"))
+                                            {
+                                                Intent i = new Intent(Home.this, pdf_preview.class);
+                                                i.putExtra("patient_id", "" + SelectedPatient.getPatientId());
+                                                i.putExtra("patientjson",patientjson);
+                                                //startActivity(i);
+                                            }
+                                            else
+                                            {
+                                                Toast.makeText(Home.this, ""+responseStr, Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+                                        catch(Exception e){
+                                            Toast.makeText(Home.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                        return false;
+                                    }
+                                });
+
+                            }
+                        }
+                    }
+
+                    else if (finalarr[0].equals("write") || finalarr[0].equals("right")
                             || finalarr[0].equals("set") || finalarr[0].equals("add") || finalarr[0].equals("start")) {
 
                         if (finalarr.length > 1) {
@@ -940,17 +999,52 @@ public class Home extends AppCompatActivity implements PatientInterface {
             Final_Patient.setF_time(f_time);
         }
 
-        String patientjson = new Gson().toJson(Final_Patient);
+        final String patientjson = new Gson().toJson(Final_Patient);
 
-        editor = getSharedPreferences(PREF_PATIENT, MODE_PRIVATE).edit();
+        /*editor = getSharedPreferences(PREF_PATIENT, MODE_PRIVATE).edit();
         // editor.putString(""+Final_Patient.getPatientDetails().getPatientId(), patientjson);
         editor.putString("" + SelectedPatient.getPatientId(), patientjson);
 
         editor.commit();
+        */
 
-        Intent i = new Intent(Home.this, pdf_preview.class);
-        i.putExtra("patient_id", "" + SelectedPatient.getPatientId());
-        startActivity(i);
+        HashMap<String,String> params = new HashMap<>();
+        params.put("action","insertPrescription");
+        params.put("patient_id",SelectedPatient.getPatientId()+"");
+        params.put("rx_json",patientjson);
+        params.put("patient_type",completed);
+
+
+        NetworkCall ncall = new NetworkCall();
+        ncall.setServerUrlWebserviceApi(VR_APIS);
+
+        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+            @Override
+            public boolean setResponse(String responseStr) {
+                try{
+                    JSONObject reader = new JSONObject(responseStr);
+                    if(reader.getString("status").equals("true"))
+                    {
+                        Intent i = new Intent(Home.this, pdf_preview.class);
+                        i.putExtra("patient_id", "" + SelectedPatient.getPatientId());
+                        i.putExtra("patientjson",patientjson);
+                        //startActivity(i);
+                    }
+                    else
+                    {
+                        Toast.makeText(Home.this, ""+responseStr, Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+                catch(Exception e){
+                    Toast.makeText(Home.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+
+
+
 
     }
 
@@ -1230,7 +1324,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         ll_draft_patients.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flag_for_patients = StaticData.draft;
+                flag_for_patients = draft;
                 ShowDraftPatients();
             }
         });
@@ -1238,7 +1332,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         ll_checkedin_patients.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flag_for_patients = StaticData.checkedin;
+                flag_for_patients = checkedin;
                 SetMainDrawerRecyclerView(PatientsList);
             }
         });
@@ -1247,18 +1341,18 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
     private void ShowDraftPatients() {
 
-        SharedPreferences prefs = getSharedPreferences(PREF_PATIENT, Context.MODE_PRIVATE);
-        Map<String, ?> entries = prefs.getAll();
-        Set<String> keys = entries.keySet();
+//        SharedPreferences prefs = getSharedPreferences(PREF_PATIENT, Context.MODE_PRIVATE);
+//        Map<String, ?> entries = prefs.getAll();
+//        Set<String> keys = entries.keySet();
 
         //  prefs.edit().remove("1").commit();
-
-
         //  SetMainDrawerRecyclerView();
 
-        PatientDraft = new ArrayList<>();
 
-        for (String key : keys) {
+
+
+
+      /*  for (String key : keys) {
             String PatientJson = prefs.getString(key, null);
             Log.e("patientjson", PatientJson);
             if (PatientJson != null) {
@@ -1270,7 +1364,38 @@ public class Home extends AppCompatActivity implements PatientInterface {
             } else {
                 Toast.makeText(this, "Json null", Toast.LENGTH_SHORT).show();
             }
-        }
+        }*/
+        PatientDraft = new ArrayList<>();
+        HashMap<String,String> params = new HashMap<>();
+        params.put("action","getAllPrescriptions");
+        params.put("patient_type","draft");
+
+        NetworkCall ncall = new NetworkCall();
+        ncall.setServerUrlWebserviceApi(VR_APIS);
+
+        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+            @Override
+            public boolean setResponse(String responseStr) {
+                try {
+                    PatientJson obj = new Gson().fromJson(responseStr, PatientJson.class);
+                    if (obj.getStatus()) {
+
+                     // List<PatientFinal>
+                      for(int i =0;i< obj.getData().size();i++)
+                      {
+                          Gson gson = new Gson();
+                          PatientFinal temp = gson.fromJson(obj.getData().get(i).getRx_json(), PatientFinal.class);
+                          PatientDraft.add(temp.getPatientDetails());
+                      }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(Home.this, "Catch : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+                return false;
+            }
+        });
         SetMainDrawerRecyclerView(PatientDraft);
 
     }
@@ -2446,19 +2571,42 @@ public class Home extends AppCompatActivity implements PatientInterface {
                         tv_home_total_patients.setText("Today's Patients - " + PatientsList.size());
                         tv_patients_checked_in.setText("" + PatientsList.size());
 
+                        PatientDraft = new ArrayList<>();
+                        HashMap<String,String> params = new HashMap<>();
+                        params.put("action","getAllPrescriptions");
+                        params.put("patient_type","draft");
 
-                        SharedPreferences prefs = getSharedPreferences(PREF_PATIENT, Context.MODE_PRIVATE);
-                        Map<String, ?> entries = prefs.getAll();
-                        Set<String> keys = entries.keySet();
+                        NetworkCall ncall = new NetworkCall();
+                        ncall.setServerUrlWebserviceApi(VR_APIS);
 
-                        //  prefs.edit().remove("1").commit();
+                        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+                            @Override
+                            public boolean setResponse(String responseStr) {
+                                try {
+                                    PatientJson obj = new Gson().fromJson(responseStr, PatientJson.class);
+                                    if (obj.getStatus()) {
 
-                        tv_patient_draft.setText(prefs.getAll().size() + "");
+                                        // List<PatientFinal>
+                                        for(int i =0;i< obj.getData().size();i++)
+                                        {
+                                            Gson gson = new Gson();
+                                            PatientFinal temp = gson.fromJson(obj.getData().get(i).getRx_json(), PatientFinal.class);
+                                            PatientDraft.add(temp.getPatientDetails());
+                                        }
 
-                        for (String key : keys) {
-                            Log.i("id", key);
-                            Toast.makeText(Home.this, "" + key, Toast.LENGTH_SHORT).show();
-                        }
+                                        tv_patient_draft.setText(PatientDraft.size() + "");
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(Home.this, "Catch : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+
+                                return false;
+                            }
+                        });
+
+
+
 
                         //  SetMainDrawerRecyclerView(PatientsList);
                         //tv_main.setText(obj.getTotal_records()+"|"+vitalList.size());
@@ -2694,14 +2842,14 @@ public class Home extends AppCompatActivity implements PatientInterface {
         if (identifier == StaticData.Adapter_identifier.patients) {
 
             switch (flag_for_patients) {
-                case StaticData.checkedin:
+                case checkedin:
                     SelectedPatientPosition = position;
                     SelectedPatient = PatientsList.get(SelectedPatientPosition);
 
                     break;
-                case StaticData.allpatients:
+                case allpatients:
                     break;
-                case StaticData.draft:
+                case draft:
                     SelectedPatientPosition = position;
                     SelectedPatient = PatientDraft.get(SelectedPatientPosition);
                     SharedPreferences prefs = getSharedPreferences(PREF_PATIENT, MODE_PRIVATE);
