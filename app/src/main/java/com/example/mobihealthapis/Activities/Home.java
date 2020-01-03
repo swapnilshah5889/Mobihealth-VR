@@ -118,7 +118,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
     TextToSpeech textToSpeech;
     RelativeLayout rl_home_main;
     RecyclerView rv_main_drawer, rv_advice_list_main, rv_followup_list_main, rv_medicines_list_main;
-    LinearLayout ll_activate_voice, ll_patient_drawer, ll_draft_patients, ll_checkedin_patients;
+    LinearLayout ll_activate_voice, ll_patient_drawer, ll_draft_patients, ll_checkedin_patients,ll_drawer_showhide;
     RipplePulseLayout mRipplePulseLayout;
     MedicineAdapter medicineAdapter;
     String flag_for_patients = "";
@@ -130,6 +130,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
     PatientFinal Final_Patient;
     List<Patient.Data> PatientDraft;
+    List<PatientFinal> Final_PatientDraft;
     Vitals.Data Final_Vitals;
     List<Issues.Data> Final_Symptoms;
     List<Diagnosis.Data> Final_Diagnosis;
@@ -304,7 +305,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
                         {
                             if(finalarr[1].equals("prescription") || finalarr[1].equals("description"))
                             {
-                                Final_Patient = new PatientFinal(SelectedPatient);
+                                /*Final_Patient = new PatientFinal(SelectedPatient);
 
 
                                 if (Final_Vitals != null) {
@@ -352,7 +353,15 @@ public class Home extends AppCompatActivity implements PatientInterface {
                                 final String patientjson = new Gson().toJson(Final_Patient);
 
                                 HashMap<String,String> params = new HashMap<>();
-                                params.put("action","insertPrescription");
+
+                                //if draft then update the previous
+                                if(flag_for_patients.equals(draft)){
+                                    params.put("action","updatePrescription");
+                                }
+                                //else insert new draft
+                                else {
+                                    params.put("action", "insertPrescription");
+                                }
                                 params.put("patient_id",SelectedPatient.getPatientId()+"");
                                 params.put("rx_json",patientjson);
                                 params.put("patient_type",draft);
@@ -384,7 +393,9 @@ public class Home extends AppCompatActivity implements PatientInterface {
                                         }
                                         return false;
                                     }
-                                });
+                                });*/
+
+                                GeneratePrescription(draft);
 
                             }
                         }
@@ -731,10 +742,12 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
                         }
 
-                    } else if (finalarr[0].equals("generate")) {
+                    }
+
+                    else if (finalarr[0].equals("generate")) {
 
                         if (finalarr[1].equals("prescription")) {
-                            GeneratePrescription();
+                            GeneratePrescription(completed);
                         }
 
                     }
@@ -998,7 +1011,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
     }
 
-    private void GeneratePrescription() {
+    private void GeneratePrescription(String patient_type) {
 
         Final_Patient = new PatientFinal(SelectedPatient);
 
@@ -1054,12 +1067,19 @@ public class Home extends AppCompatActivity implements PatientInterface {
         */
 
         HashMap<String,String> params = new HashMap<>();
-        params.put("action","insertPrescription");
+
+
+
+        if(flag_for_patients.equals(draft)){
+            params.put("action","updatePrescription");
+        }
+        else {
+            params.put("action", "insertPrescription");
+        }
+
         params.put("patient_id",SelectedPatient.getPatientId()+"");
         params.put("rx_json",patientjson);
-        params.put("patient_type",completed);
-
-
+        params.put("patient_type",patient_type);
         NetworkCall ncall = new NetworkCall();
         ncall.setServerUrlWebserviceApi(VR_APIS);
 
@@ -1070,6 +1090,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
                     JSONObject reader = new JSONObject(responseStr);
                     if(reader.getString("status").equals("true"))
                     {
+                        ResetData();
                         Intent i = new Intent(Home.this, pdf_preview.class);
                         i.putExtra("patient_id", "" + SelectedPatient.getPatientId());
                         i.putExtra("patientjson",patientjson);
@@ -1345,6 +1366,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
         ll_patient_drawer = findViewById(R.id.ll_patient_drawer);
         ll_checkedin_patients = findViewById(R.id.ll_checkedin_patients);
         ll_draft_patients = findViewById(R.id.ll_draft_patients);
+        ll_drawer_showhide = findViewById(R.id.ll_drawer_showhide);
 
         Final_Symptoms = new ArrayList<>();
         Final_Diagnosis = new ArrayList<>();
@@ -1382,6 +1404,17 @@ public class Home extends AppCompatActivity implements PatientInterface {
             }
         });
 
+        ll_drawer_showhide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if((ll_patient_drawer.getVisibility() == View.GONE ||
+                        ll_patient_drawer.getVisibility() == View.INVISIBLE))
+                    ShowHidePatientList(1);
+                else
+                    ShowHidePatientList(0);
+            }
+        });
+
     }
 
     private void ShowDraftPatients() {
@@ -1410,7 +1443,7 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 Toast.makeText(this, "Json null", Toast.LENGTH_SHORT).show();
             }
         }*/
-        PatientDraft = new ArrayList<>();
+       /* PatientDraft = new ArrayList<>();
         HashMap<String,String> params = new HashMap<>();
         params.put("action","getAllPrescriptions");
         params.put("patient_type","draft");
@@ -1440,7 +1473,8 @@ public class Home extends AppCompatActivity implements PatientInterface {
 
                 return false;
             }
-        });
+        });*/
+
         SetMainDrawerRecyclerView(PatientDraft);
 
     }
@@ -2614,9 +2648,10 @@ public class Home extends AppCompatActivity implements PatientInterface {
                         PatientsList.addAll(obj.getData());
 
                         tv_home_total_patients.setText("Today's Patients - " + PatientsList.size());
-                        tv_patients_checked_in.setText("" + PatientsList.size());
+
 
                         PatientDraft = new ArrayList<>();
+                        Final_PatientDraft = new ArrayList<>();
                         HashMap<String,String> params = new HashMap<>();
                         params.put("action","getAllPrescriptions");
                         params.put("patient_type","draft");
@@ -2636,11 +2671,21 @@ public class Home extends AppCompatActivity implements PatientInterface {
                                         {
                                             Gson gson = new Gson();
                                             PatientFinal temp = gson.fromJson(obj.getData().get(i).getRx_json(), PatientFinal.class);
+                                            Final_PatientDraft.add(temp);
                                             PatientDraft.add(temp.getPatientDetails());
-                                        }
+                                            for(int l =0; l<PatientsList.size(); l++){
+                                                if(PatientsList.get(l).getPatientId() ==
+                                                        temp.getPatientDetails().getPatientId()){
 
+                                                    PatientsList.remove(l);
+
+                                                }
+                                            }
+                                        }
+                                        tv_patients_checked_in.setText("" + PatientsList.size());
                                         tv_patient_draft.setText(PatientDraft.size() + "");
                                     }
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     Toast.makeText(Home.this, "Catch : " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -2889,7 +2934,12 @@ public class Home extends AppCompatActivity implements PatientInterface {
             switch (flag_for_patients) {
                 case checkedin:
                     SelectedPatientPosition = position;
+                    if(SelectedPatient!=null){
+                        GeneratePrescription(draft);
+
+                    }
                     SelectedPatient = PatientsList.get(SelectedPatientPosition);
+
 
                     break;
                 case allpatients:
@@ -2897,15 +2947,11 @@ public class Home extends AppCompatActivity implements PatientInterface {
                 case draft:
                     SelectedPatientPosition = position;
                     SelectedPatient = PatientDraft.get(SelectedPatientPosition);
-                    SharedPreferences prefs = getSharedPreferences(PREF_PATIENT, MODE_PRIVATE);
+                    PatientFinal temp = Final_PatientDraft.get(position);
 
-                    String ngo_json = prefs.getString(SelectedPatient.getPatientId() + "", null);
-
-                    if (ngo_json != null) {
+                    if (temp != null) {
 
                         Gson gson = new Gson();
-                        PatientFinal temp = gson.fromJson(ngo_json, PatientFinal.class);
-
                         if(temp.getVitals()!= null)
                         {
                             Final_Vitals = temp.getVitals();
@@ -2998,6 +3044,36 @@ public class Home extends AppCompatActivity implements PatientInterface {
         } else if (identifier == StaticData.Adapter_identifier.advice_add) {
             AddAdvice(AdviceList.get(position));
         }
+
+
+    }
+
+    private void ResetData() {
+
+        //Final Variables
+        Final_Advice = new ArrayList<>();
+        Final_Medicines = new ArrayList<>();
+        Final_Diagnosis = new ArrayList<>();
+        Final_DiagnosticTests = new ArrayList<>();
+        Final_Symptoms = new ArrayList<>();
+        Final_Vitals = new Vitals.Data();
+        f_time = new int[3];
+        f_date = "";
+
+        //Rx Data
+        tv_followup_datetime.setText("");
+        flow_diagnostic.removeAllViews();
+        flow_diagnosis.removeAllViews();
+        flow_symptoms.removeAllViews();
+        SetAdviceRecyclerView();
+        setMedicineRecyclerView();
+
+        //vitals
+        tv_bmi.setText("");
+        tv_height.setText("");
+        tv_weight.setText("");
+        tv_hc.setText("");
+        tv_temperature.setText("");
 
 
     }
