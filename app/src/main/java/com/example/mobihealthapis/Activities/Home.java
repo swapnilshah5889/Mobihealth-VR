@@ -81,6 +81,7 @@ import static com.example.mobihealthapis.GeneralFunctions.Functions.isNumeric;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.updatefrequency;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.PREF_PATIENT;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VOICE_RECOGNITION_REQUEST_CODE;
+import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MEDICINE_NULL_DATA;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MULTIPLE_ADVICES;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MULTIPLE_DIAGNOSIS;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MULTIPLE_DIAGNOSTIC_TEST;
@@ -359,6 +360,14 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                                 if ((f_time[0] != -1)) {
                                     Final_Patient.setF_time(f_time);
                                 }
+
+
+
+
+
+
+
+
 
 
                                 final String patientjson = new Gson().toJson(Final_Patient);
@@ -795,7 +804,8 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             }
 
 
-        } else if (requestCode == VR_NOMATCH_PROMPT_SYMPTOM && resultCode == RESULT_OK) {
+        } else if (requestCode == VR_NOMATCH_PROMPT_SYMPTOM && resultCode == RESULT_OK)
+        {
 
             ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
@@ -821,7 +831,8 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
                 }
             }
-        } else if (requestCode == VR_MULTIPLE_SYMPTOMS && resultCode == RESULT_OK) {
+        } else if (requestCode == VR_MULTIPLE_SYMPTOMS && resultCode == RESULT_OK)
+        {
             ll_symptom_dialog.setVisibility(View.GONE);
             ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
@@ -994,7 +1005,8 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                     }
                 }
             }
-        } else if (requestCode == VR_UPDATE_ADVICE && resultCode == RESULT_OK) {
+        } else if (requestCode == VR_UPDATE_ADVICE && resultCode == RESULT_OK)
+        {
             ll_symptom_dialog.setVisibility(View.GONE);
             ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
@@ -1024,6 +1036,8 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     private void GeneratePrescription(String patient_type) {
 
+
+
         Final_Patient = new PatientFinal(SelectedPatient);
 
 
@@ -1049,11 +1063,6 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         }
 
 
-        if (Final_Medicines != null) {
-            if (Final_Medicines.size() > 0)
-                Final_Patient.setFinal_Medicines(Final_Medicines);
-        }
-
 
         if (Final_Advice != null) {
             if (Final_Advice.size() > 0)
@@ -1061,64 +1070,134 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         }
 
 
-        if (!f_date.equals(""))
-            Final_Patient.setF_date(f_date);
-
-        if ((f_time[0] != -1)) {
-            Final_Patient.setF_time(f_time);
-        }
-
-        final String patientjson = new Gson().toJson(Final_Patient);
-
-        /*editor = getSharedPreferences(PREF_PATIENT, MODE_PRIVATE).edit();
-        // editor.putString(""+Final_Patient.getPatientDetails().getPatientId(), patientjson);
-        editor.putString("" + SelectedPatient.getPatientId(), patientjson);
-
-        editor.commit();
-        */
-
         HashMap<String,String> params = new HashMap<>();
 
 
 
         if(flag_for_patients.equals(draft)){
+
+            if (Final_Medicines != null) {
+                if (Final_Medicines.size() > 0)
+                    Final_Patient.setFinal_Medicines(Final_Medicines);
+
+            }
+
+
+
+            if (!f_date.equals("")) {
+                Final_Patient.setF_date(f_date);
+
+            }
+            if((f_time[0] != -1))
+            {
+                Final_Patient.setF_time(f_time);
+            }
+            final String patientjson = new Gson().toJson(Final_Patient);
+
             params.put("action","updatePrescription");
+            params.put("patient_id",SelectedPatient.getPatientId()+"");
+            params.put("rx_json",patientjson);
+            params.put("patient_type",patient_type);
+            NetworkCall ncall = new NetworkCall();
+            ncall.setServerUrlWebserviceApi(VR_APIS);
+
+            ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+                @Override
+                public boolean setResponse(String responseStr) {
+                    try{
+                        JSONObject reader = new JSONObject(responseStr);
+                        if(reader.getString("status").equals("true"))
+                        {
+                            ResetData();
+                            Intent i = new Intent(Home.this, pdf_preview.class);
+                            i.putExtra("patient_id", "" + SelectedPatient.getPatientId());
+                            i.putExtra("patientjson",patientjson);
+                            //startActivity(i);
+                        }
+                        else
+                        {
+                            Toast.makeText(Home.this, ""+responseStr, Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                    catch(Exception e){
+                        Toast.makeText(Home.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                    return false;
+                }
+            });
         }
         else {
-            params.put("action", "insertPrescription");
-        }
+            int tempcount = 0;
 
-        params.put("patient_id",SelectedPatient.getPatientId()+"");
-        params.put("rx_json",patientjson);
-        params.put("patient_type",patient_type);
-        NetworkCall ncall = new NetworkCall();
-        ncall.setServerUrlWebserviceApi(VR_APIS);
-
-        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
-            @Override
-            public boolean setResponse(String responseStr) {
-                try{
-                    JSONObject reader = new JSONObject(responseStr);
-                    if(reader.getString("status").equals("true"))
+            if (Final_Medicines != null) {
+                if (Final_Medicines.size() > 0)
+                    Final_Patient.setFinal_Medicines(Final_Medicines);
+                String text = "";
+                for(int i = 0;i<Final_Medicines.size();i++)
+                {
+                    if(!CheckMedicineNullData(Final_Medicines.get(i)))
                     {
-                        ResetData();
-                        Intent i = new Intent(Home.this, pdf_preview.class);
-                        i.putExtra("patient_id", "" + SelectedPatient.getPatientId());
-                        i.putExtra("patientjson",patientjson);
-                        //startActivity(i);
+                        text += Final_Medicines.get(i).getName()+" ";
                     }
-                    else
-                    {
-                        Toast.makeText(Home.this, ""+responseStr, Toast.LENGTH_SHORT).show();
-                    }
+                }
+                if(!text.equals(""))
+                {
+                    tempcount++;
+                    Speak("Please provide complete details for "+ text,VR_MEDICINE_NULL_DATA,3000);
+                }
 
-                }
-                catch(Exception e){
-                    Toast.makeText(Home.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-                return false;
             }
-        });
+
+            if (!f_date.equals("") && (f_time[0] != -1)) {
+                Final_Patient.setF_date(f_date);
+                Final_Patient.setF_time(f_time);
+            }
+            else if (f_date.equals("") && (f_time[0] == -1)){}
+            else if (f_date.equals("") || (f_time[0] == -1))
+            {
+                tempcount++;
+                Speak("Please provide complete details for followup " ,VR_MEDICINE_NULL_DATA,3000);
+            }
+
+            final String patientjson = new Gson().toJson(Final_Patient);
+            if(tempcount == 0)
+            {
+                params.put("action", "insertPrescription");
+
+
+                params.put("patient_id", SelectedPatient.getPatientId() + "");
+                params.put("rx_json", patientjson);
+                params.put("patient_type", patient_type);
+                NetworkCall ncall = new NetworkCall();
+                ncall.setServerUrlWebserviceApi(VR_APIS);
+
+                ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+                    @Override
+                    public boolean setResponse(String responseStr) {
+                        try {
+                            JSONObject reader = new JSONObject(responseStr);
+                            if (reader.getString("status").equals("true")) {
+                                ResetData();
+                                Intent i = new Intent(Home.this, pdf_preview.class);
+                                i.putExtra("patient_id", "" + SelectedPatient.getPatientId());
+                                i.putExtra("patientjson", patientjson);
+                                //startActivity(i);
+                            } else {
+                                Toast.makeText(Home.this, "" + responseStr, Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (Exception e) {
+                            Toast.makeText(Home.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        return false;
+                    }
+                });
+
+            }
+
+
+        }
 
 
 
@@ -2414,6 +2493,10 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         Final_Medicines.add(multiplemedobj);
         //medicineAdapter.notifyItemInserted(Final_Medicines.size()-1);
         setMedicineRecyclerView();
+        if(!CheckMedicineNullData(multiplemedobj))
+        {
+            Speak("Please provide other details for "+ multiplemedobj.getName(),VR_MEDICINE_NULL_DATA,3000);
+        }
     }
 
 
@@ -2431,9 +2514,27 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
         );
 
+
+
         Final_Medicines.add(obj);
         setMedicineRecyclerView();
 
+        if(!CheckMedicineNullData(obj))
+        {
+            Speak("Please provide other details for "+ obj.getName(),VR_MEDICINE_NULL_DATA,3000);
+        }
+    }
+
+    private Boolean CheckMedicineNullData(Medicine obj) {
+
+        double i[] = obj.getDailytimings();
+        if (obj.getFrequency() == null || obj.getDuration() == null || obj.getAfbf() == null || (i[0] == 0 && i[1] == 0 && i[2] == 0)) {
+            return false;
+        }
+        else
+            {
+            return true;
+           }
     }
 
     private void updateMedicine(String[] arr, int pos) {
@@ -2471,6 +2572,10 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         }
         Final_Medicines.set(pos, objnew);
         medicineAdapter.notifyItemChanged(pos);
+        if(!CheckMedicineNullData(objnew))
+        {
+            Speak("Please provide other details for "+ objnew.getName(),VR_MEDICINE_NULL_DATA,3000);
+        }
 
     }
 
