@@ -7,7 +7,9 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -104,7 +106,7 @@ import static com.example.mobihealthapis.GeneralFunctions.StaticData.patienttype
 import static com.example.mobihealthapis.database_call.utils_string.API_URL.SEARCH_MED;
 import static com.example.mobihealthapis.database_call.utils_string.API_URL.VR_APIS;
 
-public class Home extends AppCompatActivity implements PatientInterface {
+public class Home extends AppCompatActivity implements PatientInterface, RecognitionListener {
 
 
     //Home
@@ -259,6 +261,15 @@ public class Home extends AppCompatActivity implements PatientInterface {
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
                 "Speech recognition demo");
         startActivityForResult(intent, VOICE_REQUEST_CODE);
+
+        /*Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+        intent.putExtra(RecognizerIntent.EXTRA_WEB_SEARCH_ONLY, "false");
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, "2000");
+        SpeechRecognizer recognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        recognizer.setRecognitionListener(this);
+        recognizer.startListening(intent);*/
+
 
     }//VOICE_RECOGNITION_REQUEST_CODE
 
@@ -3341,4 +3352,48 @@ public class Home extends AppCompatActivity implements PatientInterface {
     }
 
 
+    @Override
+    public void onReadyForSpeech(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onBeginningOfSpeech() {
+
+    }
+
+    @Override
+    public void onRmsChanged(float v) {
+
+    }
+
+    @Override
+    public void onBufferReceived(byte[] bytes) {
+
+    }
+
+    @Override
+    public void onEndOfSpeech() {
+
+    }
+
+    @Override
+    public void onError(int i) {
+
+    }
+
+    @Override
+    public void onResults(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onPartialResults(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onEvent(int i, Bundle bundle) {
+
+    }
 }
