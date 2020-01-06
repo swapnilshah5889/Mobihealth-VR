@@ -2322,7 +2322,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             public boolean setResponse(String responseStr) {
 
 
-                progress_dialog.dismiss();
+               // progress_dialog.dismiss();
                 try {
                     //tv_main.setText(responseStr);
                     Patient obj = new Gson().fromJson(responseStr, Patient.class);
@@ -2339,7 +2339,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                             Final_PatientChecked.add(new PatientFinal(PatientsList.get(i)));
                         }
 
-                        progress_dialog.show();
+                        //progress_dialog.show();
                         Final_PatientDraft = new ArrayList<>();
                         HashMap<String, String> params = new HashMap<>();
                         params.put("action", "getAllPrescriptions");
@@ -2394,8 +2394,13 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                         //  SetMainDrawerRecyclerView(PatientsList);
                         //tv_main.setText(obj.getTotal_records()+"|"+vitalList.size());
                     }
+                    else
+                    {
+                        progress_dialog.dismiss();
+                    }
 
                 } catch (Exception e) {
+                    progress_dialog.dismiss();
                     e.printStackTrace();
                     Toast.makeText(Home.this, "Catch : " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
@@ -3098,7 +3103,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                 case checkedin:
 
                     if (SelectedPatient != null) {
-                        flag_for_previous_patient = draft;
+                        flag_for_previous_patient = checkedin;
                         previous_patient_position = SelectedPatientPosition;
                         GeneratePrescription(draft);
                     }
