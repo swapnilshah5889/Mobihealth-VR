@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mobihealthapis.GeneralFunctions.StaticData;
 import com.example.mobihealthapis.Interface.PatientInterface;
 import com.example.mobihealthapis.Models.Patient;
+import com.example.mobihealthapis.Models.PatientFinal;
 import com.example.mobihealthapis.R;
 import com.squareup.picasso.Picasso;
 
@@ -24,10 +25,10 @@ import java.util.StringTokenizer;
 public class PatientsAdapter extends RecyclerView.Adapter<PatientsAdapter.MyViewHolder> {
 
     Context context;
-    List<Patient.Data> PatientList;
+    List<PatientFinal> PatientList;
     PatientInterface patientInterface;
 
-    public PatientsAdapter(Context context, List<Patient.Data> patientList) {
+    public PatientsAdapter(Context context, List<PatientFinal> patientList) {
         this.context = context;
         this.PatientList = patientList;
         this.patientInterface = (PatientInterface)context;
@@ -45,7 +46,7 @@ public class PatientsAdapter extends RecyclerView.Adapter<PatientsAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder,final int position) {
 
-        final Patient.Data p = PatientList.get(position);
+        final Patient.Data p = PatientList.get(position).getPatientDetails();
         holder.tv_serial_no_patient_list.setText(""+(position+1));
 
         String name = "";
