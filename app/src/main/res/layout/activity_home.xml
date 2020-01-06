@@ -2,105 +2,102 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_home_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e5e5e5"
-    tools:context=".Activities.Home"
-    android:id="@+id/rl_home_main">
+    tools:context=".Activities.Home">
 
 
-
-<!--Main Home-->
+    <!--Main Home-->
 
     <LinearLayout
-        android:paddingTop="30dp"
-        android:paddingLeft="30dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingLeft="30dp"
+        android:paddingTop="30dp">
 
         <TextView
             android:id="@+id/tv_home_total_patients"
-            android:textStyle="bold"
-            android:textSize="25dp"
-            android:textColor="@color/colorAccent"
-            android:text="Today's Patients - "
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></TextView>
+            android:layout_height="wrap_content"
+            android:text="Today's Patients - "
+            android:textColor="@color/colorAccent"
+            android:textSize="25dp"
+            android:textStyle="bold"></TextView>
 
     </LinearLayout>
 
     <LinearLayout
-        android:padding="20dp"
-        android:weightSum="2"
-        android:gravity="center"
-        android:layout_marginBottom="200dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="200dp"
+        android:gravity="center"
+        android:padding="20dp"
+        android:weightSum="2">
 
 
         <LinearLayout
             android:id="@+id/ll_checkedin_patients"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
             android:layout_margin="15dp"
-            android:padding="20dp"
-            android:orientation="vertical"
             android:layout_weight="1"
             android:background="@drawable/patient_list_back_round"
-            android:layout_width="match_parent"
-            android:layout_height="150dp">
+            android:orientation="vertical"
+            android:padding="20dp">
 
             <TextView
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:textColor="@color/colorAccent"
-                android:text="Checked In"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></TextView>
+                android:layout_height="wrap_content"
+                android:text="Checked In"
+                android:textColor="@color/colorAccent"
+                android:textSize="20dp"
+                android:textStyle="bold"></TextView>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:gravity="bottom"
-                android:layout_height="match_parent">
-
+                android:layout_height="match_parent"
+                android:gravity="bottom">
 
 
                 <TextView
                     android:id="@+id/tv_patients_checked_in"
-                    android:gravity="right"
-                    android:textStyle="bold"
-                    android:textSize="40dp"
-                    android:textColor="@color/colorAccent"
-                    android:text="0"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"></TextView>
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="0"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="40dp"
+                    android:textStyle="bold"></TextView>
 
             </LinearLayout>
 
         </LinearLayout>
 
 
-
         <LinearLayout
             android:id="@+id/ll_draft_patients"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
             android:layout_margin="15dp"
-            android:padding="20dp"
-            android:orientation="vertical"
             android:layout_weight="1"
             android:background="@drawable/patient_list_back_round_accent"
-            android:layout_width="match_parent"
-            android:layout_height="150dp">
+            android:orientation="vertical"
+            android:padding="20dp">
 
             <TextView
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:textColor="@color/White"
-                android:text="Drafts"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></TextView>
+                android:layout_height="wrap_content"
+                android:text="Drafts"
+                android:textColor="@color/White"
+                android:textSize="20dp"
+                android:textStyle="bold"></TextView>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:gravity="bottom"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:gravity="bottom">
 
 
                 <TextView
@@ -118,38 +115,41 @@
         </LinearLayout>
 
 
-
     </LinearLayout>
 
 
-<!--Shadow-->
-    <include layout="@layout/back_shadow"
+    <!--Shadow-->
+    <include
+        layout="@layout/back_shadow"
         android:visibility="gone"></include>
 
 
-
-
-
-    <include layout="@layout/patient_details_layout"
+    <include
+        layout="@layout/patient_details_layout"
         android:visibility="invisible"></include>
 
 
-    <include layout="@layout/voice_background"
+    <include
+        layout="@layout/voice_background"
         android:visibility="visible"></include>
 
 
-<!--Main Voice-->
-    <include layout="@layout/voice_layout_main"
+    <!--Main Voice-->
+    <include
+        layout="@layout/voice_layout_main"
         android:visibility="visible"></include>
 
     <!--Patient List-->
-    <include layout="@layout/main_drawer"
+    <include
+        layout="@layout/main_drawer"
         android:visibility="gone"></include>
 
-    <include layout="@layout/multiple_symptoms_dialog"
+    <include
+        layout="@layout/multiple_symptoms_dialog"
         android:visibility="gone"></include>
 
-    <include layout="@layout/nomatch_prompt_dialog"
+    <include
+        layout="@layout/nomatch_prompt_dialog"
         android:visibility="gone"></include>
 
 </RelativeLayout>

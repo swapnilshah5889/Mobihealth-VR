@@ -181,7 +181,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#fff"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:clickable="true"
                     android:orientation="vertical">
 
@@ -1039,6 +1039,7 @@
 
                     <LinearLayout
 
+                        android:visibility="visible"
                         android:layout_marginBottom="30dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
@@ -1052,7 +1053,6 @@
                             android:orientation="vertical">
 
                             <LinearLayout
-                                android:weightSum="10"
                                 android:gravity="center"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -1063,37 +1063,16 @@
 
                                 <TextView
                                     android:paddingStart="20dp"
-                                    android:layout_weight="1"
                                     android:id="@+id/tv_followup_datetime"
                                     android:gravity="left"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:textColor="@color/colorAccent"
-                                    android:text="Date : 23-12-19 | Time : 5:00 P.M."
+                                    android:autoSizeTextType="uniform"
+                                    android:text="No Follow Up Added"
                                     android:maxLines="1"
-                                    android:textSize="18dp"></TextView>
+                                    android:textSize="25dp"></TextView>
 
-                                <LinearLayout
-                                    android:layout_weight="9"
-                                    android:id="@+id/ll_chip_delete"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:gravity="center">
-
-                                    <ImageView
-                                        android:padding="2dp"
-                                        android:layout_marginLeft="15dp"
-                                        android:layout_marginRight="5dp"
-                                        android:id="@+id/img_multiply"
-                                        android:layout_width="15dp"
-                                        android:layout_height="15dp"
-                                        android:src="@drawable/ic_multiply"
-                                        android:tint="#4c4c4c">
-
-
-                                    </ImageView>
-
-                                </LinearLayout>
 
                             </LinearLayout>
 

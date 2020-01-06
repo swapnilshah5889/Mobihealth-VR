@@ -76,15 +76,16 @@ public class pdf_preview extends AppCompatActivity {
         getintent = getIntent();
         if (getintent.hasExtra("patient_id")) {
             patient_id = getintent.getStringExtra("patient_id");
-            SharedPreferences prefs = getSharedPreferences(PREF_PATIENT, MODE_PRIVATE);
+            //SharedPreferences prefs = getSharedPreferences(PREF_PATIENT, MODE_PRIVATE);
 
-            String ngo_json = prefs.getString(patient_id, null);
+            String ngo_json = getintent.getStringExtra("patientjson");
 
             if (ngo_json != null) {
 
                 Gson gson = new Gson();
                 Final_Patient = gson.fromJson(ngo_json, PatientFinal.class);
                 onInitializeObjects();
+
             } else {
                 Toast.makeText(this, "Json null", Toast.LENGTH_SHORT).show();
             }
@@ -133,13 +134,6 @@ public class pdf_preview extends AppCompatActivity {
         tv_followup_pdf = findViewById(R.id.tv_followup_pdf);
         ll_followup_pdf = findViewById(R.id.ll_followup_pdf);
 
-        fab_print.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //GeneratePDF();
-                printPDF(rl_generate_pdf);
-            }
-        });
         SetMedicine();
         SetVitals();
         SetSymptoms();
@@ -148,8 +142,19 @@ public class pdf_preview extends AppCompatActivity {
         SetDiagnosticTest();
         SetFollowup();
 
+        fab_print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //GeneratePDF();
+                printPDF(rl_generate_pdf);
+            }
+        });
+
+
     }
 
+
+    //Set Data
     private void SetMedicine() {
         if (Final_Patient.getFinal_Medicines() != null) {
             MedicinePDFAdapter adapter = new MedicinePDFAdapter(this, Final_Patient.getFinal_Medicines());
@@ -222,7 +227,6 @@ public class pdf_preview extends AppCompatActivity {
         }
 
     }
-
 
     private void SetSymptoms() {
         if (Final_Patient.getFinal_Symptoms() != null) {
@@ -325,6 +329,8 @@ public class pdf_preview extends AppCompatActivity {
     }
 
 
+
+    //PDF Methods
     public void printPDF(View view) {
         PrintManager printManager = (PrintManager) getSystemService(PRINT_SERVICE);
         printManager.print("print_any_view_job_name", new ViewPrintAdapter(this,
@@ -350,7 +356,6 @@ public class pdf_preview extends AppCompatActivity {
         printHelper.printBitmap("Print Bitmap", bitmap);
 
     }
-
 
     public class ViewPrintAdapter extends PrintDocumentAdapter {
 
