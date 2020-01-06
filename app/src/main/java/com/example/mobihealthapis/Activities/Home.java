@@ -2891,9 +2891,10 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                                 i.putExtra("patient_id", "" + SelectedPatient.getPatientId());
                                 i.putExtra("patientjson", patientjson);
                                 //startActivity(i);
-                            } else {
+                            } else
+                                {
                                 Toast.makeText(Home.this, "" + responseStr, Toast.LENGTH_SHORT).show();
-                            }
+                                }
 
                         } catch (Exception e) {
                             Toast.makeText(Home.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
