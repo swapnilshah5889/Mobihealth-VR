@@ -128,6 +128,9 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     RipplePulseLayout mRipplePulseLayout;
     MedicineAdapter medicineAdapter;
     String flag_for_patients = "";
+    String flag_for_previous_patient="";
+    int previous_patient_position;
+
 
     int fixedheight, fixedheightcounter = 0;
 
@@ -316,10 +319,28 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         ll_drawer_showhide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(flag_for_patients.equals(checkedin))
+                {
+                    SetMainDrawerRecyclerView(PatientsList);
+                }
+                else{
+                    ShowDraftPatients();
+                }
                 if ((ll_patient_drawer.getVisibility() == View.GONE ||
-                        ll_patient_drawer.getVisibility() == View.INVISIBLE))
+                        ll_patient_drawer.getVisibility() == View.INVISIBLE)) {
+
+                    if(flag_for_patients.equals(checkedin)) {
+                        PatientsAdapter adapter = new PatientsAdapter(Home.this, PatientsList);
+                        rv_main_drawer.setAdapter(adapter);
+                    }
+                    else{
+                        PatientsAdapter adapter = new PatientsAdapter(Home.this, PatientDraft);
+                        rv_main_drawer.setAdapter(adapter);
+                    }
+
+                    rv_main_drawer.setHasFixedSize(true);
                     ShowHidePatientList(1);
-                else
+                }else
                     ShowHidePatientList(0);
             }
         });
@@ -573,664 +594,669 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+        if(resultCode == RESULT_OK)
+        {
 
-        String[] finalarr = GetRawDataFromSpeech(matches);
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-        //Show Patients & Stop Rx & CRUD Data
-        if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
+            String[] finalarr = GetRawDataFromSpeech(matches);
+
+            //Show Patients & Stop Rx & CRUD Data
+            if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
 
 
-            if (finalarr.length > 0) {
+                if (finalarr.length > 0) {
 
-                //Show Checkedin/Draft patients
-                if (finalarr[0].equals("show")) {
-                    if (finalarr.length > 1) {
-                        int temp = Functions.Soundex.StringCompareFine("checked", finalarr[1], 3);
-                        int temp1 = Functions.Soundex.StringCompareCoarse("draft", finalarr[1], 3);
-                        if (temp < 5 && temp >= 0) {
-                            flag_for_patients = checkedin;
-                            SetMainDrawerRecyclerView(PatientsList);
-
-                        } else if (temp1 < 7 && temp1 >= 0) {
-
-                            flag_for_patients = draft;
-                            ShowDraftPatients();
-                        }
-
-                    }
-
-                }
-
-                //Stop Rx & CRUD Data
-                else if (ll_main_patient_rx.getVisibility() == View.VISIBLE) {
-
-                    //Stop Rx and Upload as Draft
-                    if (finalarr[0].equals("stop")) {
+                    //Show Checkedin/Draft patients
+                    if (finalarr[0].equals("show")) {
                         if (finalarr.length > 1) {
-                            if (finalarr[1].equals("prescription") || finalarr[1].equals("description"))
-                            {
+                            int temp = Functions.Soundex.StringCompareFine("checked", finalarr[1], 3);
+                            int temp1 = Functions.Soundex.StringCompareCoarse("draft", finalarr[1], 3);
+                            if (temp < 5 && temp >= 0) {
+                                flag_for_patients = checkedin;
+                                SetMainDrawerRecyclerView(PatientsList);
 
-                                GeneratePrescription(draft);
+                            } else if (temp1 < 7 && temp1 >= 0) {
 
+                                flag_for_patients = draft;
+                                ShowDraftPatients();
                             }
-                        }
-                    }
 
-                    //Set/Add/Update/Delete Data
-                    else if (finalarr[0].equals("write") || finalarr[0].equals("right")
-                            || finalarr[0].equals("set") || finalarr[0].equals("add") || finalarr[0].equals("start"))
-                    {
-
-                        if (finalarr.length > 1) {
-                            switch (finalarr[1]) {
-                                case ("vital"):
-                                case ("vitals"): {
-
-                                    OnExpandClicked(vitals);
-                                    break;
-
-                                }
-                                case ("issue"):
-                                case ("issues"):
-                                case ("complaints"):
-                                case ("complaint"):
-                                case ("symptom"):
-                                case ("symptoms"): {
-                                    OnExpandClicked(symptoms);
-                                    break;
-                                }
-
-                                case ("diagnosis"): {
-                                    OnExpandClicked(diagnosis);
-
-                                    break;
-                                }
-                                case ("medicine"):
-                                case ("prescription"): {
-                                    if (finalarr.length > 1) {
-
-                                        OnExpandClicked(medicine);
-                                    }
-                                    break;
-                                }
-                                case ("diagnostic"): {
-                                    if (finalarr.length > 2) {
-                                        if (finalarr[2].equals("test")) {
-                                            OnExpandClicked(diagnostic);
-                                            break;
-                                        }
-                                    }
-                                    break;
-                                }
-
-
-                                case ("follow"): {
-                                    if (finalarr.length > 2) {
-                                        if (finalarr[1].equals("follow") && finalarr[2].equals("up")) {
-                                            OnExpandClicked(followup);
-                                        }
-                                    }
-
-                                    break;
-                                }
-
-                                case ("advice"):
-                                case ("advise"): {
-                                    OnExpandClicked(advice);
-                                    SetAdvice();
-                                    break;
-                                }
-
-                                default:
-                                    Toast.makeText(this, "Command not recognized", Toast.LENGTH_SHORT).show();
-                                    break;
-
-                            }
                         }
 
                     }
-                    //setting vitals when expanded
-                    else if (Functions.CheckData(finalarr[0], StaticData.Vitals) && ExpandedDetail == vitals) {
-                        SetVitals(finalarr);
-                    }
-                    //Update
-                    else if (finalarr[0].equals("update")) {
-                        if (finalarr.length > 2) {
-                            if (ExpandedDetail == medicine) {
 
-                                if (finalarr[1].equals("number")) {
-                                    if (isNumeric(finalarr[2])) {
-                                        int pos = Integer.parseInt(finalarr[2]);
-                                        if (IsInList(pos, Final_Medicines.size())) {
-                                            pos--;
-                                            String[] arr = new String[finalarr.length - 3];
-                                            int j = 0;
-                                            for (int i = 3; i < finalarr.length; i++) {
-                                                arr[j] = finalarr[i];
-                                                j++;
-                                            }
+                    //Stop Rx & CRUD Data
+                    else if (ll_main_patient_rx.getVisibility() == View.VISIBLE) {
 
-                                            updateMedicine(arr, pos);
-                                        } else {
-                                            Toast.makeText(this, "Position Out Of Bounds", Toast.LENGTH_SHORT).show();
-                                        }
+                        //Stop Rx and Upload as Draft
+                        if (finalarr[0].equals("stop")) {
+                            if (finalarr.length > 1) {
+                                if (finalarr[1].equals("prescription") || finalarr[1].equals("description"))
+                                {
 
-                                    } else if (finalarr[2].equals("one")) {
+                                    GeneratePrescription(draft);
 
-                                        int pos = 1;
-                                        if (IsInList(pos, Final_Medicines.size())) {
-                                            pos--;
-                                            String[] arr = new String[finalarr.length - 3];
-                                            int j = 0;
-                                            for (int i = 3; i < finalarr.length; i++) {
-                                                arr[j] = finalarr[i];
-                                                j++;
-                                            }
-
-                                            updateMedicine(arr, pos);
-                                        } else {
-                                            Toast.makeText(this, "Position Out Of Bounds", Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    } else if (finalarr[2].equals("two") || finalarr[2].equals("to")
-                                            || finalarr[2].equals("do")) {
-                                        int pos = 2;
-                                        if (IsInList(pos, Final_Medicines.size())) {
-                                            pos--;
-                                            String[] arr = new String[finalarr.length - 3];
-                                            int j = 0;
-                                            for (int i = 3; i < finalarr.length; i++) {
-                                                arr[j] = finalarr[i];
-                                                j++;
-                                            }
-
-                                            updateMedicine(arr, pos);
-                                        } else {
-                                            Toast.makeText(this, "Position Out Of Bounds", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
                                 }
+                            }
+                        }
 
-                            } else if (ExpandedDetail == advice) {
+                        //Set/Add/Update/Delete Data
+                        else if (finalarr[0].equals("write") || finalarr[0].equals("right")
+                                || finalarr[0].equals("set") || finalarr[0].equals("add") || finalarr[0].equals("start"))
+                        {
 
-                                if (finalarr[1].equals("number")) {
-                                    if (isNumeric(finalarr[2])) {
-                                        update_advice_position = Integer.parseInt(finalarr[2]);
-                                        if (IsInList(update_advice_position, Final_Advice.size())) {
-                                            update_advice_position--;
-                                            ShowAdviceDialog("advice", AdviceList, VR_UPDATE_ADVICE);
+                            if (finalarr.length > 1) {
+                                switch (finalarr[1]) {
+                                    case ("vital"):
+                                    case ("vitals"): {
 
-                                        }
+                                        OnExpandClicked(vitals);
+                                        break;
 
                                     }
-                                }
+                                    case ("issue"):
+                                    case ("issues"):
+                                    case ("complaints"):
+                                    case ("complaint"):
+                                    case ("symptom"):
+                                    case ("symptoms"): {
+                                        OnExpandClicked(symptoms);
+                                        break;
+                                    }
 
-                            } else if (ExpandedDetail == symptoms) {
-                                if (finalarr[1].equals("number")) {
-                                    if (isNumeric(finalarr[2])) {
-                                        update_advice_position = Integer.parseInt(finalarr[2]);
-                                        if (IsInList(update_advice_position, Final_Symptoms.size())) {
-                                            update_advice_position--;
-                                            String[] newsymptom = new String[finalarr.length - 3];
-                                            if (finalarr.length > 3) {
-                                                int x = 0;
+                                    case ("diagnosis"): {
+                                        OnExpandClicked(diagnosis);
+
+                                        break;
+                                    }
+                                    case ("medicine"):
+                                    case ("prescription"): {
+                                        if (finalarr.length > 1) {
+
+                                            OnExpandClicked(medicine);
+                                        }
+                                        break;
+                                    }
+                                    case ("diagnostic"): {
+                                        if (finalarr.length > 2) {
+                                            if (finalarr[2].equals("test")) {
+                                                OnExpandClicked(diagnostic);
+                                                break;
+                                            }
+                                        }
+                                        break;
+                                    }
+
+
+                                    case ("follow"): {
+                                        if (finalarr.length > 2) {
+                                            if (finalarr[1].equals("follow") && finalarr[2].equals("up")) {
+                                                OnExpandClicked(followup);
+                                            }
+                                        }
+
+                                        break;
+                                    }
+
+                                    case ("advice"):
+                                    case ("advise"): {
+                                        OnExpandClicked(advice);
+                                        SetAdvice();
+                                        break;
+                                    }
+
+                                    default:
+                                        Toast.makeText(this, "Command not recognized", Toast.LENGTH_SHORT).show();
+                                        break;
+
+                                }
+                            }
+
+                        }
+                        //setting vitals when expanded
+                        else if (Functions.CheckData(finalarr[0], StaticData.Vitals) && ExpandedDetail == vitals) {
+                            SetVitals(finalarr);
+                        }
+                        //Update
+                        else if (finalarr[0].equals("update")) {
+                            if (finalarr.length > 2) {
+                                if (ExpandedDetail == medicine) {
+
+                                    if (finalarr[1].equals("number")) {
+                                        if (isNumeric(finalarr[2])) {
+                                            int pos = Integer.parseInt(finalarr[2]);
+                                            if (IsInList(pos, Final_Medicines.size())) {
+                                                pos--;
+                                                String[] arr = new String[finalarr.length - 3];
+                                                int j = 0;
                                                 for (int i = 3; i < finalarr.length; i++) {
-                                                    newsymptom[x] = finalarr[i];
-                                                    x++;
+                                                    arr[j] = finalarr[i];
+                                                    j++;
                                                 }
 
-                                                updateSymptoms(update_advice_position, newsymptom);
-
-
+                                                updateMedicine(arr, pos);
+                                            } else {
+                                                Toast.makeText(this, "Position Out Of Bounds", Toast.LENGTH_SHORT).show();
                                             }
 
-                                        }
+                                        } else if (finalarr[2].equals("one")) {
 
-                                    }
-                                }
-
-                            } else if (ExpandedDetail == diagnosis) {
-                                if (finalarr[1].equals("number")) {
-                                    if (isNumeric(finalarr[2])) {
-                                        update_advice_position = Integer.parseInt(finalarr[2]);
-                                        if (IsInList(update_advice_position, Final_Diagnosis.size())) {
-                                            update_advice_position--;
-                                            String[] newsymptom = new String[finalarr.length - 3];
-                                            if (finalarr.length > 3) {
-                                                int x = 0;
+                                            int pos = 1;
+                                            if (IsInList(pos, Final_Medicines.size())) {
+                                                pos--;
+                                                String[] arr = new String[finalarr.length - 3];
+                                                int j = 0;
                                                 for (int i = 3; i < finalarr.length; i++) {
-                                                    newsymptom[x] = finalarr[i];
-                                                    x++;
+                                                    arr[j] = finalarr[i];
+                                                    j++;
                                                 }
 
-                                                updateDiagnosis(update_advice_position, newsymptom);
-
-
+                                                updateMedicine(arr, pos);
+                                            } else {
+                                                Toast.makeText(this, "Position Out Of Bounds", Toast.LENGTH_SHORT).show();
                                             }
 
-                                        }
-
-                                    }
-                                }
-
-                            } else if (ExpandedDetail == diagnostic) {
-                                if (finalarr[1].equals("number")) {
-                                    if (isNumeric(finalarr[2])) {
-                                        update_advice_position = Integer.parseInt(finalarr[2]);
-                                        if (IsInList(update_advice_position, Final_DiagnosticTests.size())) {
-                                            update_advice_position--;
-                                            String[] newsymptom = new String[finalarr.length - 3];
-                                            if (finalarr.length > 3) {
-                                                int x = 0;
+                                        } else if (finalarr[2].equals("two") || finalarr[2].equals("to")
+                                                || finalarr[2].equals("do")) {
+                                            int pos = 2;
+                                            if (IsInList(pos, Final_Medicines.size())) {
+                                                pos--;
+                                                String[] arr = new String[finalarr.length - 3];
+                                                int j = 0;
                                                 for (int i = 3; i < finalarr.length; i++) {
-                                                    newsymptom[x] = finalarr[i];
-                                                    x++;
+                                                    arr[j] = finalarr[i];
+                                                    j++;
                                                 }
 
-                                                updateDiagnosticTest(update_advice_position, newsymptom);
+                                                updateMedicine(arr, pos);
+                                            } else {
+                                                Toast.makeText(this, "Position Out Of Bounds", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    }
 
+                                } else if (ExpandedDetail == advice) {
+
+                                    if (finalarr[1].equals("number")) {
+                                        if (isNumeric(finalarr[2])) {
+                                            update_advice_position = Integer.parseInt(finalarr[2]);
+                                            if (IsInList(update_advice_position, Final_Advice.size())) {
+                                                update_advice_position--;
+                                                ShowAdviceDialog("advice", AdviceList, VR_UPDATE_ADVICE);
 
                                             }
 
                                         }
+                                    }
 
+                                } else if (ExpandedDetail == symptoms) {
+                                    if (finalarr[1].equals("number")) {
+                                        if (isNumeric(finalarr[2])) {
+                                            update_advice_position = Integer.parseInt(finalarr[2]);
+                                            if (IsInList(update_advice_position, Final_Symptoms.size())) {
+                                                update_advice_position--;
+                                                String[] newsymptom = new String[finalarr.length - 3];
+                                                if (finalarr.length > 3) {
+                                                    int x = 0;
+                                                    for (int i = 3; i < finalarr.length; i++) {
+                                                        newsymptom[x] = finalarr[i];
+                                                        x++;
+                                                    }
+
+                                                    updateSymptoms(update_advice_position, newsymptom);
+
+
+                                                }
+
+                                            }
+
+                                        }
+                                    }
+
+                                } else if (ExpandedDetail == diagnosis) {
+                                    if (finalarr[1].equals("number")) {
+                                        if (isNumeric(finalarr[2])) {
+                                            update_advice_position = Integer.parseInt(finalarr[2]);
+                                            if (IsInList(update_advice_position, Final_Diagnosis.size())) {
+                                                update_advice_position--;
+                                                String[] newsymptom = new String[finalarr.length - 3];
+                                                if (finalarr.length > 3) {
+                                                    int x = 0;
+                                                    for (int i = 3; i < finalarr.length; i++) {
+                                                        newsymptom[x] = finalarr[i];
+                                                        x++;
+                                                    }
+
+                                                    updateDiagnosis(update_advice_position, newsymptom);
+
+
+                                                }
+
+                                            }
+
+                                        }
+                                    }
+
+                                } else if (ExpandedDetail == diagnostic) {
+                                    if (finalarr[1].equals("number")) {
+                                        if (isNumeric(finalarr[2])) {
+                                            update_advice_position = Integer.parseInt(finalarr[2]);
+                                            if (IsInList(update_advice_position, Final_DiagnosticTests.size())) {
+                                                update_advice_position--;
+                                                String[] newsymptom = new String[finalarr.length - 3];
+                                                if (finalarr.length > 3) {
+                                                    int x = 0;
+                                                    for (int i = 3; i < finalarr.length; i++) {
+                                                        newsymptom[x] = finalarr[i];
+                                                        x++;
+                                                    }
+
+                                                    updateDiagnosticTest(update_advice_position, newsymptom);
+
+
+                                                }
+
+                                            }
+
+                                        }
+                                    }
+
+                                }
+
+
+                            }
+                        }
+                        // delete
+                        else if (finalarr[0].equals("delete")) {
+
+                            if (finalarr.length > 2) {
+                                //if symptoms expanded
+                                if (ExpandedDetail == symptoms) {
+                                    if (finalarr[1].equals("number") && finalarr.length > 2) {
+                                        if (isNumeric(finalarr[2])) {
+                                            int temp = Integer.parseInt(finalarr[2]);
+                                            if (IsInList(temp, Final_Symptoms.size())) {
+                                                temp--;
+                                                DeleteSymptom(temp);
+                                            }
+                                        }
+                                    }
+                                }
+                                //if diagnosis expanded
+                                else if (ExpandedDetail == diagnosis) {
+                                    if (finalarr[1].equals("number") && finalarr.length > 2) {
+                                        if (isNumeric(finalarr[2])) {
+                                            int temp = Integer.parseInt(finalarr[2]);
+                                            if (IsInList(temp, Final_Diagnosis.size())) {
+                                                temp--;
+                                                DeleteDiagnosis(temp);
+                                            }
+                                        }
+                                    }
+                                }
+                                //if diagnostic test expanded
+                                else if (ExpandedDetail == diagnostic) {
+                                    if (finalarr[1].equals("number") && finalarr.length > 2) {
+                                        if (isNumeric(finalarr[2])) {
+                                            int temp = Integer.parseInt(finalarr[2]);
+                                            if (IsInList(temp, Final_DiagnosticTests.size())) {
+                                                temp--;
+                                                DeleteDiagnosticTest(temp);
+                                            }
+                                        }
+                                    }
+                                } else if (ExpandedDetail == medicine) {
+                                    if (finalarr[1].equals("number") && finalarr.length > 2) {
+                                        if (isNumeric(finalarr[2])) {
+                                            int temp = Integer.parseInt(finalarr[2]);
+                                            if (IsInList(temp, Final_Medicines.size())) {
+                                                temp--;
+                                                DeleteMedicine(temp);
+                                            }
+                                        }
+                                    }
+                                } else if (ExpandedDetail == advice) {
+                                    if (finalarr[1].equals("number") && finalarr.length > 2) {
+                                        if (isNumeric(finalarr[2])) {
+                                            int temp = Integer.parseInt(finalarr[2]);
+                                            if (IsInList(temp, Final_Advice.size())) {
+                                                temp--;
+                                                DeleteAdvice(temp);
+                                            }
+                                        }
                                     }
                                 }
 
+
+                                //global delete
+                                if (finalarr[1].equals("symptom")) {
+                                    if (finalarr[2].equals("number") && finalarr.length > 3) {
+                                        if (isNumeric(finalarr[3])) {
+                                            int temp = Integer.parseInt(finalarr[3]);
+                                            if (IsInList(temp, Final_Symptoms.size())) {
+                                                temp--;
+                                                DeleteSymptom(temp);
+                                            }
+                                        }
+                                    }
+                                } else if (finalarr[1].equals("diagnosis")) {
+                                    if (finalarr[2].equals("number") && finalarr.length > 3) {
+                                        if (isNumeric(finalarr[3])) {
+                                            int temp = Integer.parseInt(finalarr[3]);
+                                            if (IsInList(temp, Final_Diagnosis.size())) {
+                                                temp--;
+                                                DeleteDiagnosis(temp);
+                                            }
+                                        }
+                                    }
+                                } else if (finalarr[1].equals("test")) {
+                                    if (finalarr[2].equals("number") && finalarr.length > 3) {
+                                        if (isNumeric(finalarr[3])) {
+                                            int temp = Integer.parseInt(finalarr[3]);
+                                            if (IsInList(temp, Final_DiagnosticTests.size())) {
+                                                temp--;
+                                                DeleteDiagnosticTest(temp);
+                                            }
+                                        }
+                                    }
+                                } else if (finalarr[1].equals("medicine")) {
+                                    if (finalarr[2].equals("number") && finalarr.length > 3) {
+                                        if (isNumeric(finalarr[3])) {
+                                            int temp = Integer.parseInt(finalarr[3]);
+                                            if (IsInList(temp, Final_Medicines.size())) {
+                                                temp--;
+                                                DeleteMedicine(temp);
+                                            }
+                                        }
+                                    }
+                                } else if (finalarr[1].equals("advice") || finalarr[1].equals("advise")) {
+                                    if (finalarr[2].equals("number") && finalarr.length > 3) {
+                                        if (isNumeric(finalarr[3])) {
+                                            int temp = Integer.parseInt(finalarr[3]);
+                                            if (IsInList(temp, Final_Advice.size())) {
+                                                temp--;
+                                                DeleteAdvice(temp);
+                                            }
+                                        }
+                                    }
+                                }
+
+
                             }
 
+                        } else if (finalarr[0].equals("generate")) {
+
+                            if (finalarr[1].equals("prescription")) {
+                                GeneratePrescription(completed);
+                            }
 
                         }
-                    }
-                    // delete
-                    else if (finalarr[0].equals("delete")) {
+                        //add  symptoms
+                        else if (ExpandedDetail == symptoms) {
 
-                        if (finalarr.length > 2) {
-                            //if symptoms expanded
-                            if (ExpandedDetail == symptoms) {
-                                if (finalarr[1].equals("number") && finalarr.length > 2) {
-                                    if (isNumeric(finalarr[2])) {
-                                        int temp = Integer.parseInt(finalarr[2]);
-                                        if (IsInList(temp, Final_Symptoms.size())) {
-                                            temp--;
-                                            DeleteSymptom(temp);
-                                        }
-                                    }
-                                }
-                            }
-                            //if diagnosis expanded
-                            else if (ExpandedDetail == diagnosis) {
-                                if (finalarr[1].equals("number") && finalarr.length > 2) {
-                                    if (isNumeric(finalarr[2])) {
-                                        int temp = Integer.parseInt(finalarr[2]);
-                                        if (IsInList(temp, Final_Diagnosis.size())) {
-                                            temp--;
-                                            DeleteDiagnosis(temp);
-                                        }
-                                    }
-                                }
-                            }
-                            //if diagnostic test expanded
-                            else if (ExpandedDetail == diagnostic) {
-                                if (finalarr[1].equals("number") && finalarr.length > 2) {
-                                    if (isNumeric(finalarr[2])) {
-                                        int temp = Integer.parseInt(finalarr[2]);
-                                        if (IsInList(temp, Final_DiagnosticTests.size())) {
-                                            temp--;
-                                            DeleteDiagnosticTest(temp);
-                                        }
-                                    }
-                                }
-                            } else if (ExpandedDetail == medicine) {
-                                if (finalarr[1].equals("number") && finalarr.length > 2) {
-                                    if (isNumeric(finalarr[2])) {
-                                        int temp = Integer.parseInt(finalarr[2]);
-                                        if (IsInList(temp, Final_Medicines.size())) {
-                                            temp--;
-                                            DeleteMedicine(temp);
-                                        }
-                                    }
-                                }
-                            } else if (ExpandedDetail == advice) {
-                                if (finalarr[1].equals("number") && finalarr.length > 2) {
-                                    if (isNumeric(finalarr[2])) {
-                                        int temp = Integer.parseInt(finalarr[2]);
-                                        if (IsInList(temp, Final_Advice.size())) {
-                                            temp--;
-                                            DeleteAdvice(temp);
-                                        }
-                                    }
-                                }
-                            }
-
-
-                            //global delete
-                            if (finalarr[1].equals("symptom")) {
-                                if (finalarr[2].equals("number") && finalarr.length > 3) {
-                                    if (isNumeric(finalarr[3])) {
-                                        int temp = Integer.parseInt(finalarr[3]);
-                                        if (IsInList(temp, Final_Symptoms.size())) {
-                                            temp--;
-                                            DeleteSymptom(temp);
-                                        }
-                                    }
-                                }
-                            } else if (finalarr[1].equals("diagnosis")) {
-                                if (finalarr[2].equals("number") && finalarr.length > 3) {
-                                    if (isNumeric(finalarr[3])) {
-                                        int temp = Integer.parseInt(finalarr[3]);
-                                        if (IsInList(temp, Final_Diagnosis.size())) {
-                                            temp--;
-                                            DeleteDiagnosis(temp);
-                                        }
-                                    }
-                                }
-                            } else if (finalarr[1].equals("test")) {
-                                if (finalarr[2].equals("number") && finalarr.length > 3) {
-                                    if (isNumeric(finalarr[3])) {
-                                        int temp = Integer.parseInt(finalarr[3]);
-                                        if (IsInList(temp, Final_DiagnosticTests.size())) {
-                                            temp--;
-                                            DeleteDiagnosticTest(temp);
-                                        }
-                                    }
-                                }
-                            } else if (finalarr[1].equals("medicine")) {
-                                if (finalarr[2].equals("number") && finalarr.length > 3) {
-                                    if (isNumeric(finalarr[3])) {
-                                        int temp = Integer.parseInt(finalarr[3]);
-                                        if (IsInList(temp, Final_Medicines.size())) {
-                                            temp--;
-                                            DeleteMedicine(temp);
-                                        }
-                                    }
-                                }
-                            } else if (finalarr[1].equals("advice") || finalarr[1].equals("advise")) {
-                                if (finalarr[2].equals("number") && finalarr.length > 3) {
-                                    if (isNumeric(finalarr[3])) {
-                                        int temp = Integer.parseInt(finalarr[3]);
-                                        if (IsInList(temp, Final_Advice.size())) {
-                                            temp--;
-                                            DeleteAdvice(temp);
-                                        }
-                                    }
-                                }
-                            }
-
+                            SetSymptoms(finalarr);
 
                         }
-
-                    } else if (finalarr[0].equals("generate")) {
-
-                        if (finalarr[1].equals("prescription")) {
-                            GeneratePrescription(completed);
+                        //add diagnosis
+                        else if (ExpandedDetail == diagnosis) {
+                            SetDiagnosis(finalarr);
+                        }
+                        //add diagnostic
+                        else if (ExpandedDetail == diagnostic) {
+                            SetDiagnosticTests(finalarr);
+                        }
+                        //add medicine
+                        else if (ExpandedDetail == medicine) {
+                            SetMedicines(finalarr);
+                        }
+                        //add followup
+                        else if (ExpandedDetail == followup) {
+                            SetFollowUp(finalarr);
+                        }
+                        //add advice
+                        else if (ExpandedDetail == advice) {
+                            SetAdvice();
                         }
 
-                    }
-                    //add  symptoms
-                    else if (ExpandedDetail == symptoms) {
-
-                        SetSymptoms(finalarr);
-
-                    }
-                    //add diagnosis
-                    else if (ExpandedDetail == diagnosis) {
-                        SetDiagnosis(finalarr);
-                    }
-                    //add diagnostic
-                    else if (ExpandedDetail == diagnostic) {
-                        SetDiagnosticTests(finalarr);
-                    }
-                    //add medicine
-                    else if (ExpandedDetail == medicine) {
-                        SetMedicines(finalarr);
-                    }
-                    //add followup
-                    else if (ExpandedDetail == followup) {
-                        SetFollowUp(finalarr);
-                    }
-                    //add advice
-                    else if (ExpandedDetail == advice) {
-                        SetAdvice();
                     }
 
                 }
 
             }
 
-        }
+            //Multiple Symptoms
+            else if (requestCode == VR_MULTIPLE_SYMPTOMS && resultCode == RESULT_OK) {
 
-        //Multiple Symptoms
-        else if (requestCode == VR_MULTIPLE_SYMPTOMS && resultCode == RESULT_OK) {
+                ll_symptom_dialog.setVisibility(View.GONE);
+                if (finalarr.length > 2) {
+                    if (finalarr[0].equals("select")) {
+                        if (finalarr[1].equals("number")) {
+                            if (isNumeric(finalarr[2])) {
+                                int pos = Integer.parseInt(finalarr[2]);
+                                if (IsInList(pos, issuesmatched.size())) {
+                                    pos--;
+                                    if (symptom_update_flag == 1) {
+                                        Final_Symptoms.get(update_advice_position).setIssues(issuesmatched.get(pos).getIssues());
+                                        View itemview = flow_symptoms.getChildAt(update_advice_position);
+                                        TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                                        temp.setText(issuesmatched.get(pos).getIssues());
+                                        ll__uni_prompt.setVisibility(View.GONE);
+                                        ll_symptom_dialog.setVisibility(View.GONE);
+                                        symptom_update_flag = 0;
+                                    } else
+                                        AddSymptom(issuesmatched.get(pos).getIssues());
+                                }
 
-            ll_symptom_dialog.setVisibility(View.GONE);
-            if (finalarr.length > 2) {
-                if (finalarr[0].equals("select")) {
-                    if (finalarr[1].equals("number")) {
-                        if (isNumeric(finalarr[2])) {
-                            int pos = Integer.parseInt(finalarr[2]);
-                            if (IsInList(pos, issuesmatched.size())) {
-                                pos--;
-                                if (symptom_update_flag == 1) {
-                                    Final_Symptoms.get(update_advice_position).setIssues(issuesmatched.get(pos).getIssues());
-                                    View itemview = flow_symptoms.getChildAt(update_advice_position);
-                                    TextView temp = itemview.findViewById(R.id.tv_chip_data);
-                                    temp.setText(issuesmatched.get(pos).getIssues());
-                                    ll__uni_prompt.setVisibility(View.GONE);
-                                    ll_symptom_dialog.setVisibility(View.GONE);
-                                    symptom_update_flag = 0;
-                                } else
-                                    AddSymptom(issuesmatched.get(pos).getIssues());
                             }
-
                         }
                     }
                 }
+
             }
+            //Multiple diagnosis
+            else if (requestCode == VR_MULTIPLE_DIAGNOSIS && resultCode == RESULT_OK) {
 
-        }
-        //Multiple diagnosis
-        else if (requestCode == VR_MULTIPLE_DIAGNOSIS && resultCode == RESULT_OK) {
+                ll_symptom_dialog.setVisibility(View.GONE);
+                if (finalarr.length > 2) {
+                    if (finalarr[0].equals("select")) {
+                        if (finalarr[1].equals("number")) {
+                            if (isNumeric(finalarr[2])) {
+                                int pos = Integer.parseInt(finalarr[2]);
+                                if (IsInList(pos, diagnosismatched.size())) {
+                                    pos--;
+                                    if (diagnosis_update_flag == 1) {
+                                        Final_Diagnosis.get(update_advice_position).setDiagnosis(diagnosismatched.get(pos).getDiagnosis());
+                                        View itemview = flow_diagnosis.getChildAt(update_advice_position);
+                                        TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                                        temp.setText(diagnosismatched.get(pos).getDiagnosis());
+                                        ll__uni_prompt.setVisibility(View.GONE);
+                                        ll_symptom_dialog.setVisibility(View.GONE);
+                                        diagnosis_update_flag = 0;
+                                    } else
+                                        AddDiagnosis(diagnosismatched.get(pos).getDiagnosis());
+                                }
 
-            ll_symptom_dialog.setVisibility(View.GONE);
-            if (finalarr.length > 2) {
-                if (finalarr[0].equals("select")) {
-                    if (finalarr[1].equals("number")) {
-                        if (isNumeric(finalarr[2])) {
-                            int pos = Integer.parseInt(finalarr[2]);
-                            if (IsInList(pos, diagnosismatched.size())) {
-                                pos--;
-                                if (diagnosis_update_flag == 1) {
-                                    Final_Diagnosis.get(update_advice_position).setDiagnosis(diagnosismatched.get(pos).getDiagnosis());
-                                    View itemview = flow_diagnosis.getChildAt(update_advice_position);
-                                    TextView temp = itemview.findViewById(R.id.tv_chip_data);
-                                    temp.setText(diagnosismatched.get(pos).getDiagnosis());
-                                    ll__uni_prompt.setVisibility(View.GONE);
-                                    ll_symptom_dialog.setVisibility(View.GONE);
-                                    diagnosis_update_flag = 0;
-                                } else
-                                    AddDiagnosis(diagnosismatched.get(pos).getDiagnosis());
                             }
-
                         }
                     }
                 }
+
             }
+            //Multiple Diagnostic test
+            else if (requestCode == VR_MULTIPLE_DIAGNOSTIC_TEST && resultCode == RESULT_OK) {
 
-        }
-        //Multiple Diagnostic test
-        else if (requestCode == VR_MULTIPLE_DIAGNOSTIC_TEST && resultCode == RESULT_OK) {
+                ll_symptom_dialog.setVisibility(View.GONE);
+                if (finalarr.length > 2) {
+                    if (finalarr[0].equals("select")) {
+                        if (finalarr[1].equals("number")) {
+                            if (isNumeric(finalarr[2])) {
+                                int pos = Integer.parseInt(finalarr[2]);
+                                if (IsInList(pos, diagnostictestsmatched.size())) {
+                                    pos--;
+                                    if (test_update_flag == 1) {
+                                        Final_DiagnosticTests.get(update_advice_position).setTest_name(diagnostictestsmatched.get(pos).getTest_name());
+                                        View itemview = flow_diagnostic.getChildAt(update_advice_position);
+                                        TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                                        temp.setText(diagnostictestsmatched.get(pos).getTest_name());
+                                        ll__uni_prompt.setVisibility(View.GONE);
+                                        ll_symptom_dialog.setVisibility(View.GONE);
+                                        test_update_flag = 0;
+                                    } else
+                                        AddDiagnosticTest(diagnostictestsmatched.get(pos).getTest_name());
+                                }
 
-            ll_symptom_dialog.setVisibility(View.GONE);
-            if (finalarr.length > 2) {
-                if (finalarr[0].equals("select")) {
-                    if (finalarr[1].equals("number")) {
-                        if (isNumeric(finalarr[2])) {
-                            int pos = Integer.parseInt(finalarr[2]);
-                            if (IsInList(pos, diagnostictestsmatched.size())) {
-                                pos--;
-                                if (test_update_flag == 1) {
-                                    Final_DiagnosticTests.get(update_advice_position).setTest_name(diagnostictestsmatched.get(pos).getTest_name());
-                                    View itemview = flow_diagnostic.getChildAt(update_advice_position);
-                                    TextView temp = itemview.findViewById(R.id.tv_chip_data);
-                                    temp.setText(diagnostictestsmatched.get(pos).getTest_name());
-                                    ll__uni_prompt.setVisibility(View.GONE);
-                                    ll_symptom_dialog.setVisibility(View.GONE);
-                                    test_update_flag = 0;
-                                } else
-                                    AddDiagnosticTest(diagnostictestsmatched.get(pos).getTest_name());
                             }
-
                         }
                     }
                 }
+
             }
+            //Multiple Medicines
+            else if (requestCode == VR_MULTIPLE_MEDICINES && resultCode == RESULT_OK) {
 
-        }
-        //Multiple Medicines
-        else if (requestCode == VR_MULTIPLE_MEDICINES && resultCode == RESULT_OK) {
+                if (finalarr.length > 2) {
+                    if (finalarr[0].equals("select")) {
+                        if (finalarr[1].equals("number")) {
+                            if (isNumeric(finalarr[2])) {
+                                int pos = Integer.parseInt(finalarr[2]);
+                                if (IsInList(pos, MedicineList.size())) {
+                                    pos--;
+                                    AddMedicine1(MedicineList.get(pos), multiplemedobj);
+                                }
 
-            if (finalarr.length > 2) {
-                if (finalarr[0].equals("select")) {
-                    if (finalarr[1].equals("number")) {
-                        if (isNumeric(finalarr[2])) {
-                            int pos = Integer.parseInt(finalarr[2]);
-                            if (IsInList(pos, MedicineList.size())) {
-                                pos--;
-                                AddMedicine1(MedicineList.get(pos), multiplemedobj);
                             }
-
                         }
                     }
                 }
+
             }
+            //Multiple Advices
+            else if (requestCode == VR_MULTIPLE_ADVICES && resultCode == RESULT_OK) {
 
-        }
-        //Multiple Advices
-        else if (requestCode == VR_MULTIPLE_ADVICES && resultCode == RESULT_OK) {
+                if (finalarr.length > 2) {
+                    if (finalarr[0].equals("select")) {
+                        if (finalarr[1].equals("number")) {
+                            if (isNumeric(finalarr[2])) {
+                                int pos = Integer.parseInt(finalarr[2]);
+                                if (IsInList(pos, AdviceList.size())) {
+                                    pos--;
+                                    AddAdvice(AdviceList.get(pos));
+                                }
 
-            if (finalarr.length > 2) {
-                if (finalarr[0].equals("select")) {
-                    if (finalarr[1].equals("number")) {
-                        if (isNumeric(finalarr[2])) {
-                            int pos = Integer.parseInt(finalarr[2]);
-                            if (IsInList(pos, AdviceList.size())) {
-                                pos--;
-                                AddAdvice(AdviceList.get(pos));
                             }
-
                         }
                     }
                 }
+
             }
 
-        }
+            //No match Symptom
+            else if (requestCode == VR_NOMATCH_PROMPT_SYMPTOM && resultCode == RESULT_OK) {
 
-        //No match Symptom
-        else if (requestCode == VR_NOMATCH_PROMPT_SYMPTOM && resultCode == RESULT_OK) {
+                if (finalarr.length > 0) {
 
-            if (finalarr.length > 0) {
+                    if ((finalarr[0].equals("yes") || finalarr[0].equals("accept") || finalarr[0].equals("except")) &&
+                            (!temp_symptom.equals(""))) {
+                        if (symptom_update_flag == 1) {
+                            if (IsInList(update_advice_position, Final_Symptoms.size())) {
+                                Final_Symptoms.get(update_advice_position).setIssues(temp_symptom);
+                                View itemview = flow_symptoms.getChildAt(update_advice_position);
+                                TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                                temp.setText(temp_symptom);
+                                ll__uni_prompt.setVisibility(View.GONE);
+                                ll_symptom_dialog.setVisibility(View.GONE);
+                                symptom_update_flag = 0;
+                            }
+                        } else
+                            AddSymptom(temp_symptom);
 
-                if ((finalarr[0].equals("yes") || finalarr[0].equals("accept") || finalarr[0].equals("except")) &&
-                        (!temp_symptom.equals(""))) {
-                    if (symptom_update_flag == 1) {
-                        if (IsInList(update_advice_position, Final_Symptoms.size())) {
-                            Final_Symptoms.get(update_advice_position).setIssues(temp_symptom);
-                            View itemview = flow_symptoms.getChildAt(update_advice_position);
+                    } else if (finalarr[0].equals("no") || finalarr[0].equals("decline")) {
+                        ll__uni_prompt.setVisibility(View.GONE);
+                        symptom_update_flag = 0;
+                    }
+                }
+
+            }
+            //No match diagnosis
+            else if (requestCode == VR_NOMATCH_PROMPT_DIAGNOSIS && resultCode == RESULT_OK) {
+
+                if (finalarr.length > 0) {
+
+                    if ((finalarr[0].equals("yes") || finalarr[0].equals("accept") || finalarr[0].equals("except")) &&
+                            (!temp_symptom.equals(""))) {
+
+                        if (diagnosis_update_flag == 1) {
+                            Log.e("error", Final_Diagnosis.size() + "|" + diagnosismatched.size());
+                            Final_Diagnosis.get(update_advice_position).setDiagnosis(temp_symptom);
+                            View itemview = flow_diagnosis.getChildAt(update_advice_position);
                             TextView temp = itemview.findViewById(R.id.tv_chip_data);
                             temp.setText(temp_symptom);
                             ll__uni_prompt.setVisibility(View.GONE);
                             ll_symptom_dialog.setVisibility(View.GONE);
-                            symptom_update_flag = 0;
-                        }
-                    } else
-                        AddSymptom(temp_symptom);
-
-                } else if (finalarr[0].equals("no") || finalarr[0].equals("decline")) {
-                    ll__uni_prompt.setVisibility(View.GONE);
-                    symptom_update_flag = 0;
-                }
-            }
-
-        }
-        //No match diagnosis
-        else if (requestCode == VR_NOMATCH_PROMPT_DIAGNOSIS && resultCode == RESULT_OK) {
-
-            if (finalarr.length > 0) {
-
-                if ((finalarr[0].equals("yes") || finalarr[0].equals("accept") || finalarr[0].equals("except")) &&
-                        (!temp_symptom.equals(""))) {
-
-                    if (diagnosis_update_flag == 1) {
-                        Log.e("error", Final_Diagnosis.size() + "|" + diagnosismatched.size());
-                        Final_Diagnosis.get(update_advice_position).setDiagnosis(temp_symptom);
-                        View itemview = flow_diagnosis.getChildAt(update_advice_position);
-                        TextView temp = itemview.findViewById(R.id.tv_chip_data);
-                        temp.setText(temp_symptom);
+                            diagnosis_update_flag = 0;
+                        } else
+                            AddDiagnosis(temp_symptom);
+                    } else if (finalarr[0].equals("no") || finalarr[0].equals("decline")) {
                         ll__uni_prompt.setVisibility(View.GONE);
-                        ll_symptom_dialog.setVisibility(View.GONE);
                         diagnosis_update_flag = 0;
-                    } else
-                        AddDiagnosis(temp_symptom);
-                } else if (finalarr[0].equals("no") || finalarr[0].equals("decline")) {
-                    ll__uni_prompt.setVisibility(View.GONE);
-                    diagnosis_update_flag = 0;
-                }
-            }
-
-        }
-        //No match Diagnostic Test
-        else if (requestCode == VR_NOMATCH_PROMPT_DIAGNOSTIC_TEST && resultCode == RESULT_OK) {
-
-            if (finalarr.length > 0) {
-
-                if ((finalarr[0].equals("yes") || finalarr[0].equals("accept") || finalarr[0].equals("except")) &&
-                        (!temp_symptom.equals(""))) {
-
-                    if (test_update_flag == 1) {
-                        //Log.e("error",Final_DiagnosticTests.size()+"|"+diagnosismatched.size());
-                        Final_DiagnosticTests.get(update_advice_position).setTest_name(temp_symptom);
-                        View itemview = flow_diagnostic.getChildAt(update_advice_position);
-                        TextView temp = itemview.findViewById(R.id.tv_chip_data);
-                        temp.setText(temp_symptom);
-                        ll__uni_prompt.setVisibility(View.GONE);
-                        ll_symptom_dialog.setVisibility(View.GONE);
-                        test_update_flag = 0;
-                    } else
-                        AddDiagnosticTest(temp_symptom);
-
-                } else if (finalarr[0].equals("no") || finalarr[0].equals("decline")) {
-                    ll__uni_prompt.setVisibility(View.GONE);
-                    test_update_flag = 0;
-                }
-            }
-
-        }
-        //Update Advice
-        else if (requestCode == VR_UPDATE_ADVICE && resultCode == RESULT_OK) {
-
-            ll_symptom_dialog.setVisibility(View.GONE);
-
-            if (finalarr.length > 2) {
-                if (finalarr[0].equals("select")) {
-                    if (finalarr[1].equals("number")) {
-                        if (isNumeric(finalarr[2])) {
-                            int pos = Integer.parseInt(finalarr[2]);
-                            if (IsInList(pos, AdviceList.size())) {
-                                pos--;
-                                updateAdvice(pos);
-                            }
-
-                        }
                     }
                 }
 
             }
+            //No match Diagnostic Test
+            else if (requestCode == VR_NOMATCH_PROMPT_DIAGNOSTIC_TEST && resultCode == RESULT_OK) {
+
+                if (finalarr.length > 0) {
+
+                    if ((finalarr[0].equals("yes") || finalarr[0].equals("accept") || finalarr[0].equals("except")) &&
+                            (!temp_symptom.equals(""))) {
+
+                        if (test_update_flag == 1) {
+                            //Log.e("error",Final_DiagnosticTests.size()+"|"+diagnosismatched.size());
+                            Final_DiagnosticTests.get(update_advice_position).setTest_name(temp_symptom);
+                            View itemview = flow_diagnostic.getChildAt(update_advice_position);
+                            TextView temp = itemview.findViewById(R.id.tv_chip_data);
+                            temp.setText(temp_symptom);
+                            ll__uni_prompt.setVisibility(View.GONE);
+                            ll_symptom_dialog.setVisibility(View.GONE);
+                            test_update_flag = 0;
+                        } else
+                            AddDiagnosticTest(temp_symptom);
+
+                    } else if (finalarr[0].equals("no") || finalarr[0].equals("decline")) {
+                        ll__uni_prompt.setVisibility(View.GONE);
+                        test_update_flag = 0;
+                    }
+                }
+
+            }
+            //Update Advice
+            else if (requestCode == VR_UPDATE_ADVICE && resultCode == RESULT_OK) {
+
+                ll_symptom_dialog.setVisibility(View.GONE);
+
+                if (finalarr.length > 2) {
+                    if (finalarr[0].equals("select")) {
+                        if (finalarr[1].equals("number")) {
+                            if (isNumeric(finalarr[2])) {
+                                int pos = Integer.parseInt(finalarr[2]);
+                                if (IsInList(pos, AdviceList.size())) {
+                                    pos--;
+                                    updateAdvice(pos);
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+            super.onActivityResult(requestCode, resultCode, data);
 
         }
-
-        super.onActivityResult(requestCode, resultCode, data);
 
     }
 
@@ -2739,7 +2765,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         HashMap<String, String> params = new HashMap<>();
 
         //Upload as Draft
-        if (flag_for_patients.equals(draft)) {
+        if (patient_type.equals(draft)) {
 
             progress_dialog.show();
             if (Final_Medicines != null) {
@@ -2757,9 +2783,16 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             }
             final String patientjson = new Gson().toJson(Final_Patient);
             ResetData();
-            params.put("action", "updatePrescription");
+            if(flag_for_previous_patient.equals(draft)) {
+                params.put("action", "updatePrescription");
+            }
+            else {
+                params.put("action", "insertPrescription");
+            }
             params.put("patient_id", SelectedPatient.getPatientId() + "");
             params.put("rx_json", patientjson);
+            Gson gson = new Gson();
+            final PatientFinal temp = gson.fromJson(patientjson, PatientFinal.class);
             params.put("patient_type", patient_type);
             NetworkCall ncall = new NetworkCall();
             ncall.setServerUrlWebserviceApi(VR_APIS);
@@ -2772,11 +2805,24 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                     try {
                         JSONObject reader = new JSONObject(responseStr);
                         if (reader.getString("status").equals("true")) {
-                            ResetData();
+                            //ResetData();
                             Intent i = new Intent(Home.this, pdf_preview.class);
                             i.putExtra("patient_id", "" + SelectedPatient.getPatientId());
                             i.putExtra("patientjson", patientjson);
-                            startActivity(i);
+                          /*  if(flag_for_previous_patient.equals(checkedin))
+                            {
+                                Final_PatientDraft.add(temp);
+                                PatientsList.remove(previous_patient_position);
+
+                            }
+                            else if(flag_for_previous_patient.equals(draft))
+                            {
+                                Final_PatientDraft.add(SelectedPatientPosition,temp);
+                                Final_PatientDraft.remove(previous_patient_position);
+                                PatientDraft.remove(previous_patient_position);
+                            }*/
+                            FetchPatients();
+                            //startActivity(i);
                         } else {
                             Toast.makeText(Home.this, "" + responseStr, Toast.LENGTH_SHORT).show();
                         }
@@ -3049,10 +3095,15 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
             switch (flag_for_patients) {
                 case checkedin:
-                    SelectedPatientPosition = position;
+
+
+
                     if (SelectedPatient != null) {
+                        flag_for_previous_patient=checkedin;
+                        previous_patient_position = SelectedPatientPosition;
                         GeneratePrescription(draft);
                     }
+                    SelectedPatientPosition = position;
                     SelectedPatient = PatientsList.get(SelectedPatientPosition);
                     FetchVitals();
 
@@ -3060,6 +3111,13 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                 case allpatients:
                     break;
                 case draft:
+
+
+                    if (SelectedPatient != null) {
+                        flag_for_previous_patient=draft;
+                        previous_patient_position = SelectedPatientPosition;
+                        GeneratePrescription(draft);
+                    }
                     SelectedPatientPosition = position;
                     SelectedPatient = PatientDraft.get(SelectedPatientPosition);
                     PatientFinal temp = Final_PatientDraft.get(position);
@@ -3235,6 +3293,16 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                     itemView.setClickable(true);
                 }
             }
+            else
+            {
+                Final_Symptoms = new ArrayList<>();
+                flow_symptoms.removeAllViews();
+            }
+        }
+        else
+        {
+            Final_Symptoms = new ArrayList<>();
+            flow_symptoms.removeAllViews();
         }
 
         if (Final_Diagnosis != null) {
@@ -3281,6 +3349,14 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                     itemView.setClickable(true);
                 }
             }
+            else{
+                Final_Diagnosis = new ArrayList<>();
+                flow_diagnosis.removeAllViews();
+            }
+        }
+        else{
+            Final_Diagnosis = new ArrayList<>();
+            flow_diagnosis.removeAllViews();
         }
 
         if (Final_DiagnosticTests != null) {
@@ -3330,12 +3406,29 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
 
             }
+            else
+            {
+                Final_DiagnosticTests = new ArrayList<>();
+                flow_diagnostic.removeAllViews();
+            }
+        }else
+        {
+            Final_DiagnosticTests = new ArrayList<>();
+            flow_diagnostic.removeAllViews();
         }
 
         if (Final_Medicines != null) {
             if (Final_Medicines.size() > 0) {
                 setMedicineRecyclerView();
             }
+            else{
+                Final_Medicines = new ArrayList<>();
+                setMedicineRecyclerView();
+            }
+        }
+        else{
+            Final_Medicines = new ArrayList<>();
+            setMedicineRecyclerView();
         }
 
         if(Final_Vitals != null){
@@ -3350,7 +3443,18 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             if (Final_Advice.size() > 0) {
                 SetAdviceRecyclerView();
             }
+            else
+            {  Final_Advice = new ArrayList<>();
+            SetAdviceRecyclerView();
+
+            }
         }
+        else
+        {  Final_Advice = new ArrayList<>();
+            SetAdviceRecyclerView();
+
+        }
+
 
         if (f_time[0] != -1 && !f_date.equals("")) {
             String ampm = "";
