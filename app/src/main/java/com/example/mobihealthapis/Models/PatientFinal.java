@@ -1,5 +1,6 @@
 package com.example.mobihealthapis.Models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PatientFinal {
@@ -21,11 +22,11 @@ public class PatientFinal {
         f_date = "";
         f_time = new int[]{-1, -1, -1};
         Vitals = null;
-        Final_Symptoms = null;
-        Final_Diagnosis = null;
-        Final_DiagnosticTests = null;
-        Final_Advice = null;
-        Final_Medicines = null;
+        Final_Symptoms = new ArrayList<>();
+        Final_Diagnosis = new ArrayList<>();
+        Final_DiagnosticTests = new ArrayList<>();
+        Final_Advice = new ArrayList<>();
+        Final_Medicines = new ArrayList<>();
     }
 
     public Patient.Data getPatientDetails() {

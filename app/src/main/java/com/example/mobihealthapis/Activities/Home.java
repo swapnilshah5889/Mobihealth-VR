@@ -119,7 +119,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     int ExpandedDetail = -1;
 
     TextView tv_home_total_patients, tv_patient_draft, tv_patients_checked_in;
-    List<Patient.Data> PatientsList;
+    List<PatientFinal> Final_PatientChecked;
     ImageView img_patient;
     TextToSpeech textToSpeech;
     RelativeLayout rl_home_main;
@@ -135,10 +135,9 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     int fixedheight, fixedheightcounter = 0;
 
     int SelectedPatientPosition;
-    Patient.Data SelectedPatient;
+    PatientFinal SelectedPatient;
 
     PatientFinal Final_Patient;
-    List<Patient.Data> PatientDraft;
     List<PatientFinal> Final_PatientDraft;
     Vitals.Data Final_Vitals;
     List<Issues.Data> Final_Symptoms;
@@ -151,6 +150,8 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     List<Diagnosis.Data> diagnosismatched;
     List<DiagnosticTests.Data> diagnostictestsmatched;
     List<Med.Data> medicinematched;
+
+    PatientsAdapter patientsadapter;
 
     //UPDATE POSITIONS
 
@@ -304,7 +305,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             @Override
             public void onClick(View v) {
                 flag_for_patients = draft;
-                ShowDraftPatients();
+                ShowDraftPatients(true);
             }
         });
 
@@ -312,42 +313,32 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             @Override
             public void onClick(View v) {
                 flag_for_patients = checkedin;
-                SetMainDrawerRecyclerView(PatientsList);
+                SetMainDrawerRecyclerView(Final_PatientChecked,true);
+
             }
         });
 
         ll_drawer_showhide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(flag_for_patients.equals(checkedin))
-                {
-                    SetMainDrawerRecyclerView(PatientsList);
-                }
-                else{
-                    ShowDraftPatients();
-                }
+//                if(flag_for_patients.equals(checkedin))
+//                {
+//                    SetMainDrawerRecyclerView(Final_PatientChecked);
+//                }
+//                else{
+//                    ShowDraftPatients();
+//                }
                 if ((ll_patient_drawer.getVisibility() == View.GONE ||
-                        ll_patient_drawer.getVisibility() == View.INVISIBLE)) {
-
-                    if(flag_for_patients.equals(checkedin)) {
-                        PatientsAdapter adapter = new PatientsAdapter(Home.this, PatientsList);
-                        rv_main_drawer.setAdapter(adapter);
-                    }
-                    else{
-                        PatientsAdapter adapter = new PatientsAdapter(Home.this, PatientDraft);
-                        rv_main_drawer.setAdapter(adapter);
-                    }
-
-                    rv_main_drawer.setHasFixedSize(true);
+                        ll_patient_drawer.getVisibility() == View.INVISIBLE))
                     ShowHidePatientList(1);
-                }else
+                else
                     ShowHidePatientList(0);
             }
         });
 
     }
 
-    private void ShowDraftPatients() {
+    private void ShowDraftPatients(Boolean show) {
 
 //        SharedPreferences prefs = getSharedPreferences(PREF_PATIENT, Context.MODE_PRIVATE);
 //        Map<String, ?> entries = prefs.getAll();
@@ -405,7 +396,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             }
         });*/
 
-        SetMainDrawerRecyclerView(PatientDraft);
+        SetMainDrawerRecyclerView(Final_PatientDraft,show);
 
     }
 
@@ -594,15 +585,14 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(resultCode == RESULT_OK)
-        {
-
+        if(resultCode == RESULT_OK){
             ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
             String[] finalarr = GetRawDataFromSpeech(matches);
 
             //Show Patients & Stop Rx & CRUD Data
             if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
+
 
 
                 if (finalarr.length > 0) {
@@ -614,12 +604,12 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                             int temp1 = Functions.Soundex.StringCompareCoarse("draft", finalarr[1], 3);
                             if (temp < 5 && temp >= 0) {
                                 flag_for_patients = checkedin;
-                                SetMainDrawerRecyclerView(PatientsList);
+                                SetMainDrawerRecyclerView(Final_PatientChecked,true);
 
                             } else if (temp1 < 7 && temp1 >= 0) {
 
                                 flag_for_patients = draft;
-                                ShowDraftPatients();
+                                ShowDraftPatients(true);
                             }
 
                         }
@@ -1255,8 +1245,8 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             }
 
             super.onActivityResult(requestCode, resultCode, data);
-
         }
+
 
     }
 
@@ -1338,9 +1328,9 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     private void SetPatientDetails() {
 
-        tv_patient_name.setText(SelectedPatient.getFname());
-        tv_patient_id_2.setText("ID : " + SelectedPatient.getPatientId());
-        tv_gender_age.setText(SelectedPatient.getGender() + " | " + SelectedPatient.getAge());
+        tv_patient_name.setText(SelectedPatient.getPatientDetails().getFname());
+        tv_patient_id_2.setText("ID : " + SelectedPatient.getPatientDetails().getPatientId());
+        tv_gender_age.setText(SelectedPatient.getPatientDetails().getGender() + " | " + SelectedPatient.getPatientDetails().getAge());
 
     }
 
@@ -2338,14 +2328,18 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                     Patient obj = new Gson().fromJson(responseStr, Patient.class);
 
                     if (obj.getStatus()) {
-                        PatientsList = new ArrayList<>();
+
+                        List<Patient.Data> PatientsList = new ArrayList<>();
                         PatientsList.addAll(obj.getData());
 
                         tv_home_total_patients.setText("Today's Patients - " + PatientsList.size());
 
+                        Final_PatientChecked = new ArrayList<>();
+                        for(int i = 0; i < PatientsList.size(); i++){
+                            Final_PatientChecked.add(new PatientFinal(PatientsList.get(i)));
+                        }
 
                         progress_dialog.show();
-                        PatientDraft = new ArrayList<>();
                         Final_PatientDraft = new ArrayList<>();
                         HashMap<String, String> params = new HashMap<>();
                         params.put("action", "getAllPrescriptions");
@@ -2367,18 +2361,24 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                                             Gson gson = new Gson();
                                             PatientFinal temp = gson.fromJson(obj.getData().get(i).getRx_json(), PatientFinal.class);
                                             Final_PatientDraft.add(temp);
-                                            PatientDraft.add(temp.getPatientDetails());
-                                            for (int l = 0; l < PatientsList.size(); l++) {
-                                                if (PatientsList.get(l).getPatientId() ==
+                                            for (int l = 0; l < Final_PatientChecked.size(); l++) {
+                                                if (Final_PatientChecked.get(l).getPatientDetails().getPatientId() ==
                                                         temp.getPatientDetails().getPatientId()) {
 
-                                                    PatientsList.remove(l);
+                                                    Final_PatientChecked.remove(l);
 
                                                 }
                                             }
                                         }
-                                        tv_patients_checked_in.setText("" + PatientsList.size());
-                                        tv_patient_draft.setText(PatientDraft.size() + "");
+                                        tv_patients_checked_in.setText("" + Final_PatientChecked.size());
+                                        tv_patient_draft.setText(Final_PatientDraft.size() + "");
+
+                                        if(flag_for_patients.equals(checkedin)){
+                                            SetMainDrawerRecyclerView(Final_PatientChecked,false);
+                                        }
+                                        else{
+                                            ShowDraftPatients(false);
+                                        }
                                     }
 
                                 } catch (Exception e) {
@@ -2446,7 +2446,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         HashMap<String, String> params = new HashMap<>();
 
         params.put("action", "getChildVitals");
-        params.put("patient_id", "" + SelectedPatient.getPatientId());
+        params.put("patient_id", "" + SelectedPatient.getPatientDetails().getPatientId());
 
         NetworkCall ncall = new NetworkCall();
 
@@ -2555,12 +2555,14 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         rv_medicines_list_main.setHasFixedSize(true);
     }
 
-    private void SetMainDrawerRecyclerView(List<Patient.Data> PatientList) {
+    private void SetMainDrawerRecyclerView(List<PatientFinal> PatientList,Boolean show) {
 
-        PatientsAdapter adapter = new PatientsAdapter(this, PatientList);
-        rv_main_drawer.setAdapter(adapter);
+        patientsadapter = new PatientsAdapter(this, PatientList);
+        rv_main_drawer.setAdapter(patientsadapter);
         rv_main_drawer.setHasFixedSize(true);
-        ShowHidePatientList(1);
+        if(show)
+            ShowHidePatientList(1);
+
     }
 
     private void SetAdviceRecyclerView() {
@@ -2734,9 +2736,9 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
 
     //Generate Final Prescription
-    private void GeneratePrescription(String patient_type) {
+    private void GeneratePrescription(final String patient_type) {
 
-        Final_Patient = new PatientFinal(SelectedPatient);
+        Final_Patient = SelectedPatient;
 
         if (Final_Vitals != null) {
             Final_Patient.setVitals(Final_Vitals);
@@ -2783,16 +2785,14 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             }
             final String patientjson = new Gson().toJson(Final_Patient);
             ResetData();
-            if(flag_for_previous_patient.equals(draft)) {
-                params.put("action", "updatePrescription");
-            }
-            else {
-                params.put("action", "insertPrescription");
-            }
-            params.put("patient_id", SelectedPatient.getPatientId() + "");
-            params.put("rx_json", patientjson);
             Gson gson = new Gson();
-            final PatientFinal temp = gson.fromJson(patientjson, PatientFinal.class);
+            if(flag_for_previous_patient.equals(draft))
+                params.put("action", "updatePrescription");
+            else
+                params.put("action", "insertPrescription");
+
+            params.put("patient_id", Final_Patient.getPatientDetails().getPatientId() + "");
+            params.put("rx_json", patientjson);
             params.put("patient_type", patient_type);
             NetworkCall ncall = new NetworkCall();
             ncall.setServerUrlWebserviceApi(VR_APIS);
@@ -2807,22 +2807,12 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                         if (reader.getString("status").equals("true")) {
                             //ResetData();
                             Intent i = new Intent(Home.this, pdf_preview.class);
-                            i.putExtra("patient_id", "" + SelectedPatient.getPatientId());
+                            i.putExtra("patient_id", "" + Final_Patient.getPatientDetails().getPatientId());
                             i.putExtra("patientjson", patientjson);
-                          /*  if(flag_for_previous_patient.equals(checkedin))
-                            {
-                                Final_PatientDraft.add(temp);
-                                PatientsList.remove(previous_patient_position);
 
-                            }
-                            else if(flag_for_previous_patient.equals(draft))
-                            {
-                                Final_PatientDraft.add(SelectedPatientPosition,temp);
-                                Final_PatientDraft.remove(previous_patient_position);
-                                PatientDraft.remove(previous_patient_position);
-                            }*/
+
                             FetchPatients();
-                            //startActivity(i);
+
                         } else {
                             Toast.makeText(Home.this, "" + responseStr, Toast.LENGTH_SHORT).show();
                         }
@@ -2873,7 +2863,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                 params.put("action", "insertPrescription");
 
 
-                params.put("patient_id", SelectedPatient.getPatientId() + "");
+                params.put("patient_id", Final_Patient.getPatientDetails().getPatientId() + "");
                 params.put("rx_json", patientjson);
                 params.put("patient_type", patient_type);
                 NetworkCall ncall = new NetworkCall();
@@ -2886,10 +2876,20 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                         try {
                             JSONObject reader = new JSONObject(responseStr);
                             if (reader.getString("status").equals("true")) {
-                                ResetData();
+                                //ResetData();
                                 Intent i = new Intent(Home.this, pdf_preview.class);
-                                i.putExtra("patient_id", "" + SelectedPatient.getPatientId());
+                                i.putExtra("patient_id", "" + Final_Patient.getPatientDetails().getPatientId());
                                 i.putExtra("patientjson", patientjson);
+                                /*Final_PatientChecked.remove(Final_Patient);
+                                Final_PatientDraft.add(Final_Patient);
+                                if(flag_for_patients.equals(checkedin))
+                                    patientsadapter = new PatientsAdapter(Home.this,Final_PatientChecked);
+                                else
+                                    patientsadapter = new PatientsAdapter(Home.this,Final_PatientDraft);
+
+                                rv_main_drawer.setAdapter(patientsadapter);
+                                rv_main_drawer.setHasFixedSize(true);*/
+                                FetchPatients();
                                 //startActivity(i);
                             } else {
                                 Toast.makeText(Home.this, "" + responseStr, Toast.LENGTH_SHORT).show();
@@ -3096,15 +3096,13 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             switch (flag_for_patients) {
                 case checkedin:
 
-
-
                     if (SelectedPatient != null) {
-                        flag_for_previous_patient=checkedin;
+                        flag_for_previous_patient = draft;
                         previous_patient_position = SelectedPatientPosition;
                         GeneratePrescription(draft);
                     }
                     SelectedPatientPosition = position;
-                    SelectedPatient = PatientsList.get(SelectedPatientPosition);
+                    SelectedPatient = Final_PatientChecked.get(SelectedPatientPosition);
                     FetchVitals();
 
                     break;
@@ -3112,48 +3110,16 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                     break;
                 case draft:
 
-
                     if (SelectedPatient != null) {
-                        flag_for_previous_patient=draft;
+                        flag_for_previous_patient = draft;
                         previous_patient_position = SelectedPatientPosition;
                         GeneratePrescription(draft);
+
                     }
+
                     SelectedPatientPosition = position;
-                    SelectedPatient = PatientDraft.get(SelectedPatientPosition);
-                    PatientFinal temp = Final_PatientDraft.get(position);
-
-                    if (temp != null) {
-
-                        //ResetData();
-                        Gson gson = new Gson();
-                        if (temp.getVitals() != null) {
-                            Final_Vitals = temp.getVitals();
-                        }
-                        if (temp.getFinal_Medicines() != null) {
-                            Final_Medicines = temp.getFinal_Medicines();
-                        }
-                        if (temp.getFinal_Symptoms() != null) {
-                            Final_Symptoms = temp.getFinal_Symptoms();
-                        }
-                        if (temp.getFinal_Advice() != null) {
-                            Final_Advice = temp.getFinal_Advice();
-                        }
-                        if (temp.getFinal_Diagnosis() != null) {
-                            Final_Diagnosis = temp.getFinal_Diagnosis();
-                        }
-                        if (temp.getFinal_DiagnosticTests() != null) {
-                            Final_DiagnosticTests = temp.getFinal_DiagnosticTests();
-                        }
-                        if (!(temp.getF_date().equals("")) && temp.getF_time()[0] != -1) {
-                            f_date = temp.getF_date();
-                            f_time = temp.getF_time();
-                        }
-
-                        ResumePatient();
-                    } else {
-                        Toast.makeText(this, "Json null", Toast.LENGTH_SHORT).show();
-                    }
-
+                    SelectedPatient = Final_PatientDraft.get(SelectedPatientPosition);
+                    ResumePatient();
                     break;
             }
 
@@ -3250,7 +3216,19 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
 //        tv_height.setText(Final_Vitals.getHeight()+" CM");
 //        tv_weight.setText(Final_Vitals.getWeight()+" KG");
+
+        Final_Symptoms = SelectedPatient.getFinal_Symptoms();
+        Final_Diagnosis = SelectedPatient.getFinal_Diagnosis();
+        Final_DiagnosticTests = SelectedPatient.getFinal_DiagnosticTests();
+        Final_Medicines = SelectedPatient.getFinal_Medicines();
+        Final_Vitals = SelectedPatient.getVitals();
+        Final_Advice = SelectedPatient.getFinal_Advice();
+        f_date = SelectedPatient.getF_date();
+        f_time = SelectedPatient.getF_time();
+
+
         if (Final_Symptoms != null) {
+
             if (Final_Symptoms.size() > 0) {
                 for (int i = 0; i < Final_Symptoms.size(); i++) {
                     final ViewGroup parent = (ViewGroup) rl_home_main;
@@ -3293,19 +3271,10 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                     itemView.setClickable(true);
                 }
             }
-            else
-            {
-                Final_Symptoms = new ArrayList<>();
-                flow_symptoms.removeAllViews();
-            }
-        }
-        else
-        {
-            Final_Symptoms = new ArrayList<>();
-            flow_symptoms.removeAllViews();
         }
 
         if (Final_Diagnosis != null) {
+
             if (Final_Diagnosis.size() > 0) {
                 for (int i = 0; i < Final_Diagnosis.size(); i++) {
                     final ViewGroup parent = (ViewGroup) rl_home_main;
@@ -3349,17 +3318,10 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                     itemView.setClickable(true);
                 }
             }
-            else{
-                Final_Diagnosis = new ArrayList<>();
-                flow_diagnosis.removeAllViews();
-            }
-        }
-        else{
-            Final_Diagnosis = new ArrayList<>();
-            flow_diagnosis.removeAllViews();
         }
 
         if (Final_DiagnosticTests != null) {
+
             if (Final_DiagnosticTests.size() > 0) {
 
                 for (int i = 0; i < Final_DiagnosticTests.size(); i++) {
@@ -3406,32 +3368,17 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
 
             }
-            else
-            {
-                Final_DiagnosticTests = new ArrayList<>();
-                flow_diagnostic.removeAllViews();
-            }
-        }else
-        {
-            Final_DiagnosticTests = new ArrayList<>();
-            flow_diagnostic.removeAllViews();
         }
 
         if (Final_Medicines != null) {
+
             if (Final_Medicines.size() > 0) {
                 setMedicineRecyclerView();
             }
-            else{
-                Final_Medicines = new ArrayList<>();
-                setMedicineRecyclerView();
-            }
-        }
-        else{
-            Final_Medicines = new ArrayList<>();
-            setMedicineRecyclerView();
         }
 
         if(Final_Vitals != null){
+
             tv_bmi.setText(""+Final_Vitals.getBMI());
             tv_hc.setText(""+Final_Vitals.getHead());
             tv_height.setText(""+Final_Vitals.getHeight());
@@ -3440,23 +3387,14 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         }
 
         if (Final_Advice != null) {
+
             if (Final_Advice.size() > 0) {
                 SetAdviceRecyclerView();
             }
-            else
-            {  Final_Advice = new ArrayList<>();
-            SetAdviceRecyclerView();
-
-            }
-        }
-        else
-        {  Final_Advice = new ArrayList<>();
-            SetAdviceRecyclerView();
-
         }
 
+        if (!(SelectedPatient.getF_date().equals("")) && SelectedPatient.getF_time()[0] != -1) {
 
-        if (f_time[0] != -1 && !f_date.equals("")) {
             String ampm = "";
             if (f_time[2] == 0)
                 ampm = "A.M.";
