@@ -1,7 +1,6 @@
 package com.example.mobihealthapis.Activities;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -68,8 +66,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import static com.example.mobihealthapis.GeneralFunctions.Functions.FilterDiagnosis;
@@ -82,7 +78,6 @@ import static com.example.mobihealthapis.GeneralFunctions.Functions.getMedTiming
 import static com.example.mobihealthapis.GeneralFunctions.Functions.getfrequency;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.isNumeric;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.updatefrequency;
-import static com.example.mobihealthapis.GeneralFunctions.StaticData.PREF_PATIENT;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VOICE_RECOGNITION_REQUEST_CODE;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MEDICINE_NULL_DATA;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VR_MULTIPLE_ADVICES;
@@ -2814,7 +2809,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                             Intent i = new Intent(Home.this, pdf_preview.class);
                             i.putExtra("patient_id", "" + Final_Patient.getPatientDetails().getPatientId());
                             i.putExtra("patientjson", patientjson);
-
+                            startActivity(i);
 
                             FetchPatients();
 

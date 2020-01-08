@@ -1,14 +1,7 @@
 package com.example.mobihealthapis.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.widget.NestedScrollView;
-import androidx.print.PrintHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -17,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 import android.os.CancellationSignal;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.print.PageRange;
 import android.print.PrintAttributes;
@@ -27,12 +21,16 @@ import android.print.pdf.PrintedPdfDocument;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.NestedScrollView;
+import androidx.print.PrintHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobihealthapis.Adapters.MedicinePDFAdapter;
 import com.example.mobihealthapis.Models.Advice;
@@ -45,14 +43,24 @@ import com.example.mobihealthapis.Models.Vitals;
 import com.example.mobihealthapis.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.nex3z.flowlayout.FlowLayout;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.LineNumberReader;
+import java.text.SimpleDateFormat;
 import java.util.List;
-
-import static com.example.mobihealthapis.GeneralFunctions.StaticData.PREF_PATIENT;
+import java.util.Locale;
 
 public class pdf_preview extends AppCompatActivity {
 
@@ -134,6 +142,20 @@ public class pdf_preview extends AppCompatActivity {
         tv_followup_pdf = findViewById(R.id.tv_followup_pdf);
         ll_followup_pdf = findViewById(R.id.ll_followup_pdf);
 
+        rl_generate_pdf.setDrawingCacheEnabled(true);
+        rl_generate_pdf.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+        rl_generate_pdf.layout(0, 0, rl_generate_pdf.getMeasuredWidth(), rl_generate_pdf.getMeasuredHeight());
+
+        rl_generate_pdf.buildDrawingCache(true);
+        Bitmap b = Bitmap.createBitmap(rl_generate_pdf.getDrawingCache());
+        rl_generate_pdf.setDrawingCacheEnabled(false); // clear drawing cache
+
+        //bmImage = findViewById(R.id.bmImage);
+        bmImage = new ImageView(this);
+        bmImage.setImageBitmap(b);
+
         SetMedicine();
         SetVitals();
         SetSymptoms();
@@ -146,7 +168,8 @@ public class pdf_preview extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //GeneratePDF();
-                printPDF(rl_generate_pdf);
+//                printPDF(rl_generate_pdf);
+                itextPDFGenerate();
             }
         });
 
@@ -329,7 +352,6 @@ public class pdf_preview extends AppCompatActivity {
     }
 
 
-
     //PDF Methods
     public void printPDF(View view) {
         PrintManager printManager = (PrintManager) getSystemService(PRINT_SERVICE);
@@ -438,5 +460,354 @@ public class pdf_preview extends AppCompatActivity {
             }
             callback.onWriteFinished(new PageRange[]{new PageRange(0, 0)});
         }
+    }
+
+
+    public void itextPDFGenerate() {
+
+
+        try {
+
+            Document document = new Document();
+
+
+            // Location to save
+            String filename = "Patient_Name_";
+            filename += new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis());
+            String filepath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + filename + ".pdf";
+            File root = new File(filepath);
+//            if(root.exists()){
+//                root.createNewFile();
+//            }
+//            String sdcardhtmlpath = root.getPath().toString() + "/pdftest.pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(filepath));
+
+            // Open to write
+            document.open();
+            document.setPageSize(PageSize.A4);
+            document.addCreationDate();
+
+            document.add(new Paragraph("\n\n\n\n\n"));
+            /*Bitmap bitmap = ((BitmapDrawable) bmImage.getDrawable()).getBitmap();
+            ByteArrayOutputStream stream3 = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream3);
+            Image maimg = Image.getInstance(stream3.toByteArray());
+            maimg.setAbsolutePosition(450  , 870);
+            maimg.scalePercent(40);
+            document.add(maimg);*/
+            /*maimg.setAbsolutePosition(0, 0);
+            //maimg.scalePercent(40);
+            document.add(maimg);*/
+
+
+            Font Bold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
+            Font Normal = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
+            Font BoldTitle = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
+            Font NormalText = new Font(Font.FontFamily.HELVETICA, 14, Font.NORMAL);
+            Font BoldText = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+            Font Normalsmall = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
+            //Chunk hello = new Chunk("Hello", Bold);
+
+            //Vitals
+            Vitals.Data myvitals = Final_Patient.getVitals();
+            Paragraph Vitals = new Paragraph();
+
+            Vitals.add(new Chunk("Height : ", Bold));
+            Vitals.add(new Chunk("" + myvitals.getHeight() + " CM", Normal));
+            Vitals.add(new Chunk("  Weight : ", Bold));
+            Vitals.add(new Chunk("" + myvitals.getWeight() + " KG", Normal));
+            Vitals.add(new Chunk("  H.C. : ", Bold));
+            Vitals.add(new Chunk("" + myvitals.getHead() + " CM", Normal));
+            Vitals.add(new Chunk("  Temperature : ", Bold));
+            Vitals.add(new Chunk("" + myvitals.getTemperature() + " °", Normal));
+//            double bmi = getBMI(myvitals.getHeight(),myvitals.getWeight());
+//            Vitals.add(new Chunk(" BMI : ", Bold));
+//            Vitals.add(new Chunk(""+bmi, Normal));
+//
+
+            document.add(Vitals);
+
+
+            //Symptoms
+            if (!tv_symptoms_pdf.getText().toString().equals("")) {
+                Paragraph symptoms = new Paragraph();
+                symptoms.add(new Chunk("Symptoms : ", Bold));
+                symptoms.add(new Chunk(tv_symptoms_pdf.getText().toString(), Normal));
+                document.add(symptoms);
+            }
+
+
+            //Diagnosis
+            if (!tv_diagnosis_pdf.getText().toString().equals("")) {
+                Paragraph symptoms = new Paragraph();
+                symptoms.add(new Chunk("Diagnosis : ", Bold));
+                symptoms.add(new Chunk(tv_diagnosis_pdf.getText().toString(), Normal));
+                document.add(symptoms);
+            }
+
+
+            //Medicines
+
+
+            PdfPTable table = new PdfPTable(3); // 3 columns.
+            table.setWidthPercentage(100);
+            float[] columnWidths = {9f, 5f, 6f};
+
+            table.setWidths(columnWidths);
+            PdfPCell cell1 = new PdfPCell(new Paragraph("Medicine name", BoldTitle));
+            PdfPCell cell2 = new PdfPCell(new Paragraph("Dose", BoldTitle));
+            PdfPCell cell3 = new PdfPCell(new Paragraph("Timing/Duration", BoldTitle));
+
+
+            cell1.setPadding(10);
+            cell2.setPadding(10);
+            cell3.setPadding(10);
+
+            cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell1.setVerticalAlignment(Element.ALIGN_CENTER);
+            cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+            BaseColor cellbackground = new BaseColor(211, 211, 211);
+
+            cell1.setBackgroundColor(cellbackground);
+            cell2.setBackgroundColor(cellbackground);
+            cell3.setBackgroundColor(cellbackground);
+            cell1.setBorderColor(cellbackground);
+            cell2.setBorderColor(cellbackground);
+            cell3.setBorderColor(cellbackground);
+
+
+            table.addCell(cell1);
+            table.addCell(cell2);
+            table.addCell(cell3);
+            table.setSpacingBefore(10);
+            table.setSpacingAfter(5);
+            document.add(table);
+
+
+            List<Medicine> medicines = Final_Patient.getFinal_Medicines();
+            for (int i = 0; i < medicines.size(); i++) {
+
+                Medicine med = medicines.get(i);
+                PdfPTable table2 = new PdfPTable(4);
+                table2.setWidthPercentage(100);
+
+                float[] columnWidths2 = {1f, 8f, 5f, 6f};
+                table2.setWidths(columnWidths2);
+                PdfPCell cell4 = new PdfPCell(new Paragraph((i+1) + ".", BoldText));
+                cell4.setRowspan(2);
+                PdfPCell cell5 = new PdfPCell(new Paragraph(med.getName(), BoldText));
+                // PdfPCell cell6 = new PdfPCell(new Paragraph("paracitamol"));
+                double[] timings = med.getDailytimings();
+                PdfPCell cell7 = new PdfPCell(new Paragraph((int)timings[0]+"-"+(int)timings[1]+"-"+(int)timings[2], BoldText));
+                // PdfPCell cell8 = new PdfPCell(new Paragraph("After food"));
+                PdfPCell cell9 = new PdfPCell(new Paragraph(med.getDuration()+" / "+med.getFrequency(), NormalText));
+
+                cell4.setPaddingTop(5);
+                cell5.setPaddingTop(5);
+                cell7.setPadding(5);
+                cell9.setPadding(5);
+
+
+                cell4.setBorderColor(BaseColor.WHITE);
+                cell5.setBorderColor(BaseColor.WHITE);
+                cell7.setBorderColor(BaseColor.WHITE);
+                cell9.setBorderColor(BaseColor.WHITE);
+
+                cell7.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell9.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+                table2.addCell(cell4);
+                table2.addCell(cell5);
+                table2.addCell(cell7);
+                table2.addCell(cell9);
+                // table2.addCell(cell);
+                // table2.addCell(cell);
+                table2.completeRow();
+
+                PdfPCell cell6 = new PdfPCell(new Paragraph(""+med.getGenericname(), Normalsmall));
+                PdfPCell cell8 = new PdfPCell(new Paragraph(""+med.getAfbf(), Normalsmall));
+                PdfPCell cell12 = new PdfPCell();
+
+
+                cell6.setBorderColor(BaseColor.WHITE);
+                cell8.setBorderColor(BaseColor.WHITE);
+                cell12.setBorderColor(BaseColor.WHITE);
+
+                cell8.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+
+                table2.addCell(cell6);
+                table2.addCell(cell8);
+                table2.addCell(cell12);
+
+
+                table2.completeRow();
+
+                // table2.setSpacingAfter(10);
+
+                document.add(table2);
+
+                PdfPTable table3 = new PdfPTable(1);
+                table3.setWidthPercentage(100);
+                PdfPCell cell13 = new PdfPCell(new Paragraph(""));
+
+                cell13.setBorderWidthTop(0);
+                cell13.setBorderWidthLeft(0);
+                cell13.setBorderWidthRight(0);
+                cell13.setBorderWidthBottom(1);
+
+                cell13.setBorderColorBottom(cellbackground);
+                table3.addCell(cell13);
+                table3.setSpacingAfter(5);
+                table3.setSpacingBefore(5);
+                table3.completeRow();
+                document.add(table3);
+            }
+
+
+            /*for(int i=1;i<25;i++)
+            {
+                PdfPTable table2 = new PdfPTable(4);
+                table2.setWidthPercentage(100);
+
+                float[] columnWidths2 = {1f,8f, 5f,6f};
+                table2.setWidths(columnWidths2);
+                PdfPCell cell4 = new PdfPCell(new Paragraph(i+".",BoldText));
+                cell4.setRowspan(2);
+                PdfPCell cell5 = new PdfPCell(new Paragraph("Dolo IMG 300mg",BoldText));
+                // PdfPCell cell6 = new PdfPCell(new Paragraph("paracitamol"));
+                PdfPCell cell7 = new PdfPCell(new Paragraph("1-0-1",BoldText));
+                // PdfPCell cell8 = new PdfPCell(new Paragraph("After food"));
+                PdfPCell cell9 = new PdfPCell(new Paragraph("10 Days/Daily",NormalText));
+
+                cell4.setPaddingTop(5);
+                cell5.setPaddingTop(5);
+                cell7.setPadding(5);
+                cell9.setPadding(5);
+
+
+
+                cell4.setBorderColor(BaseColor.WHITE);
+                cell5.setBorderColor(BaseColor.WHITE);
+                cell7.setBorderColor(BaseColor.WHITE);
+                cell9.setBorderColor(BaseColor.WHITE);
+
+                cell7.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell9.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+                table2.addCell(cell4);
+                table2.addCell(cell5);
+                table2.addCell(cell7);
+                table2.addCell(cell9);
+                // table2.addCell(cell);
+                // table2.addCell(cell);
+                table2.completeRow();
+
+                PdfPCell cell6 = new PdfPCell(new Paragraph("Paracetamol",Normalsmall));
+                PdfPCell cell8 = new PdfPCell(new Paragraph("After food",Normalsmall));
+                PdfPCell cell12 = new PdfPCell();
+
+
+
+
+                cell6.setBorderColor(BaseColor.WHITE);
+                cell8.setBorderColor(BaseColor.WHITE);
+                cell12.setBorderColor(BaseColor.WHITE);
+
+                cell8.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+
+
+
+
+                table2.addCell(cell6);
+                table2.addCell(cell8);
+                table2.addCell(cell12);
+
+
+
+                table2.completeRow();
+
+                // table2.setSpacingAfter(10);
+
+                document.add(table2);
+
+                PdfPTable table3 = new PdfPTable(1);
+                table3.setWidthPercentage(100);
+                PdfPCell cell13 = new PdfPCell(new Paragraph(""));
+
+                cell13.setBorderWidthTop(0);
+                cell13.setBorderWidthLeft(0);
+                cell13.setBorderWidthRight(0);
+                cell13.setBorderWidthBottom(1);
+
+                cell13.setBorderColorBottom(cellbackground);
+                table3.addCell(cell13);
+                table3.setSpacingAfter(5);
+                table3.setSpacingBefore(5);
+                table3.completeRow();
+                document.add(table3);
+            }
+*/
+
+
+
+
+
+
+
+
+
+            //Advice
+            if (!tv_advice_pdf.getText().toString().equals("")) {
+                Font Bold1 = new Font(Font.FontFamily.TIMES_ROMAN, 11, Font.BOLD);
+                Font Normal1 = new Font(Font.FontFamily.TIMES_ROMAN, 11, Font.NORMAL);
+                Paragraph symptoms = new Paragraph();
+                symptoms.add(new Chunk("Advice : ", Bold1));
+                symptoms.add(new Chunk(tv_advice_pdf.getText().toString(), Normal1));
+                document.add(symptoms);
+            }
+
+            //Diagnostic Tests
+            if (!tv_test_pdf.getText().toString().equals("")) {
+                Paragraph symptoms = new Paragraph();
+                symptoms.add(new Chunk("Tests Prescribed : ", Bold));
+                symptoms.add(new Chunk(tv_test_pdf.getText().toString(), Normal));
+                document.add(symptoms);
+            }
+
+
+            //Follow Up
+            if (!tv_followup_pdf.getText().toString().equals("")) {
+                Paragraph symptoms = new Paragraph();
+                symptoms.add(new Chunk("Follow Up : ", Bold));
+                symptoms.add(new Chunk(tv_followup_pdf.getText().toString(), Normal));
+                document.add(symptoms);
+            }
+
+
+            document.close();
+
+
+            /*File file = new File(filepath);
+            if(file.exists()){
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }*/
+
+            Toast.makeText(this, filepath, Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+
+            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 }

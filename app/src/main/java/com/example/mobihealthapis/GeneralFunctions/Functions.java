@@ -1,7 +1,5 @@
 package com.example.mobihealthapis.GeneralFunctions;
 
-import androidx.annotation.Nullable;
-
 import com.example.mobihealthapis.Models.Diagnosis;
 import com.example.mobihealthapis.Models.DiagnosticTests;
 import com.example.mobihealthapis.Models.Issues;
@@ -10,7 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Objects;
 import java.util.StringTokenizer;
 
 public class Functions {
@@ -632,5 +629,16 @@ public static boolean hasNext(int pos,int size){
             return diff;
         }
 
+    }
+
+
+    public static double getBMI(int height,double weight){
+        double bmi = 0.0;
+
+        double hm = height/1000;
+
+        bmi = weight/(hm*hm);
+
+        return bmi;
     }
 }
