@@ -9,6 +9,9 @@
 
     tools:context=".Activities.pdf_preview">
 
+
+
+
     <androidx.core.widget.NestedScrollView
 
         android:id="@+id/ll_main_pdfp"
@@ -17,8 +20,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:orientation="vertical">
+
 
             <LinearLayout
                 android:padding="20dp"
@@ -356,9 +359,20 @@
     </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+
+    <!--<com.github.barteksc.pdfviewer.PDFView
+        android:id="@+id/pdfView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_anchor="@+id/ll_main_pdfp"
+        app:layout_anchorGravity="center">
+
+    </com.github.barteksc.pdfviewer.PDFView>-->
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_print"
         android:layout_width="wrap_content"
+        android:layout_margin="@dimen/_20sdp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right">
 

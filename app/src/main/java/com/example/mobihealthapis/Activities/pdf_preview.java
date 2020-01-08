@@ -793,12 +793,33 @@ public class pdf_preview extends AppCompatActivity {
             document.close();
 
 
+            //PDFView pdfView = findViewById(R.id.pdfView);
+
+            /*Uri uripath = Uri.parse(filepath);
+            pdfView.fromUri(uripath)
+                    .enableSwipe(true) // allows to block changing pages using swipe
+                    .swipeHorizontal(false)
+                    .enableDoubletap(true)
+                    .defaultPage(0)
+                    // allows to draw something on the current page, usually visible in the middle of the screen
+                    .enableAnnotationRendering(false) // render annotations (such as comments, colors or forms)
+                    .password(null)
+                    .scrollHandle(null)
+                    .enableAntialiasing(true) // improve rendering a little bit on low-res screens
+                    // spacing between pages in dp. To define spacing color, set view background
+                    .spacing(0)
+                    .load();*/
+
             /*File file = new File(filepath);
             if(file.exists()){
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setDataAndType(Uri.parse( "http://gunkelweb.com/coms493/texts/AI_Dummies.pdf"), "text/html");PackageManager pm = getPackageManager();
                 startActivity(intent);
+                *//*List<ResolveInfo> activities = pm.queryIntentActivities(intent,0);
+                if(activities.size()>0) {
+                    //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }*//*
             }*/
 
             Toast.makeText(this, filepath, Toast.LENGTH_SHORT).show();
