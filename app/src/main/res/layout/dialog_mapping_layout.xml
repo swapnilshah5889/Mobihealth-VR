@@ -1,6 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_gravity="center"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_margin="@dimen/_10sdp"
+            android:id="@+id/tv_data_fetched"
+            android:text="data fetched"
+            android:textSize="@dimen/_16sdp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="#00f"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TextView>
+
+        <LinearLayout
+            android:background="#ddd"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"></LinearLayout>
+
+        <TextView
+            android:paddingRight="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_10sdp"
+            android:id="@+id/tv_height_dialog"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:gravity="center"
+            android:textColor="#333"
+            android:textStyle="bold"
+            android:textSize="@dimen/_15sdp"
+            android:text="Height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></TextView>
+
+        <LinearLayout
+            android:layout_margin="@dimen/_10sdp"
+            android:background="#555"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"></LinearLayout>
+
+        <TextView
+            android:paddingRight="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_10sdp"
+            android:id="@+id/tv_weight_dialog"
+            android:gravity="center"
+            android:textColor="#333"
+            android:textStyle="bold"
+            android:textSize="@dimen/_15sdp"
+            android:text="Weight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></TextView>
+
+        <LinearLayout
+            android:layout_margin="@dimen/_10sdp"
+            android:background="#555"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"></LinearLayout>
+
+        <TextView
+            android:paddingRight="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_10sdp"
+            android:id="@+id/tv_head_dialog"
+            android:gravity="center"
+            android:textColor="#333"
+            android:textStyle="bold"
+            android:textSize="@dimen/_15sdp"
+            android:text="Head Circumfurence"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></TextView>
+
+        <LinearLayout
+            android:layout_margin="@dimen/_10sdp"
+            android:background="#555"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"></LinearLayout>
+
+        <TextView
+            android:paddingRight="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_10sdp"
+            android:id="@+id/tv_temperature_dialog"
+            android:gravity="center"
+            android:textColor="#333"
+            android:textStyle="bold"
+            android:textSize="@dimen/_15sdp"
+            android:text="Temperature"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></TextView>
+
+        <LinearLayout
+            android:layout_margin="@dimen/_10sdp"
+            android:background="#555"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"></LinearLayout>
+
+        <TextView
+            android:paddingRight="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_10sdp"
+            android:id="@+id/tv_none_dialog"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:gravity="center"
+            android:textColor="#333"
+            android:textStyle="bold"
+            android:textSize="@dimen/_15sdp"
+            android:text="None"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></TextView>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -91,5 +91,11 @@ public class StaticData {
         MonthsFilters.add("december");
         return MonthsFilters;
     }
+
+
+    public static String[] Vital_Classes = {"height","weight","head circumfurence","temperature"};
+
+
+
 }
 

@@ -1,10 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".DataGather">
+    android:background="#fff"
+    tools:context=".Activities.DataGather">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:clickable="true"
+            android:background="@drawable/round_back"
+            android:padding="12dp"
+            android:tint="#333"
+            android:elevation="5dp"
+            android:scaleType="fitCenter"
+            android:layout_margin="10dp"
+            android:id="@+id/img_speak_pi"
+            android:src="@drawable/ic_voice"
+            android:layout_width="60dp"
+            android:layout_height="60dp">
+        </ImageView>
+
+    </LinearLayout>
+
+    <TextView
+        android:textSize="@dimen/_14sdp"
+        android:textStyle="normal"
+        android:textColor="#000"
+        android:paddingLeft="@dimen/_16sdp"
+        android:text="Recognized Text : "
+        android:layout_marginTop="@dimen/_10sdp"
+        android:id="@+id/tv_recognized_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></TextView>
+
+
+    <LinearLayout
+        android:background="#777"
+        android:layout_margin="@dimen/_10sdp"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"></LinearLayout>
+
+    <TextView
+        android:gravity="center"
+        android:textColor="#333"
+        android:textStyle="bold"
+        android:textSize="@dimen/_15sdp"
+        android:text="Mapped Values"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></TextView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_text_map"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:paddingLeft="@dimen/_16sdp"
+        android:paddingRight="@dimen/_16sdp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>
