@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:text="1."
         android:textColor="@color/DrawerBack"
-        android:textSize="20dp"
+        android:textSize="@dimen/_17sdp"
         android:textStyle="bold"
-        android:padding="10dp"
+        android:padding="@dimen/_3sdp"
         android:layout_height="wrap_content"
         android:gravity="center"
         >
@@ -28,11 +28,11 @@
         android:text="fever with cold"
         android:maxLines="2"
         android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="18dp"
+        android:autoSizeMinTextSize="@dimen/_17sdp"
         android:textColor="@color/DrawerBack"
-        android:textSize="20dp"
+        android:textSize="@dimen/_17sdp"
         android:textStyle="bold"
-        android:padding="10dp"
+        android:padding="@dimen/_2sdp"
         android:layout_height="wrap_content"
 
         >

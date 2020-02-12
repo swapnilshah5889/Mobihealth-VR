@@ -11,13 +11,13 @@
 <!-- main patient details-->
     <LinearLayout
         android:background="@color/colorAccent"
-        android:padding="15dp"
+        android:padding="@dimen/_11sdp"
         android:weightSum="2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="@dimen/_3sdp"
             android:gravity="center"
             android:orientation="vertical"
             android:layout_weight="1"
@@ -27,7 +27,7 @@
             <TextView
                 android:id="@+id/tv_patient_name"
                 android:text="Monu K"
-                android:textSize="25dp"
+                android:textSize="@dimen/_22sdp"
                 android:textStyle="bold"
 
                 android:maxLines="1"
@@ -40,7 +40,7 @@
 
                 android:id="@+id/tv_gender_age"
                 android:text="Male | 5 m - 20 days"
-                android:textSize="22dp"
+                android:textSize="@dimen/_18sdp"
                 android:textStyle="normal"
                 android:maxLines="1"
                 android:autoSizeTextType="uniform"
@@ -54,7 +54,7 @@
 
         <LinearLayout
 
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="@dimen/_4sdp"
             android:gravity="right|center_vertical"
             android:orientation="vertical"
             android:layout_weight="1"
@@ -64,7 +64,7 @@
                 android:id="@+id/tv_patient_id_2"
                 android:gravity="right"
                 android:text="ID : 2315"
-                android:textSize="22dp"
+                android:textSize="@dimen/_18sdp"
                 android:maxLines="1"
                 android:autoSizeTextType="uniform"
                 android:textStyle="normal"
@@ -76,17 +76,17 @@
             <LinearLayout
                 android:id="@+id/ll_previous_rx"
                 android:clickable="true"
-                android:layout_marginTop="5dp"
-                android:paddingRight="15dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:paddingRight="@dimen/_12sdp"
+                android:paddingLeft="@dimen/_12sdp"
+                android:paddingTop="@dimen/_3sdp"
+                android:paddingBottom="@dimen/_3sdp"
                 android:background="@drawable/previousrx_back_round"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
                 <TextView
                     android:text="Previous Rx"
-                    android:textSize="18dp"
+                    android:textSize="@dimen/_15sdp"
                     android:maxLines="1"
                     android:autoSizeTextType="uniform"
                     android:textStyle="normal"
@@ -138,10 +138,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
-                            android:padding="10dp"
+                            android:padding="@dimen/_7sdp"
                             android:text="Vitals"
                             android:textColor="#6c6c6c"
-                            android:textSize="20dp"
+                            android:textSize="@dimen/_15sdp"
                             android:textStyle="bold"></TextView>
 
                         <!--        Expand-->
@@ -152,13 +152,13 @@
                             android:layout_weight="8"
                             android:clickable="true"
                             android:gravity="top|right"
-                            android:padding="5dp">
+                            android:padding="@dimen/_3sdp">
 
                             <ImageView
                                 android:id="@+id/img_expand_vital"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:layout_margin="10dp"
+                                android:layout_width="@dimen/_21sdp"
+                                android:layout_height="@dimen/_21sdp"
+                                android:layout_margin="@dimen/_7sdp"
                                 android:src="@drawable/ic_add_white"
                                 android:tint="#4c4c4c"></ImageView>
 
@@ -199,12 +199,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
-                            android:paddingLeft="20dp"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp"
+                            android:paddingLeft="@dimen/_17sdp"
+                            android:paddingTop="@dimen/_17sdp"
+                            android:paddingBottom="@dimen/_17sdp"
                             android:text="Vitals"
                             android:textColor="#6c6c6c"
-                            android:textSize="35dp"
+                            android:textSize="@dimen/_28sdp"
                             android:textStyle="bold">
 
                         </TextView>
@@ -215,7 +215,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="8"
-                            android:paddingStart="20dp"
+                            android:paddingStart="@dimen/_16sdp"
                             android:orientation="vertical">
 
                             <TextView
@@ -224,7 +224,7 @@
 
                                 android:text="BMI"
                                 android:textColor="#6c6c6c"
-                                android:textSize="20dp"
+                                android:textSize="@dimen/_14sdp"
                                 android:textStyle="normal">
 
                             </TextView>
@@ -234,7 +234,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="23.6"
                                 android:textColor="#6c6c6c"
-                                android:textSize="25dp"
+                                android:textSize="@dimen/_20sdp"
                                 android:textStyle="bold">
 
                             </TextView>
@@ -249,22 +249,22 @@
                         android:layout_height="wrap_content">
 
                         <LinearLayout
-                            android:padding="20dp"
+                            android:padding="@dimen/_16sdp"
                             android:weightSum="4"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <LinearLayout
                                 android:orientation="vertical"
-                                android:layout_margin="5dp"
+                                android:layout_margin="@dimen/_3sdp"
                                 android:layout_weight="1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
 
                                 <TextView
-                                    android:layout_marginBottom="7dp"
+                                    android:layout_marginBottom="@dimen/_3sdp"
                                     android:text="Height"
-                                    android:textSize="20dp"
+                                    android:textSize="@dimen/_14sdp"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"></TextView>
 
@@ -275,11 +275,10 @@
 
                                     <TextView
                                         android:id="@+id/tv_height"
-                                        android:layout_marginLeft="10dp"
-                                        android:layout_marginBottom="15dp"
-                                        android:layout_marginTop="15dp"
-                                        android:textSize="25dp"
-                                        android:textStyle="bold"
+                                        android:layout_marginLeft="@dimen/_7sdp"
+                                        android:layout_marginBottom="@dimen/_10sdp"
+                                        android:layout_marginTop="@dimen/_10sdp"
+                                        android:textSize="@dimen/_21sdp"
                                         android:textColor="#4c4c4c"
                                         android:maxLines="1"
                                         android:autoSizeTextType="uniform"
@@ -298,9 +297,9 @@
                                 android:layout_height="wrap_content">
 
                                 <TextView
-                                    android:layout_marginBottom="7dp"
+                                    android:layout_marginBottom="@dimen/_3sdp"
                                     android:text="Weight"
-                                    android:textSize="20dp"
+                                    android:textSize="@dimen/_14sdp"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"></TextView>
 
@@ -311,15 +310,15 @@
 
                                     <TextView
                                         android:id="@+id/tv_weight"
-                                        android:layout_marginLeft="10dp"
-                                        android:layout_marginBottom="15dp"
-                                        android:layout_marginTop="15dp"
-                                        android:textSize="25dp"
-                                        android:textStyle="bold"
+                                        android:layout_marginLeft="@dimen/_7sdp"
+                                        android:layout_marginBottom="@dimen/_10sdp"
+                                        android:layout_marginTop="@dimen/_10sdp"
+                                        android:textSize="@dimen/_21sdp"
+
                                         android:maxLines="1"
                                         android:autoSizeTextType="uniform"
                                         android:textColor="#4c4c4c"
-                                        android:text="2.6 K.G."
+                                        android:text="2.6 KG"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"></TextView>
 
@@ -328,15 +327,15 @@
                             </LinearLayout>
                             <LinearLayout
                                 android:orientation="vertical"
-                                android:layout_margin="5dp"
+                                android:layout_margin="@dimen/_3sdp"
                                 android:layout_weight="1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
 
                                 <TextView
-                                    android:layout_marginBottom="7dp"
+                                    android:layout_marginBottom="@dimen/_3sdp"
                                     android:text="H.C."
-                                    android:textSize="20dp"
+                                    android:textSize="@dimen/_14sdp"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"></TextView>
 
@@ -347,11 +346,10 @@
 
                                     <TextView
                                         android:id="@+id/tv_hc"
-                                        android:layout_marginLeft="10dp"
-                                        android:layout_marginBottom="15dp"
-                                        android:layout_marginTop="15dp"
-                                        android:textSize="25dp"
-                                        android:textStyle="bold"
+                                        android:layout_marginLeft="@dimen/_7sdp"
+                                        android:layout_marginBottom="@dimen/_10sdp"
+                                        android:layout_marginTop="@dimen/_10sdp"
+                                        android:textSize="@dimen/_21sdp"
                                         android:textColor="#4c4c4c"
                                         android:text="25 cm"
                                         android:maxLines="1"
@@ -364,17 +362,18 @@
                             </LinearLayout>
                             <LinearLayout
                                 android:orientation="vertical"
-                                android:layout_margin="5dp"
+                                android:layout_margin="@dimen/_3sdp"
                                 android:layout_weight="1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
 
                                 <TextView
-                                    android:layout_marginBottom="7dp"
+                                    android:layout_marginBottom="@dimen/_3sdp"
                                     android:text="Temperature"
                                     android:autoSizeTextType="uniform"
                                     android:maxLines="1"
-                                    android:textSize="20dp"
+                                    android:gravity="center"
+                                    android:textSize="@dimen/_14sdp"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"></TextView>
 
@@ -385,11 +384,11 @@
 
                                     <TextView
                                         android:id="@+id/tv_temperature"
-                                        android:layout_marginLeft="10dp"
-                                        android:layout_marginBottom="15dp"
-                                        android:layout_marginTop="15dp"
-                                        android:textSize="25dp"
-                                        android:textStyle="bold"
+                                        android:layout_marginLeft="@dimen/_7sdp"
+                                        android:layout_marginBottom="@dimen/_10sdp"
+                                        android:layout_marginTop="@dimen/_10sdp"
+                                        android:textSize="@dimen/_21sdp"
+
                                         android:textColor="#4c4c4c"
                                         android:text="94 °"
                                         android:maxLines="1"
@@ -435,10 +434,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:padding="10dp"
+                        android:padding="@dimen/_7sdp"
                         android:text="Symptoms"
                         android:textColor="#6c6c6c"
-                        android:textSize="20dp"
+                        android:textSize="@dimen/_15sdp"
                         android:textStyle="bold"></TextView>
 
 
@@ -449,13 +448,13 @@
                         android:layout_weight="8"
                         android:clickable="true"
                         android:gravity="top|right"
-                        android:padding="5dp">
+                        android:padding="@dimen/_3sdp">
 
                         <ImageView
                             android:id="@+id/img_expand_symptoms"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_margin="10dp"
+                            android:layout_width="@dimen/_21sdp"
+                            android:layout_height="@dimen/_21sdp"
+                            android:layout_margin="@dimen/_7sdp"
                             android:src="@drawable/ic_add_white"
                             android:tint="#4c4c4c"></ImageView>
 
@@ -483,25 +482,24 @@
                             android:id="@+id/tv_symptoms"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="20dp"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp"
+                            android:paddingLeft="@dimen/_15sdp"
+                            android:paddingTop="@dimen/_15sdp"
+                            android:paddingBottom="@dimen/_15sdp"
                             android:text="Symptoms"
                             android:textColor="#6c6c6c"
-                            android:textSize="35dp"
+                            android:textSize="@dimen/_28sdp"
                             android:textStyle="bold">
 
                         </TextView>
-
 
 
                     </LinearLayout>
 
 
                     <LinearLayout
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:layout_marginBottom="30dp"
+                        android:paddingLeft="@dimen/_7sdp"
+                        android:paddingRight="@dimen/_7sdp"
+                        android:layout_marginBottom="@dimen/_23sdp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -521,7 +519,7 @@
                 <LinearLayout
                     android:background="#f7f7f7"
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"></LinearLayout>
+                    android:layout_height="@dimen/_3sdp"></LinearLayout>
             </LinearLayout>
 
             <!-- For Diagnosis-->
@@ -543,10 +541,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:padding="10dp"
+                        android:padding="@dimen/_7sdp"
                         android:text="Diagnosis"
                         android:textColor="#6c6c6c"
-                        android:textSize="20dp"
+                        android:textSize="@dimen/_15sdp"
                         android:textStyle="bold"></TextView>
 
 
@@ -557,13 +555,13 @@
                         android:layout_weight="8"
                         android:clickable="true"
                         android:gravity="top|right"
-                        android:padding="5dp">
+                        android:padding="@dimen/_3sdp">
 
                         <ImageView
                             android:id="@+id/img_expand_diagnosis"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_margin="10dp"
+                            android:layout_width="@dimen/_21sdp"
+                            android:layout_height="@dimen/_21sdp"
+                            android:layout_margin="@dimen/_7sdp"
                             android:src="@drawable/ic_add_white"
                             android:tint="#4c4c4c"></ImageView>
 
@@ -591,25 +589,24 @@
                             android:id="@+id/tv_diagnosis"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="20dp"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp"
+                            android:paddingLeft="@dimen/_15sdp"
+                            android:paddingTop="@dimen/_15sdp"
+                            android:paddingBottom="@dimen/_15sdp"
                             android:text="Diagnosis"
                             android:textColor="#6c6c6c"
-                            android:textSize="35dp"
+                            android:textSize="@dimen/_28sdp"
                             android:textStyle="bold">
 
                         </TextView>
-
 
 
                     </LinearLayout>
 
 
                     <LinearLayout
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:layout_marginBottom="30dp"
+                        android:paddingLeft="@dimen/_7sdp"
+                        android:paddingRight="@dimen/_7sdp"
+                        android:layout_marginBottom="@dimen/_23sdp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -651,10 +648,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:padding="10dp"
+                        android:padding="@dimen/_7sdp"
                         android:text="Medicine"
                         android:textColor="#6c6c6c"
-                        android:textSize="20dp"
+                        android:textSize="@dimen/_15sdp"
                         android:textStyle="bold"></TextView>
 
 
@@ -665,13 +662,13 @@
                         android:layout_weight="8"
                         android:clickable="true"
                         android:gravity="top|right"
-                        android:padding="5dp">
+                        android:padding="@dimen/_3sdp">
 
                         <ImageView
                             android:id="@+id/img_expand_medicine"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_margin="10dp"
+                            android:layout_width="@dimen/_21sdp"
+                            android:layout_height="@dimen/_21sdp"
+                            android:layout_margin="@dimen/_7sdp"
                             android:src="@drawable/ic_add_white"
                             android:tint="#4c4c4c"></ImageView>
 
@@ -699,12 +696,12 @@
                             android:id="@+id/tv_medicine"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="20dp"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp"
+                            android:paddingLeft="@dimen/_15sdp"
+                            android:paddingTop="@dimen/_15sdp"
+                            android:paddingBottom="@dimen/_15sdp"
                             android:text="Medicine"
                             android:textColor="#6c6c6c"
-                            android:textSize="35dp"
+                            android:textSize="@dimen/_28sdp"
                             android:textStyle="bold">
 
                         </TextView>
@@ -716,9 +713,9 @@
 
 <!--                    rv_medicines_list_main-->
                     <LinearLayout
-                        android:layout_marginBottom="30dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="@dimen/_23sdp"
+                        android:layout_marginLeft="@dimen/_14sdp"
+                        android:layout_marginRight="@dimen/_14sdp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -737,7 +734,7 @@
                 <LinearLayout
                     android:background="#f7f7f7"
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"></LinearLayout>
+                    android:layout_height="@dimen/_3sdp"></LinearLayout>
             </LinearLayout>
 
             <!-- For Diagnostic Tests-->
@@ -759,10 +756,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:padding="10dp"
+                        android:padding="@dimen/_7sdp"
                         android:text="Diagnostic Tests"
                         android:textColor="#6c6c6c"
-                        android:textSize="20dp"
+                        android:textSize="@dimen/_15sdp"
                         android:textStyle="bold"></TextView>
 
 
@@ -773,13 +770,13 @@
                         android:layout_weight="8"
                         android:clickable="true"
                         android:gravity="top|right"
-                        android:padding="5dp">
+                        android:padding="@dimen/_3sdp">
 
                         <ImageView
                             android:id="@+id/img_expand_diagnostic"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_margin="10dp"
+                            android:layout_width="@dimen/_21sdp"
+                            android:layout_height="@dimen/_21sdp"
+                            android:layout_margin="@dimen/_7sdp"
                             android:src="@drawable/ic_add_white"
                             android:tint="#4c4c4c"></ImageView>
 
@@ -807,12 +804,12 @@
                             android:id="@+id/tv_diagnostic"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="20dp"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp"
+                            android:paddingLeft="@dimen/_15sdp"
+                            android:paddingTop="@dimen/_15sdp"
+                            android:paddingBottom="@dimen/_15sdp"
                             android:text="Diagnostic Tests"
                             android:textColor="#6c6c6c"
-                            android:textSize="35dp"
+                            android:textSize="@dimen/_28sdp"
                             android:textStyle="bold">
 
                         </TextView>
@@ -823,9 +820,9 @@
 
 
                     <LinearLayout
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:layout_marginBottom="30dp"
+                        android:paddingLeft="@dimen/_7sdp"
+                        android:paddingRight="@dimen/_7sdp"
+                        android:layout_marginBottom="@dimen/_23sdp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -846,7 +843,7 @@
                 <LinearLayout
                     android:background="#f7f7f7"
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"></LinearLayout>
+                    android:layout_height="@dimen/_3sdp"></LinearLayout>
             </LinearLayout>
 
             <!-- For Advice-->
@@ -868,10 +865,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:padding="10dp"
+                        android:padding="@dimen/_7sdp"
                         android:text="Advice"
                         android:textColor="#6c6c6c"
-                        android:textSize="20dp"
+                        android:textSize="@dimen/_15sdp"
                         android:textStyle="bold"></TextView>
 
 
@@ -882,13 +879,13 @@
                         android:layout_weight="8"
                         android:clickable="true"
                         android:gravity="top|right"
-                        android:padding="5dp">
+                        android:padding="@dimen/_3sdp">
 
                         <ImageView
                             android:id="@+id/img_expand_advice"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_margin="10dp"
+                            android:layout_width="@dimen/_21sdp"
+                            android:layout_height="@dimen/_21sdp"
+                            android:layout_margin="@dimen/_7sdp"
                             android:src="@drawable/ic_add_white"
                             android:tint="#4c4c4c"></ImageView>
 
@@ -916,12 +913,12 @@
                             android:id="@+id/tv_advice"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="20dp"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp"
+                            android:paddingLeft="@dimen/_15sdp"
+                            android:paddingTop="@dimen/_15sdp"
+                            android:paddingBottom="@dimen/_15sdp"
                             android:text="Advice"
                             android:textColor="#6c6c6c"
-                            android:textSize="35dp"
+                            android:textSize="@dimen/_28sdp"
                             android:textStyle="bold">
 
                         </TextView>
@@ -932,9 +929,9 @@
 
 
                     <LinearLayout
-                        android:layout_marginBottom="30dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="@dimen/_15sdp"
+                        android:layout_marginLeft="@dimen/_15sdp"
+                        android:layout_marginRight="@dimen/_15sdp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -952,7 +949,7 @@
                 <LinearLayout
                     android:background="#f7f7f7"
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"></LinearLayout>
+                    android:layout_height="@dimen/_3sdp"></LinearLayout>
             </LinearLayout>
 
             <!-- For Follow Up-->
@@ -974,10 +971,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:padding="10dp"
+                        android:padding="@dimen/_7sdp"
                         android:text="Follow Up"
                         android:textColor="#6c6c6c"
-                        android:textSize="20dp"
+                        android:textSize="@dimen/_15sdp"
                         android:textStyle="bold"></TextView>
 
 
@@ -988,13 +985,13 @@
                         android:layout_weight="8"
                         android:clickable="true"
                         android:gravity="top|right"
-                        android:padding="5dp">
+                        android:padding="@dimen/_3sdp">
 
                         <ImageView
                             android:id="@+id/img_expand_followup"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_margin="10dp"
+                            android:layout_width="@dimen/_21sdp"
+                            android:layout_height="@dimen/_21sdp"
+                            android:layout_margin="@dimen/_7sdp"
                             android:src="@drawable/ic_add_white"
                             android:tint="#4c4c4c"></ImageView>
 
@@ -1087,14 +1084,14 @@
                 <LinearLayout
                     android:background="#f7f7f7"
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"></LinearLayout>
+                    android:layout_height="@dimen/_3sdp"></LinearLayout>
             </LinearLayout>
 
 
             <!--Blank Space-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"></LinearLayout>
+                android:layout_height="@dimen/_250sdp"></LinearLayout>
 
         </LinearLayout>
 

@@ -3,13 +3,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp">
+    android:layout_marginTop="@dimen/_6sdp">
 
 
     <LinearLayout
         android:id="@+id/ll_patient_main"
         android:clickable="true"
-        android:padding="10dp"
+        android:padding="@dimen/_7sdp"
         android:background="@drawable/patient_list_back_round"
         android:orientation="horizontal"
         android:weightSum="20"
@@ -26,7 +26,7 @@
                 android:id="@+id/tv_serial_no_patient_list"
                 android:gravity="center"
                 android:text="1"
-                android:textSize="18dp"
+                android:textSize="@dimen/_13sdp"
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -41,56 +41,57 @@
             android:layout_height="wrap_content">
 
             <RelativeLayout
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="@dimen/_7sdp"
+                android:layout_marginRight="@dimen/_7sdp"
                 android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/img_patient"
                     android:background="#ddd"
-                    android:padding="5dp"
+                    android:padding="@dimen/_3sdp"
                     android:src="@drawable/ic_profile"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"></ImageView>
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"></ImageView>
                 <ImageView
                     android:src="@drawable/ic_circular_cutout"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"></ImageView>
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"></ImageView>
 
             </RelativeLayout>
 
             <LinearLayout
-                android:paddingStart="10dp"
+                android:paddingStart="@dimen/_3sdp"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/tv_patient_fname"
-                    android:textSize="18dp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:textSize="@dimen/_7sdp"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
-                    android:text="Pihu M"
+                    android:text="Pihu m"
                     android:maxLines="1"
                     android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="18dp"
+                    android:autoSizeMinTextSize="@dimen/_4sdp"
                     android:ellipsize="end"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"></TextView>
 
                 <TextView
                     android:id="@+id/tv_patient_number"
-                    android:layout_marginTop="5dp"
-                    android:textSize="15dp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:textSize="@dimen/_7sdp"
                     android:textStyle="normal"
                     android:textColor="@color/colorPrimary"
                     android:text="9578465231"
                     android:maxLines="1"
                     android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="13dp"
+                    android:autoSizeMinTextSize="@dimen/_4sdp"
                     android:ellipsize="end"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"></TextView>
@@ -102,7 +103,7 @@
 
 
         <LinearLayout
-            android:paddingRight="10dp"
+            android:paddingRight="@dimen/_3sdp"
             android:gravity="center"
             android:orientation="vertical"
             android:layout_weight="8"
@@ -112,13 +113,13 @@
             <TextView
                 android:id="@+id/tv_patient_id"
                 android:gravity="end"
-                android:textSize="13dp"
+                android:textSize="@dimen/_7sdp"
                 android:textStyle="normal"
                 android:textColor="@color/colorPrimary"
                 android:text="230154"
                 android:maxLines="1"
                 android:autoSizeTextType="uniform"
-                android:autoSizeMinTextSize="13dp"
+                android:autoSizeMinTextSize="@dimen/_4sdp"
                 android:ellipsize="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></TextView>
@@ -126,8 +127,8 @@
             <TextView
                 android:id="@+id/tv_booking_type"
                 android:gravity="right"
-                android:layout_marginTop="10dp"
-                android:textSize="11dp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:textSize="@dimen/_5sdp"
                 android:textStyle="normal"
                 android:textColor="@color/colorPrimary"
                 android:text="Follow Up"
