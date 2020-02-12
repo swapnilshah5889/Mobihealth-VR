@@ -45,9 +45,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="@dimen/_3sdp"
-                        android:autoSizeMaxTextSize="@dimen/_13sdp"
-                        android:autoSizeMinTextSize="@dimen/_7sdp"
-                        android:autoSizeTextType="uniform"
+                        android:textSize="@dimen/_13sdp"
+
                         android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:lines="2"

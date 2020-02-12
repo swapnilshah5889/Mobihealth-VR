@@ -41,12 +41,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoSizeTextType="uniform"
-                android:autoSizeMinTextSize="@dimen/_12sdp"
+                android:autoSizeMaxTextSize="@dimen/_12sdp"
                 android:ellipsize="end"
                 android:textColor="@color/colorAccent"
                 android:text="Take over-the-counter medications like acetaminophen and ibuprofen to reduce fever."
                 android:maxLines="3"
-                android:textSize="@dimen/_20sdp"></TextView>
+                android:textSize="@dimen/_12sdp"></TextView>
 
             <LinearLayout
                 android:layout_weight="9"

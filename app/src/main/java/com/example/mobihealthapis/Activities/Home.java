@@ -2375,6 +2375,10 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                                             ShowDraftPatients(false);
                                         }
                                     }
+                                    else
+                                    {
+                                        tv_patients_checked_in.setText("" + Final_PatientChecked.size());
+                                    }
 
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -2809,7 +2813,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                             Intent i = new Intent(Home.this, pdf_preview.class);
                             i.putExtra("patient_id", "" + Final_Patient.getPatientDetails().getPatientId());
                             i.putExtra("patientjson", patientjson);
-                            startActivity(i);
+                           // startActivity(i);
 
                             FetchPatients();
 
@@ -2890,7 +2894,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                                 rv_main_drawer.setAdapter(patientsadapter);
                                 rv_main_drawer.setHasFixedSize(true);*/
                                 FetchPatients();
-                                //startActivity(i);
+                                startActivity(i);
                             } else
                                 {
                                 Toast.makeText(Home.this, "" + responseStr, Toast.LENGTH_SHORT).show();
