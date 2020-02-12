@@ -16,15 +16,15 @@
         <ImageView
             android:clickable="true"
             android:background="@drawable/round_back"
-            android:padding="12dp"
+            android:padding="@dimen/_12sdp"
             android:tint="#333"
-            android:elevation="5dp"
+            android:elevation="@dimen/_5sdp"
             android:scaleType="fitCenter"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/_10sdp"
             android:id="@+id/img_speak_pi"
             android:src="@drawable/ic_voice"
-            android:layout_width="60dp"
-            android:layout_height="60dp">
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_45sdp">
         </ImageView>
 
     </LinearLayout>
