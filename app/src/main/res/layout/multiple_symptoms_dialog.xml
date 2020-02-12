@@ -6,7 +6,7 @@
     android:background="#a000"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="20dp"
+    android:padding="@dimen/_17sdp"
     android:id="@+id/ll_symptom_dialog">
 
 
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/patient_list_back_round"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="@dimen/_8sdp">
 
 
 
@@ -27,11 +27,11 @@
             <TextView
                 android:id="@+id/tv_dialog_heading"
                 android:layout_weight="1"
-                android:textSize="30dp"
+                android:textSize="@dimen/_22sdp"
                 android:textColor="@color/colorAccent"
                 android:textStyle="bold"
                 android:gravity="left"
-                android:padding="10dp"
+                android:padding="@dimen/_3sdp"
                 android:text="Symptom Options"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></TextView>
@@ -42,7 +42,7 @@
                 android:text="Close"
                 android:textColor="#f00"
                 android:textStyle="bold"
-                android:textSize="16dp"
+                android:textSize="@dimen/_12sdp"
                 android:autoSizeTextType="uniform"
                 android:maxLines="1"
                 android:layout_weight="9"
@@ -55,8 +55,8 @@
         <TextView
             android:id="@+id/tv_dialog_count"
             android:gravity="center"
-            android:padding="10dp"
-            android:textSize="18dp"
+            android:padding="@dimen/_7sdp"
+            android:textSize="@dimen/_14sdp"
             android:textColor="@color/colorAccent"
             android:textStyle="normal"
             android:text="5 Matches Found In The Database"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"></TextView>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:padding="10dp"
+            android:padding="@dimen/_5sdp"
             android:id="@+id/rv_multiple_symptoms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

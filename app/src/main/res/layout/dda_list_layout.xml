@@ -3,38 +3,38 @@
     android:layout_width="wrap_content"
     android:background="@color/White"
     android:id="@+id/ll_flow_chip"
-    android:layout_marginTop="15dp"
-    android:layout_marginLeft="15dp"
-    android:layout_marginRight="15dp"
+    android:layout_marginTop="@dimen/_10sdp"
+    android:layout_marginLeft="@dimen/_10sdp"
+    android:layout_marginRight="@dimen/_10sdp"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
 
     <LinearLayout
-        android:minWidth="100dp"
+        android:minWidth="@dimen/_100sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        `<LinearLayout
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/flow_chip_back"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="@dimen/_10sdp">
 
             <TextView
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="@dimen/_5sdp"
                 android:id="@+id/tv_chip_number"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="5"
                 android:gravity="center"
                 android:text="1."
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="@dimen/_10sdp"
                 android:textColor="@color/colorAccent"
-                android:textSize="18dp">
+                android:textSize="@dimen/_12sdp">
 
             </TextView>
 
@@ -46,7 +46,7 @@
                 android:textColor="@color/colorAccent"
                 android:text="Fever with cold"
                 android:maxLines="1"
-                android:textSize="18dp"></TextView>
+                android:textSize="@dimen/_12sdp"></TextView>
 
             <LinearLayout
                 android:id="@+id/ll_chip_delete"
@@ -55,12 +55,12 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:padding="2dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="5dp"
+                    android:padding="@dimen/_2sdp"
+                    android:layout_marginLeft="@dimen/_14sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
                     android:id="@+id/img_multiply"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
                     android:src="@drawable/ic_multiply"
                     android:tint="#4c4c4c">
 

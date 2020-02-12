@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_margin="10dp"
+    android:layout_margin="@dimen/_8sdp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -17,24 +17,24 @@
             android:layout_height="wrap_content"
             android:background="@drawable/flow_chip_back"
             android:orientation="horizontal"
-            android:padding="10dp"
+            android:padding="@dimen/_8sdp"
             android:weightSum="10">
 
 
             <TextView
-                android:paddingStart="15dp"
+                android:paddingStart="@dimen/_12sdp"
                 android:layout_weight="1"
                 android:id="@+id/tv_chip_data"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoSizeTextType="uniform"
-                android:autoSizeMinTextSize="16dp"
+                android:autoSizeMinTextSize="@dimen/_12sdp"
                 android:ellipsize="end"
                 android:textColor="@color/colorAccent"
                 android:text="Date : 25/12/2019 | Time : 12:30 P.M."
                 android:maxLines="2"
-                android:textSize="20dp"></TextView>
+                android:textSize="@dimen/_12sdp"></TextView>
 
             <LinearLayout
                 android:layout_weight="9"
@@ -44,12 +44,12 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:padding="2dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="5dp"
+                    android:padding="@dimen/_2sdp"
+                    android:layout_marginLeft="@dimen/_12sdp"
+                    android:layout_marginRight="@dimen/_4sdp"
                     android:id="@+id/img_multiply"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="@dimen/_12sdp"
+                    android:layout_height="@dimen/_12sdp"
                     android:src="@drawable/ic_multiply"
                     android:tint="#4c4c4c">
 

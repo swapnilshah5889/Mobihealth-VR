@@ -17,8 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobihealthapis.Adapters.DataMapAdapter;
+import com.example.mobihealthapis.Models.DataMap;
 import com.example.mobihealthapis.R;
 import com.example.mobihealthapis.database_call.NetworkCall;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +28,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
+import static com.example.mobihealthapis.GeneralFunctions.Functions.getVitals2;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.VOICE_RECOGNITION_REQUEST_CODE;
 import static com.example.mobihealthapis.GeneralFunctions.StaticData.Vital_Classes;
 import static com.example.mobihealthapis.database_call.utils_string.API_URL.VR_APIS;
@@ -36,11 +39,13 @@ public class DataGather extends AppCompatActivity {
     ImageView img_speak_pi;
     TextView tv_recognized_text,tv_data_fetched;
     RecyclerView rv_text_map;
+    int temprequestcode = 22;
 
     List<String> text_map;
     private String android_id,android_id2;
     Dialog progress_dialog;
-
+    List<DataMap.Data> dmp;
+    String[] dmp_list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,12 +71,107 @@ public class DataGather extends AppCompatActivity {
         img_speak_pi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startVoiceRecognitionActivity(VOICE_RECOGNITION_REQUEST_CODE);
+                startVoiceRecognitionActivity(temprequestcode);
             }
         });
 
         text_map = new ArrayList<>();
         SetRV();
+
+        fetchdatamap();
+
+    }
+
+    private void fetchdatamap() {
+
+        progress_dialog.show();
+        NetworkCall ncall = new NetworkCall();
+        ncall.setServerUrlWebserviceApi(VR_APIS);
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put("action","getAlldatamap");
+
+        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+            @Override
+            public boolean setResponse(String responseStr) {
+
+                try {
+                    DataMap obj = new Gson().fromJson(responseStr, DataMap.class);
+                    if (obj.getStatus()) {
+                        dmp = new ArrayList<>();
+
+                        dmp.addAll(obj.getData());
+                        processmapeddata();
+                        //  tv_main.setText(obj.getTotal_records()+"|"+Issuelist.size());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(DataGather.this, "Catch : " + e.getMessage(), Toast.LENGTH_LONG).show();
+
+                }
+
+                progress_dialog.dismiss();
+                return false;
+            }
+        });
+    }
+
+    private void processmapeddata() {
+        dmp_list = new String[4];
+
+        for (int i = 0 ;i < dmp.size();i++)
+        {
+
+            switch (dmp.get(i).getMap().toString()){
+
+                case "height":
+                    if(dmp_list[0]==null)
+                    {
+
+                        dmp_list[0] = dmp.get(i).getData()+" ";
+                    }
+                    else {
+                        dmp_list[0] += dmp.get(i).getData() + " ";
+                    }
+                    break;
+                case "weight":
+                    if(dmp_list[1]==null)
+                    {
+
+                        dmp_list[1] = dmp.get(i).getData()+" ";
+                    }
+                    else {
+                        dmp_list[1] += dmp.get(i).getData() + " ";
+                    }
+                    break;
+                case "head":
+                    if(dmp_list[2]==null)
+                    {
+
+                        dmp_list[2] = dmp.get(i).getData()+" ";
+                    }
+                    else {
+                        dmp_list[2] += dmp.get(i).getData()+" ";
+                    }
+
+                    break;
+                case "temperature":
+                    if(dmp_list[3]==null)
+                    {
+
+                        dmp_list[3] = dmp.get(i).getData()+" ";
+                    }
+                    else {
+                        dmp_list[3] += dmp.get(i).getData()+" ";
+                    }
+                    break;
+
+            }
+
+        }
+
+
+
     }
 
     private void SetRV() {
@@ -111,9 +211,10 @@ public class DataGather extends AppCompatActivity {
 
             String[] rawDataFromSpeech = GetRawDataFromSpeech(matches);
 
-            tv_recognized_text.setText("Recognized Text : "+rawDataFromSpeech[0]);
+
 
             if(rawDataFromSpeech.length>0){
+                tv_recognized_text.setText("Recognized Text : "+rawDataFromSpeech[0]);
                 if(requestCode == VOICE_RECOGNITION_REQUEST_CODE){
 
                     int count = 0;
@@ -133,12 +234,29 @@ public class DataGather extends AppCompatActivity {
                     }
 
                 }
+                else if(requestCode == temprequestcode){
+                   HashMap<String,Double> vitals =getVitals2(rawDataFromSpeech,dmp_list);
+                    List<String> temp = new ArrayList<>();
+
+                    for (String key : vitals.keySet())
+                    {
+                        temp.add(key+" -> "+vitals.get(key));
+                    }
+
+                   SetRV2(temp);
+                }
             }
 
         }
 
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void SetRV2(List<String> temp) {
+        DataMapAdapter adapter = new DataMapAdapter(this,temp);
+        rv_text_map.setAdapter(adapter);
+        rv_text_map.setHasFixedSize(true);
     }
 
     private void ShowMappingDialog(final String data) {

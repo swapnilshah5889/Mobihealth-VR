@@ -9,7 +9,7 @@
                 android:color="@color/colorAccent"/>
 
             <corners
-                android:radius="50dp"/>
+                android:radius="@dimen/_100sdp"/>
 
         </shape>
         <ripple android:color="@color/DrawerBack"></ripple>

@@ -95,6 +95,71 @@ public class Functions {
         return Vitals;
     }
 
+    public static HashMap<String, Double> getVitals2(String[] arr,String[] dmp_list)
+    {
+        HashMap<String,Double> Vitals = new HashMap<>();
+
+
+        for(int i = 0;i<arr.length;i++)
+        {// height
+            if(dmp_list[0].contains(arr[i]) && hasNext((i+1), arr.length) )
+            {
+                String a =(String) arr[i+1];
+                if(isNumeric(a))
+                {
+                    Vitals.put("height",Double.parseDouble(a));
+                }
+
+            }
+            //weight
+            if(dmp_list[1].contains(arr[i]) && hasNext((i+1), arr.length) )
+            {
+                String a =(String) arr[i+1];
+                if(isNumeric(a))
+                {
+                    Vitals.put("weight",Double.parseDouble(a));
+                }
+
+            }
+            //head
+            if((dmp_list[2].contains(arr[i])) && hasNext((i+1), arr.length) )
+            {
+                if(hasNext((i+1), arr.length)){
+                    if(isNumeric(arr[i+1])){
+                        Vitals.put("head",Double.parseDouble(arr[i+1]));
+                    }
+
+
+                    else if(arr[i+1].equals("circumference") && hasNext((i+2),arr.length)){
+                        String a =(String) arr[i+2];
+                        if(isNumeric(a))
+                        {
+                            Vitals.put("head",Double.parseDouble(a));
+                        }
+
+                    }
+
+                }
+
+
+            }
+            //temperature
+            if(dmp_list[3].contains(arr[i]) && hasNext((i+1), arr.length) )
+            {
+                String a =(String) arr[i+1];
+                if(isNumeric(a))
+                {
+                    Vitals.put("temperature",Double.parseDouble(a));
+                }
+
+            }
+
+
+
+
+        }
+        return Vitals;
+    }
 public static boolean hasNext(int pos,int size){
         if(pos<size)
             return true;

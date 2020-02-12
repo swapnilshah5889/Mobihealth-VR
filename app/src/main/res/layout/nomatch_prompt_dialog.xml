@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:gravity="center"
-    android:padding="30dp"
+    android:padding="@dimen/_18sdp"
     android:background="#a000"
     android:layout_height="match_parent"
     android:id="@+id/ll__uni_prompt">
@@ -10,13 +10,13 @@
     <LinearLayout
         android:orientation="vertical"
         android:background="@drawable/patient_list_back_round"
-        android:padding="20dp"
+        android:padding="@dimen/_12sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_promt_question"
-            android:textSize="23dp"
+            android:textSize="@dimen/_17sdp"
             android:textStyle="bold"
             android:textColor="@color/colorAccent"
             android:text="No Match Found In The Database. Do You Want To ADD This Symptom ?"
@@ -26,9 +26,9 @@
         <TextView
             android:id="@+id/tv_promt_data"
             android:textStyle="bold"
-            android:textSize="20dp"
+            android:textSize="@dimen/_13sdp"
             android:textColor="@color/DrawerBack"
-            android:padding="20dp"
+            android:padding="@dimen/_8sdp"
             android:text="Symptom : Fever With Cold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></TextView>
@@ -60,11 +60,11 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:padding="5dp"
+                        android:padding="@dimen/_1sdp"
                         android:id="@+id/tv_promt_no"
                         android:clickable="true"
                         android:gravity="center"
-                        android:textSize="20dp"
+                        android:textSize="@dimen/_15sdp"
                         android:textColor="@color/colorAccent"
                         android:textStyle="bold"
                         android:text="No"
@@ -79,11 +79,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
-                        android:padding="5dp"
+                        android:padding="@dimen/_1sdp"
                         android:id="@+id/tv_promt_yes"
                         android:clickable="true"
                         android:gravity="center"
-                        android:textSize="20dp"
+                        android:textSize="@dimen/_15sdp"
                         android:textColor="@color/colorAccent"
                         android:textStyle="bold"
                         android:text="Yes"
