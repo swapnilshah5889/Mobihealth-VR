@@ -55,6 +55,7 @@ import com.example.mobihealthapis.Models.Medicine;
 import com.example.mobihealthapis.Models.Patient;
 import com.example.mobihealthapis.Models.PatientFinal;
 import com.example.mobihealthapis.Models.PatientJson;
+import com.example.mobihealthapis.Models.PatientPrevRxJson;
 import com.example.mobihealthapis.Models.Vitals;
 import com.example.mobihealthapis.R;
 import com.example.mobihealthapis.database_call.NetworkCall;
@@ -663,12 +664,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             @Override
             public void onClick(View v) {
 
-
-                //GeneratePrescription(draft);
-
-                //hide main patient details when stop command given and show home page
-                /*ll_patient_drawer.setVisibility(View.GONE);
-                ll_main_patient_rx.setVisibility(View.GONE);*/
+                FetchPreviousRX();
 
             }
         });
@@ -2758,6 +2754,44 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         });
     }
 
+    private void FetchPreviousRX(){
+        final Dialog dialog = Functions.createDialog(Home.this);
+        if(created != 0){
+            Functions.showDialog(dialog);
+        }
+        HashMap<String,String> params = new HashMap<>();
+        params.put("action","getPreviousRx");
+        params.put("patient_id",""+SelectedPatient.getPatientDetails().getPatientId());
+
+        NetworkCall ncall = new NetworkCall();
+        ncall.setServerUrlWebserviceApi(VR_APIS);
+        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+            @Override
+            public boolean setResponse(String responseStr) {
+                Functions.dismissDialog(dialog);
+                try{
+
+                    PatientPrevRxJson obj = new Gson().fromJson(responseStr, PatientPrevRxJson.class);
+                    if (obj.getStatus()){
+                        Gson gson = new Gson();
+                        PatientFinal temp = gson.fromJson(obj.getData().getRx_json(), PatientFinal.class);
+                        SelectedPatient = temp;
+                        ResumePatient();
+                    }
+                    else{
+                        Speak("No previous prescription available for the selected patient",-1,3000);
+                    }
+
+                }
+                catch (Exception e){
+                    Toast.makeText(Home.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        });
+    }
+
 
 
     //Recycler Views
@@ -3120,6 +3154,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                                 rv_main_drawer.setAdapter(patientsadapter);
                                 rv_main_drawer.setHasFixedSize(true);*/
                                 FetchPatients();
+                                transitions.SlideUpDown(rl_home_main, ll_main_patient_rx, true, 0);
                                 startActivity(i);
                             } else {
                                 Toast.makeText(Home.this, "" + responseStr, Toast.LENGTH_SHORT).show();
