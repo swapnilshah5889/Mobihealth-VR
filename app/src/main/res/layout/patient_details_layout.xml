@@ -127,7 +127,7 @@
 
                     <LinearLayout
                         android:id="@+id/ll_vitals_expand_main"
-                        android:visibility="visible"
+                        android:visibility="invisible"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#fff"
@@ -151,7 +151,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="8"
                             android:clickable="true"
-                            android:gravity="top|right"
+                            android:gravity="right|center_vertical"
                             android:padding="@dimen/_3sdp">
 
                             <ImageView
@@ -181,7 +181,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#fff"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:clickable="true"
                     android:orientation="vertical">
 
@@ -251,6 +251,7 @@
                         <LinearLayout
                             android:padding="@dimen/_16sdp"
                             android:weightSum="4"
+                            android:gravity="center_vertical"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
@@ -269,6 +270,7 @@
                                     android:layout_height="wrap_content"></TextView>
 
                                 <LinearLayout
+                                    android:gravity="center"
                                     android:background="@drawable/rounded_border"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
@@ -278,7 +280,7 @@
                                         android:layout_marginLeft="@dimen/_7sdp"
                                         android:layout_marginBottom="@dimen/_10sdp"
                                         android:layout_marginTop="@dimen/_10sdp"
-                                        android:textSize="@dimen/_21sdp"
+                                        android:textSize="@dimen/_18sdp"
                                         android:textColor="#4c4c4c"
                                         android:maxLines="1"
                                         android:autoSizeTextType="uniform"
@@ -313,7 +315,7 @@
                                         android:layout_marginLeft="@dimen/_7sdp"
                                         android:layout_marginBottom="@dimen/_10sdp"
                                         android:layout_marginTop="@dimen/_10sdp"
-                                        android:textSize="@dimen/_21sdp"
+                                        android:textSize="@dimen/_18sdp"
 
                                         android:maxLines="1"
                                         android:autoSizeTextType="uniform"
@@ -349,7 +351,7 @@
                                         android:layout_marginLeft="@dimen/_7sdp"
                                         android:layout_marginBottom="@dimen/_10sdp"
                                         android:layout_marginTop="@dimen/_10sdp"
-                                        android:textSize="@dimen/_21sdp"
+                                        android:textSize="@dimen/_18sdp"
                                         android:textColor="#4c4c4c"
                                         android:text="25 cm"
                                         android:maxLines="1"
@@ -387,7 +389,7 @@
                                         android:layout_marginLeft="@dimen/_7sdp"
                                         android:layout_marginBottom="@dimen/_10sdp"
                                         android:layout_marginTop="@dimen/_10sdp"
-                                        android:textSize="@dimen/_21sdp"
+                                        android:textSize="@dimen/_18sdp"
 
                                         android:textColor="#4c4c4c"
                                         android:text="94 °"
@@ -447,7 +449,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="8"
                         android:clickable="true"
-                        android:gravity="top|right"
+                        android:gravity="right|center_vertical"
                         android:padding="@dimen/_3sdp">
 
                         <ImageView
@@ -554,7 +556,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="8"
                         android:clickable="true"
-                        android:gravity="top|right"
+                        android:gravity="right|center_vertical"
                         android:padding="@dimen/_3sdp">
 
                         <ImageView
@@ -661,7 +663,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="8"
                         android:clickable="true"
-                        android:gravity="top|right"
+                        android:gravity="right|center_vertical"
                         android:padding="@dimen/_3sdp">
 
                         <ImageView
@@ -769,7 +771,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="8"
                         android:clickable="true"
-                        android:gravity="top|right"
+                        android:gravity="right|center_vertical"
                         android:padding="@dimen/_3sdp">
 
                         <ImageView
@@ -878,7 +880,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="8"
                         android:clickable="true"
-                        android:gravity="top|right"
+                        android:gravity="right|center_vertical"
                         android:padding="@dimen/_3sdp">
 
                         <ImageView
@@ -984,7 +986,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="8"
                         android:clickable="true"
-                        android:gravity="top|right"
+                        android:gravity="right|center_vertical"
                         android:padding="@dimen/_3sdp">
 
                         <ImageView

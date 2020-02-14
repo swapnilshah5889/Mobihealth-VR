@@ -1,5 +1,7 @@
 package com.example.mobihealthapis.database_call;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.util.HashMap;
@@ -34,11 +36,36 @@ public class NetworkCall {
         return call;
     }
 
+    public void performPostCall(String serverUrlWebserviceApi, HashMap<String, String> parameters) {
+        Call<Object> call = RestClient.getClient().getResponse(serverUrlWebserviceApi,
+                parameters);
+        Log.e("url",serverUrlWebserviceApi);
+        Log.e("params",parameters.toString());
+        call.enqueue(new Callback<Object>() {
+
+            @Override
+            public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
+                if (response.isSuccessful()) {
+                    responseString = RestClient.getGSONBuilder().toJson(response.body());
+                } else {
+                    responseString = "";
+                }
+                if (setDataRes!=null) setDataRes.setResponse(responseString);
+            }
+            @Override
+            public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
+                responseString = "";
+                setDataRes.setResponse(t.getMessage());
+            }
+
+        });
+    }
 
     private void performPostCall() {
         Call<Object> call = RestClient.getClient().getResponse(SERVER_URL_WEBSERVICE_API,
                 parameters);
-
+        Log.e("url",SERVER_URL_WEBSERVICE_API);
+        Log.e("params",parameters.toString());
         call.enqueue(new Callback<Object>() {
 
             @Override

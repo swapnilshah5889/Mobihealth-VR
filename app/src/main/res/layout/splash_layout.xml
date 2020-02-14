@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:id="@+id/ll_main_splash"
+    android:gravity="center"
+    android:background="@color/White"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/img_mobihealth"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="match_parent"
+        android:gravity="left"
+        android:weightSum="2"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_weight="1"
+            android:paddingTop="@dimen/_10sdp"
+            android:paddingStart="@dimen/_10sdp"
+            android:src="@drawable/img_mobihealth_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"></ImageView>
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/ll_mobihealth_logo"
+        app:layout_constraintTop_toBottomOf="@+id/img_mobihealth"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/pb_splash_screen"
+        android:gravity="center"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:text="Voice"
+            android:gravity="center"
+            android:textSize="@dimen/_25sdp"
+            android:textColor="#555"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></TextView>
+
+        <ImageView
+            android:padding="@dimen/_10sdp"
+            android:src="@drawable/img_rx"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_150sdp"></ImageView>
+    </LinearLayout>
+
+
+    <ProgressBar
+        android:id="@+id/pb_splash_screen"
+        app:layout_constraintTop_toBottomOf="@+id/ll_mobihealth_logo"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:progressTint="#f00"
+        style="@android:style/Widget.Holo.Light.ProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></ProgressBar>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

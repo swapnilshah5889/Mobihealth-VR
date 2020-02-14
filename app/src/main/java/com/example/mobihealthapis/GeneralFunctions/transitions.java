@@ -1,7 +1,5 @@
 package com.example.mobihealthapis.GeneralFunctions;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -13,7 +11,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
-import android.widget.LinearLayout;
 
 public class transitions {
 
@@ -63,6 +60,10 @@ public class transitions {
             transition = new Slide(Gravity.CENTER);
         else if(gravity == 3)
             transition = new Slide(Gravity.BOTTOM);
+        else if(gravity == 4)
+            transition = new Slide(Gravity.LEFT);
+        else if(gravity == 5)
+            transition = new Slide(Gravity.RIGHT);
         transition.setDuration(300);
         transition.addTarget(target.getId());
         TransitionManager.beginDelayedTransition(parent,transition);

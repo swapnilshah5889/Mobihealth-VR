@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:padding="@dimen/_20sdp"
+        android:padding="@dimen/_15sdp"
         android:background="@color/White"
         android:gravity="center"
         android:layout_height="wrap_content">
@@ -16,7 +16,7 @@
         <TextView
             android:text="Please Wait..."
             android:textStyle="italic"
-            android:textSize="@dimen/_18sdp"
+            android:textSize="@dimen/_14sdp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></TextView>
 
@@ -24,8 +24,8 @@
         <ProgressBar
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></ProgressBar>
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="@dimen/_15sdp"></ProgressBar>
     </LinearLayout>
 
 

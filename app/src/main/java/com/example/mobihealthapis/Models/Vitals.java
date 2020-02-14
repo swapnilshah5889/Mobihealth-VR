@@ -40,7 +40,7 @@ public class Vitals {
 
     public static class Data {
         @SerializedName("BMI")
-        private float BMI;
+        private double BMI;
         @SerializedName("Weight")
         private double Weight;
         @SerializedName("Height")
@@ -70,11 +70,11 @@ public class Vitals {
             Temperature = temperature;
         }
 
-        public float getBMI() {
+        public double getBMI() {
             return BMI;
         }
 
-        public void setBMI(float BMI) {
+        public void setBMI(double BMI) {
             this.BMI = BMI;
         }
 

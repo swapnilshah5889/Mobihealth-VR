@@ -9,113 +9,131 @@
     tools:context=".Activities.Home">
 
 
-    <!--Main Home-->
-
-    <LinearLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_home"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="30dp"
-        android:paddingTop="30dp">
-
-        <TextView
-            android:id="@+id/tv_home_total_patients"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Today's Patients - "
-            android:textColor="@color/colorAccent"
-            android:textSize="25dp"
-            android:textStyle="bold"></TextView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="200dp"
-        android:gravity="center"
-        android:padding="20dp"
-        android:weightSum="2">
-
-
+        android:layout_height="match_parent">
         <LinearLayout
-            android:id="@+id/ll_checkedin_patients"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_margin="15dp"
-            android:layout_weight="1"
-            android:background="@drawable/patient_list_back_round"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Checked In"
-                android:textColor="@color/colorAccent"
-                android:textSize="20dp"
-                android:textStyle="bold"></TextView>
+            <!--Main Home-->
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="bottom">
-
+                android:layout_height="wrap_content"
+                android:paddingLeft="30dp"
+                android:paddingTop="30dp">
 
                 <TextView
-                    android:id="@+id/tv_patients_checked_in"
+                    android:id="@+id/tv_home_total_patients"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="0"
+                    android:text="Today's Patients - "
                     android:textColor="@color/colorAccent"
-                    android:textSize="40dp"
+                    android:textSize="25dp"
                     android:textStyle="bold"></TextView>
 
             </LinearLayout>
 
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/ll_draft_patients"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_margin="15dp"
-            android:layout_weight="1"
-            android:background="@drawable/patient_list_back_round_accent"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Drafts"
-                android:textColor="@color/White"
-                android:textSize="20dp"
-                android:textStyle="bold"></TextView>
-
+            <!--Checked in and drafts-->
             <LinearLayout
+                android:id="@+id/ll_container_draft_checked"
                 android:layout_width="match_parent"
+                android:clickable="true"
                 android:layout_height="match_parent"
-                android:gravity="bottom">
+                android:layout_marginBottom="200dp"
+                android:gravity="center"
+                android:padding="20dp"
+                android:weightSum="2">
 
 
-                <TextView
-                    android:id="@+id/tv_patient_draft"
+                <LinearLayout
+                    android:id="@+id/ll_checkedin_patients"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="0"
-                    android:textColor="@color/White"
-                    android:textSize="40dp"
-                    android:textStyle="bold"></TextView>
+                    android:layout_height="150dp"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/patient_list_back_round"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Checked In"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="20dp"
+                        android:textStyle="bold"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="bottom">
+
+
+                        <TextView
+                            android:id="@+id/tv_patients_checked_in"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="0"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="40dp"
+                            android:textStyle="bold"></TextView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ll_draft_patients"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/patient_list_back_round_accent"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Drafts"
+                        android:textColor="@color/White"
+                        android:textSize="20dp"
+                        android:textStyle="bold"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="bottom">
+
+
+                        <TextView
+                            android:id="@+id/tv_patient_draft"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="0"
+                            android:textColor="@color/White"
+                            android:textSize="40dp"
+                            android:textStyle="bold"></TextView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
         </LinearLayout>
 
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    </LinearLayout>
+
 
 
     <!--Shadow-->
@@ -129,9 +147,6 @@
         android:visibility="invisible"></include>
 
 
-    <include
-        layout="@layout/voice_background"
-        android:visibility="visible"></include>
 
 
     <!--Main Voice-->
@@ -152,4 +167,7 @@
         layout="@layout/nomatch_prompt_dialog"
         android:visibility="gone"></include>
 
+    <include
+        layout="@layout/splash_layout"
+        android:visibility="visible"></include>
 </RelativeLayout>

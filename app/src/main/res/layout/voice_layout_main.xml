@@ -2,15 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:gravity="bottom"
-    android:paddingBottom="@dimen/_13sdp"
+
     android:layout_height="match_parent">
 
 
     <LinearLayout
+
         android:gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <RelativeLayout
+            android:background="#eee"
             android:gravity="center"
             android:orientation="horizontal"
             android:layout_width="match_parent"

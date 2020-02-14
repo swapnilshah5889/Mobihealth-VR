@@ -27,7 +27,7 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:padding="@dimen/_9sdp"
+                    android:padding="@dimen/_10sdp"
                     android:tint="@color/colorPrimary"
                     android:src="@drawable/ic_drawer"
                     android:layout_width="@dimen/_35sdp"
@@ -36,6 +36,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_drawer_selector"
                 android:paddingTop="@dimen/_8sdp"
                 android:paddingBottom="@dimen/_8sdp"
                 android:weightSum="10"
@@ -45,15 +46,17 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:id="@+id/tv_drawer_title"
+                    android:gravity="center"
                     android:layout_weight="2"
                     android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="@dimen/_13sdp"
+                    android:autoSizeMinTextSize="@dimen/_12sdp"
                     android:textStyle="bold"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:textColor="@color/White"
                     android:text="Checked in List"
-                    android:textSize="@dimen/_18sdp"
+                    android:textSize="@dimen/_13sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"></TextView>
 
@@ -66,7 +69,7 @@
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:padding="@dimen/_6sdp"
+                        android:padding="@dimen/_4sdp"
                         android:src="@drawable/ic_down"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"></ImageView>

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,17 +14,22 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mobihealthapis.Adapters.AdviceAdapter;
 import com.example.mobihealthapis.Adapters.MedicineAdapter;
@@ -35,10 +41,12 @@ import com.example.mobihealthapis.Adapters.MultipleSymptomAdapter;
 import com.example.mobihealthapis.Adapters.PatientsAdapter;
 import com.example.mobihealthapis.GeneralFunctions.Functions;
 import com.example.mobihealthapis.GeneralFunctions.OnSwipeTouchListener;
+import com.example.mobihealthapis.GeneralFunctions.PermissionsMethods;
 import com.example.mobihealthapis.GeneralFunctions.StaticData;
 import com.example.mobihealthapis.GeneralFunctions.transitions;
 import com.example.mobihealthapis.Interface.PatientInterface;
 import com.example.mobihealthapis.Models.Advice;
+import com.example.mobihealthapis.Models.DataMap;
 import com.example.mobihealthapis.Models.Diagnosis;
 import com.example.mobihealthapis.Models.DiagnosticTests;
 import com.example.mobihealthapis.Models.Issues;
@@ -75,6 +83,7 @@ import static com.example.mobihealthapis.GeneralFunctions.Functions.IsInList;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.getDailyTimings;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.getDuration;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.getMedTimings;
+import static com.example.mobihealthapis.GeneralFunctions.Functions.getVitals2;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.getfrequency;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.isNumeric;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.updatefrequency;
@@ -107,25 +116,32 @@ import static com.example.mobihealthapis.database_call.utils_string.API_URL.VR_A
 
 public class Home extends AppCompatActivity implements PatientInterface, RecognitionListener {
 
+    //Splash Screen
+    ConstraintLayout ll_main_splash;
 
     //Home
     private final int doctor_id = 40089;
 
+    SwipeRefreshLayout swipe_refresh_home;
+
     int ExpandedDetail = -1;
 
-    TextView tv_home_total_patients, tv_patient_draft, tv_patients_checked_in;
+    TextView tv_home_total_patients, tv_patient_draft, tv_patients_checked_in, tv_drawer_title;
     List<PatientFinal> Final_PatientChecked;
     ImageView img_patient;
     TextToSpeech textToSpeech;
     RelativeLayout rl_home_main;
     RecyclerView rv_main_drawer, rv_advice_list_main, rv_followup_list_main, rv_medicines_list_main;
-    LinearLayout ll_activate_voice, ll_patient_drawer, ll_draft_patients, ll_checkedin_patients, ll_drawer_showhide;
+    LinearLayout ll_activate_voice, ll_patient_drawer, ll_draft_patients, ll_checkedin_patients,
+            ll_drawer_showhide, ll_drawer_selector, ll_container_draft_checked;
     RipplePulseLayout mRipplePulseLayout;
     MedicineAdapter medicineAdapter;
     String flag_for_patients = "";
-    String flag_for_previous_patient="";
+    String flag_for_previous_patient = "";
     int previous_patient_position;
 
+
+    String[] drawer_selected = {"Checked In", "Drafts"};
 
     int fixedheight, fixedheightcounter = 0;
 
@@ -159,7 +175,8 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     Boolean[] isExpanded;
     LinearLayout[] ll_expand_main, ll_expand, ll_after_expand, ll_data;
     ImageView[] img_expand;
-    TextView tv_patient_id_2, tv_patient_name, tv_gender_age, tv_bmi, tv_weight, tv_height, tv_temperature, tv_followup_datetime, tv_hc;
+    TextView tv_patient_id_2, tv_patient_name, tv_gender_age, tv_bmi, tv_weight, tv_height,
+            tv_temperature, tv_followup_datetime, tv_hc;
     LinearLayout ll_previous_rx;
     List<Issues.Data> Issuelist;
     List<Diagnosis.Data> DiagnosisList;
@@ -170,6 +187,9 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     FlowLayout flow_symptoms, flow_diagnosis, flow_diagnostic;
 
     private int details = 7;
+
+    List<DataMap.Data> vitals_map;
+    String[] vitals_list;
 
     //Symptom Dialog
     LinearLayout ll_symptom_dialog;
@@ -194,10 +214,15 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     Dialog progress_dialog;
 
+    int created = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        created = -0;
+
+        PermissionsMethods.CheckPermissions(this,Home.this);
 
         InitializeObjects();
 
@@ -260,6 +285,8 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     private void HomeInit() {
 
+        ll_main_splash = findViewById(R.id.ll_main_splash);
+
         tv_home_total_patients = findViewById(R.id.tv_home_total_patients);
         tv_patients_checked_in = findViewById(R.id.tv_patients_checked_in);
         tv_patient_draft = findViewById(R.id.tv_patient_draft);
@@ -290,12 +317,106 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         progress_dialog.setCancelable(false);
         //progress_dialog.show();
 
-        FetchPatients();
+        swipe_refresh_home = findViewById(R.id.swipe_refresh_home);
+        tv_drawer_title = findViewById(R.id.tv_drawer_title);
+        ll_drawer_selector = findViewById(R.id.ll_drawer_selector);
+        ll_container_draft_checked = findViewById(R.id.ll_container_draft_checked);
 
+
+
+        vitals_map = new ArrayList<>();
+        //new fetchpatients().execute();
+        FetchPatients();
+        fetchdatamap();
+        //LoadData();
+        ExpandedDetail = vitals;
         HomeClickMethods();
     }
+/*
+    private void LoadData() {
+        final Handler mHandler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                if(msg.what == 0)
+                    new fetchpatients().execute();
+                return false;
+            }
+        });
+        //FetchPatients();
+
+        Thread t = new Thread(){
+            @Override
+            public void run(){
+                mHandler.sendEmptyMessage(0);
+            }
+        };
+        t.run();
+    }*/
 
     private void HomeClickMethods() {
+
+        ll_container_draft_checked.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ll_patient_drawer.getVisibility() == View.VISIBLE) {
+                    transitions.SlideUpDown(rl_home_main, ll_patient_drawer, true, 4);
+                }
+            }
+        });
+
+        ll_drawer_selector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(Home.this, v);
+                //final List<String> donationtype = fixed_data.GetDonationTypeList();
+                popupMenu.getMenu().add(Menu.NONE, 0, 0, "Checked In");
+                popupMenu.getMenu().add(Menu.NONE, 1, 1, "Drafts");
+                popupMenu.getMenu().add(Menu.NONE, 2, 2, "Completed");
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        //Checked In Clicked
+                        if (menuItem.getItemId() == 0) {
+                            flag_for_patients = checkedin;
+                            SetMainDrawerRecyclerView(Final_PatientChecked, false);
+                        }
+
+                        //Drafts Clicked
+                        else if (menuItem.getItemId() == 1) {
+                            flag_for_patients = draft;
+                            SetMainDrawerRecyclerView(Final_PatientDraft, false);
+                        }
+
+                        //Completed Clicked
+                        else {
+                            Toast.makeText(Home.this, "Completed Clicked", Toast.LENGTH_SHORT).show();
+                        }
+
+                        if (flag_for_patients == draft) {
+                            tv_drawer_title.setText(drawer_selected[1]);
+                        } else {
+                            tv_drawer_title.setText(drawer_selected[0]);
+                        }
+
+                        return true;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
+
+        swipe_refresh_home.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Toast.makeText(Home.this, "refresh", Toast.LENGTH_SHORT).show();
+                FetchPatients();
+//                new fetchpatients().execute();
+                //LoadData();
+            }
+        });
+
         ll_draft_patients.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -308,7 +429,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             @Override
             public void onClick(View v) {
                 flag_for_patients = checkedin;
-                SetMainDrawerRecyclerView(Final_PatientChecked,true);
+                SetMainDrawerRecyclerView(Final_PatientChecked, true);
 
             }
         });
@@ -391,7 +512,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             }
         });*/
 
-        SetMainDrawerRecyclerView(Final_PatientDraft,show);
+        SetMainDrawerRecyclerView(Final_PatientDraft, show);
 
     }
 
@@ -543,7 +664,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             public void onClick(View v) {
 
 
-                GeneratePrescription(draft);
+                //GeneratePrescription(draft);
 
                 //hide main patient details when stop command given and show home page
                 /*ll_patient_drawer.setVisibility(View.GONE);
@@ -580,14 +701,13 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
             ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
             String[] finalarr = GetRawDataFromSpeech(matches);
 
             //Show Patients & Stop Rx & CRUD Data
             if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
-
 
 
                 if (finalarr.length > 0) {
@@ -599,7 +719,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                             int temp1 = Functions.Soundex.StringCompareCoarse("draft", finalarr[1], 3);
                             if (temp < 5 && temp >= 0) {
                                 flag_for_patients = checkedin;
-                                SetMainDrawerRecyclerView(Final_PatientChecked,true);
+                                SetMainDrawerRecyclerView(Final_PatientChecked, true);
 
                             } else if (temp1 < 7 && temp1 >= 0) {
 
@@ -617,8 +737,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                         //Stop Rx and Upload as Draft
                         if (finalarr[0].equals("stop")) {
                             if (finalarr.length > 1) {
-                                if (finalarr[1].equals("prescription") || finalarr[1].equals("description"))
-                                {
+                                if (finalarr[1].equals("prescription") || finalarr[1].equals("description")) {
 
                                     GeneratePrescription(draft);
 
@@ -628,8 +747,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
                         //Set/Add/Update/Delete Data
                         else if (finalarr[0].equals("write") || finalarr[0].equals("right")
-                                || finalarr[0].equals("set") || finalarr[0].equals("add") || finalarr[0].equals("start"))
-                        {
+                                || finalarr[0].equals("set") || finalarr[0].equals("add") || finalarr[0].equals("start")) {
 
                             if (finalarr.length > 1) {
                                 switch (finalarr[1]) {
@@ -700,7 +818,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
                         }
                         //setting vitals when expanded
-                        else if (Functions.CheckData(finalarr[0], StaticData.Vitals) && ExpandedDetail == vitals) {
+                        else if (Functions.CheckData2(finalarr, vitals_list) && ExpandedDetail == vitals) {
                             SetVitals(finalarr);
                         }
                         //Update
@@ -970,7 +1088,9 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
                             }
 
-                        } else if (finalarr[0].equals("generate")) {
+                        }
+                        //Generate Prescription
+                        else if (finalarr[0].equals("generate")) {
 
                             if (finalarr[1].equals("prescription")) {
                                 GeneratePrescription(completed);
@@ -1254,7 +1374,11 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
         String finaldata = matches.get(0).toLowerCase();
 
+        char s = finaldata.charAt(finaldata.length()-1);
 
+        if(s == '.'){
+            finaldata = finaldata.substring(0,finaldata.length()-1);
+        }
         StringTokenizer st = new StringTokenizer(finaldata, " ");
         String[] finalarr = new String[st.countTokens()];
 
@@ -1373,9 +1497,9 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         String date_1 = "";
         date_1 = "Date : " + f_date;
 
-        if(date_1.equals("") || !time_1.equals(""))
+        if (date_1.equals("") || !time_1.equals(""))
             tv_followup_datetime.setText(date_1 + " | " + time_1);
-        else if(date_1.equals("") && time_1.equals("")){
+        else if (date_1.equals("") && time_1.equals("")) {
             tv_followup_datetime.setText("No Follow Up Added.");
         }
 
@@ -1458,7 +1582,8 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     private void SetVitals(String[] data) {
 
-        HashMap<String, Double> rawVitals = Functions.getVitals(data);
+        //HashMap<String, Double> rawVitals = Functions.getVitals(data);
+        HashMap<String,Double> rawVitals =getVitals2(data,vitals_list);
         if (rawVitals.size() > 0) {
             for (String key : rawVitals.keySet()) {
                 Double a = 0.0;
@@ -1487,7 +1612,18 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
                 }
             }
+
+            if (Final_Vitals.getWeight() > 0 && Final_Vitals.getHeight() > 0){
+
+                double bmi = (Final_Vitals.getWeight())/((Final_Vitals.getHeight()/10)*(Final_Vitals.getHeight()/10));
+                Final_Vitals.setBMI(bmi);
+                tv_bmi.setText(""+bmi);
+
+            }
+
         }
+
+
 
 
     }
@@ -1724,7 +1860,6 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             Speak("Please provide other details for " + multiplemedobj.getName(), VR_MEDICINE_NULL_DATA, 3000);
         }
     }
-
 
     private void AddMedicine(Med.Data data, String[] arr) {
 
@@ -2236,7 +2371,10 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     //Fetch Data
 
     private void FetchSymptoms() {
-        progress_dialog.show();
+        final Dialog dialog = Functions.createDialog(Home.this);
+        if(created != 0){
+            Functions.showDialog(dialog);
+        }
         HashMap<String, String> params = new HashMap<>();
         params.put("action", "getIssues");
         NetworkCall ncall = new NetworkCall();
@@ -2246,7 +2384,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             @Override
             public boolean setResponse(String responseStr) {
 
-                progress_dialog.dismiss();
+                Functions.dismissDialog(dialog);
                 try {
                     Issues obj = new Gson().fromJson(responseStr, Issues.class);
                     if (obj.isStatus()) {
@@ -2269,7 +2407,10 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     private void FetchDiagnosis() {
 
-        progress_dialog.show();
+        final Dialog dialog = Functions.createDialog(Home.this);
+        if(created != 0){
+            Functions.showDialog(dialog);
+        }
         HashMap<String, String> params = new HashMap<>();
         params.put("action", "getDiagnosis");
         NetworkCall ncall = new NetworkCall();
@@ -2279,7 +2420,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             @Override
             public boolean setResponse(String responseStr) {
 
-                progress_dialog.dismiss();
+                Functions.dismissDialog(dialog);
                 try {
                     Diagnosis obj = new Gson().fromJson(responseStr, Diagnosis.class);
                     if (obj.isStatus()) {
@@ -2301,7 +2442,12 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     private void FetchPatients() {
 
-        progress_dialog.show();
+        //progress_dialog.show();
+        final Dialog dialog = Functions.createDialog(Home.this);
+        if(created != 0) {
+            Functions.showDialog(dialog);
+        }
+
         HashMap<String, String> params = new HashMap<>();
 
         params.put("action", "getChildren");
@@ -2311,26 +2457,35 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
         ncall.setServerUrlWebserviceApi(VR_APIS);
 
+        /*ncall.performPostCall(VR_APIS,params);
+        ncall.setDataResponseListener(new NetworkCall.SetDataResponse() {
+            @Override
+            public boolean setResponse(String responseStr) {
+                return false;
+            }
+        });
+        */
 
         ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
             @Override
             public boolean setResponse(String responseStr) {
 
 
-               // progress_dialog.dismiss();
+                // progress_dialog.dismiss();
                 try {
                     //tv_main.setText(responseStr);
                     Patient obj = new Gson().fromJson(responseStr, Patient.class);
 
                     if (obj.getStatus()) {
 
+                        Log.d("api",responseStr);
                         List<Patient.Data> PatientsList = new ArrayList<>();
                         PatientsList.addAll(obj.getData());
 
                         tv_home_total_patients.setText("Today's Patients - " + PatientsList.size());
 
                         Final_PatientChecked = new ArrayList<>();
-                        for(int i = 0; i < PatientsList.size(); i++){
+                        for (int i = 0; i < PatientsList.size(); i++) {
                             Final_PatientChecked.add(new PatientFinal(PatientsList.get(i)));
                         }
 
@@ -2346,11 +2501,18 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                         ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
                             @Override
                             public boolean setResponse(String responseStr) {
-                                progress_dialog.dismiss();
+                                //progress_dialog.dismiss();
+                                Functions.dismissDialog(dialog);
+                                if(created == 0) {
+                                    //transitions.FadeInOut(ll_main_splash, true, Home.this, 300);
+                                    transitions.SlideUpDown(rl_home_main, ll_main_splash, true, 0);
+                                    created = -1;
+                                }
+                                swipe_refresh_home.setRefreshing(false);
                                 try {
                                     PatientJson obj = new Gson().fromJson(responseStr, PatientJson.class);
                                     if (obj.getStatus()) {
-
+                                        Log.d("api",responseStr);
                                         // List<PatientFinal>
                                         for (int i = 0; i < obj.getData().size(); i++) {
                                             Gson gson = new Gson();
@@ -2368,16 +2530,14 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                                         tv_patients_checked_in.setText("" + Final_PatientChecked.size());
                                         tv_patient_draft.setText(Final_PatientDraft.size() + "");
 
-                                        if(flag_for_patients.equals(checkedin)){
-                                            SetMainDrawerRecyclerView(Final_PatientChecked,false);
-                                        }
-                                        else{
+                                        if (flag_for_patients.equals(checkedin)) {
+                                            SetMainDrawerRecyclerView(Final_PatientChecked, false);
+                                        } else {
                                             ShowDraftPatients(false);
                                         }
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         tv_patients_checked_in.setText("" + Final_PatientChecked.size());
+                                        tv_patient_draft.setText(Final_PatientDraft.size() + "");
                                     }
 
                                 } catch (Exception e) {
@@ -2392,14 +2552,16 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
                         //  SetMainDrawerRecyclerView(PatientsList);
                         //tv_main.setText(obj.getTotal_records()+"|"+vitalList.size());
-                    }
-                    else
-                    {
-                        progress_dialog.dismiss();
+                    } else {
+                        swipe_refresh_home.setRefreshing(false);
+                        //progress_dialog.dismiss();
+                        Functions.dismissDialog(dialog);
                     }
 
                 } catch (Exception e) {
-                    progress_dialog.dismiss();
+                    swipe_refresh_home.setRefreshing(false);
+                    //progress_dialog.dismiss();
+                    Functions.dismissDialog(dialog);
                     e.printStackTrace();
                     Toast.makeText(Home.this, "Catch : " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
@@ -2412,7 +2574,10 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     }
 
     private void FetchDiagnosticList() {
-        progress_dialog.show();
+        final Dialog dialog = Functions.createDialog(Home.this);
+        if(created != 0){
+            Functions.showDialog(dialog);
+        }
         HashMap<String, String> params = new HashMap<>();
         params.put("action", "getDiagnosticTests");
         NetworkCall ncall = new NetworkCall();
@@ -2422,7 +2587,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             @Override
             public boolean setResponse(String responseStr) {
 
-                progress_dialog.dismiss();
+                Functions.dismissDialog(dialog);
                 try {
                     DiagnosticTests obj = new Gson().fromJson(responseStr, DiagnosticTests.class);
                     if (obj.isStatus()) {
@@ -2446,7 +2611,10 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     private void FetchVitals() {
 
-        progress_dialog.show();
+        final Dialog dialog = Functions.createDialog(Home.this);
+        if(created != 0){
+            Functions.showDialog(dialog);
+        }
         HashMap<String, String> params = new HashMap<>();
 
         params.put("action", "getChildVitals");
@@ -2461,7 +2629,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             @Override
             public boolean setResponse(String responseStr) {
 
-                progress_dialog.dismiss();
+                Functions.dismissDialog(dialog);
                 try {
                     //tv_main.setText(responseStr);
                     Vitals obj = new Gson().fromJson(responseStr, Vitals.class);
@@ -2475,8 +2643,8 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                         Final_Vitals.setHeight(SelectedPatient.getVitals().getHeight());
                         Final_Vitals.setWeight(SelectedPatient.getVitals().getWeight());
                         Final_Vitals.setBMI(SelectedPatient.getVitals().getBMI());
-                        tv_height.setText(SelectedPatient.getVitals().getHeight() + " cm");
-                        tv_weight.setText(SelectedPatient.getVitals().getWeight() + " k.g.");
+                        tv_height.setText(SelectedPatient.getVitals().getHeight() + " CM");
+                        tv_weight.setText(SelectedPatient.getVitals().getWeight() + " KG");
                         tv_bmi.setText("" + SelectedPatient.getVitals().getBMI());
 
                         //tv_main.setText(obj.getTotal_records()+"|"+vitalList.size());
@@ -2495,7 +2663,10 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     private void FetchMedicine(final String[] arr, final int pos) {
 
-        progress_dialog.show();
+        final Dialog dialog = Functions.createDialog(Home.this);
+        if(created != 0){
+            Functions.showDialog(dialog);
+        }
         medicinematched = new ArrayList<>();
         MedicineList = new ArrayList<>();
         HashMap<String, String> params = new HashMap<>();
@@ -2512,7 +2683,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             @Override
             public boolean setResponse(String responseStr) {
 
-                progress_dialog.dismiss();
+                Functions.dismissDialog(dialog);
                 try {
                     Med obj = new Gson().fromJson(responseStr, Med.class);
                     if (obj.getStatus()) {
@@ -2549,6 +2720,45 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     }
 
+    private void fetchdatamap() {
+
+        final Dialog dialog = Functions.createDialog(Home.this);
+        if(created != 0){
+            Functions.showDialog(dialog);
+        }
+        NetworkCall ncall = new NetworkCall();
+        ncall.setServerUrlWebserviceApi(VR_APIS);
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put("action","getAlldatamap");
+
+        ncall.call(params).setDataResponseListener(new NetworkCall.SetDataResponse() {
+            @Override
+            public boolean setResponse(String responseStr) {
+
+                Functions.dismissDialog(dialog);
+                try {
+                    DataMap obj = new Gson().fromJson(responseStr, DataMap.class);
+                    if (obj.getStatus()) {
+                        vitals_map = new ArrayList<>();
+
+                        vitals_map.addAll(obj.getData());
+                        processmapeddata();
+                        //  tv_main.setText(obj.getTotal_records()+"|"+Issuelist.size());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(Home.this, "Catch : " + e.getMessage(), Toast.LENGTH_LONG).show();
+
+                }
+
+
+                return false;
+            }
+        });
+    }
+
+
 
     //Recycler Views
 
@@ -2559,12 +2769,12 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         rv_medicines_list_main.setHasFixedSize(true);
     }
 
-    private void SetMainDrawerRecyclerView(List<PatientFinal> PatientList,Boolean show) {
+    private void SetMainDrawerRecyclerView(List<PatientFinal> PatientList, Boolean show) {
 
         patientsadapter = new PatientsAdapter(this, PatientList);
         rv_main_drawer.setAdapter(patientsadapter);
         rv_main_drawer.setHasFixedSize(true);
-        if(show)
+        if (show)
             ShowHidePatientList(1);
 
     }
@@ -2730,11 +2940,20 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     private void ShowHidePatientList(int x) {
 
+        if (flag_for_patients == draft) {
+            tv_drawer_title.setText(drawer_selected[1]);
+        } else {
+            tv_drawer_title.setText(drawer_selected[0]);
+        }
         if (x == 1 && (ll_patient_drawer.getVisibility() == View.GONE ||
-                ll_patient_drawer.getVisibility() == View.INVISIBLE))
-            ll_patient_drawer.setVisibility(View.VISIBLE);
-        else if (ll_patient_drawer.getVisibility() == View.VISIBLE)
-            ll_patient_drawer.setVisibility(View.GONE);
+                ll_patient_drawer.getVisibility() == View.INVISIBLE)) {
+            //ll_patient_drawer.setVisibility(View.VISIBLE);
+            transitions.SlideUpDown(rl_home_main, ll_patient_drawer, false, 4);
+        } else if (ll_patient_drawer.getVisibility() == View.VISIBLE) {
+            //ll_patient_drawer.setVisibility(View.GONE);
+            transitions.SlideUpDown(rl_home_main, ll_patient_drawer, true, 4);
+        }
+
 
     }
 
@@ -2790,7 +3009,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             final String patientjson = new Gson().toJson(Final_Patient);
             ResetData();
             Gson gson = new Gson();
-            if(flag_for_previous_patient.equals(draft))
+            if (flag_for_previous_patient.equals(draft))
                 params.put("action", "updatePrescription");
             else
                 params.put("action", "insertPrescription");
@@ -2813,7 +3032,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                             Intent i = new Intent(Home.this, pdf_preview.class);
                             i.putExtra("patient_id", "" + Final_Patient.getPatientDetails().getPatientId());
                             i.putExtra("patientjson", patientjson);
-                           // startActivity(i);
+                            // startActivity(i);
 
                             FetchPatients();
 
@@ -2834,8 +3053,14 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             int tempcount = 0;
 
             if (Final_Medicines != null) {
-                if (Final_Medicines.size() > 0)
+                if (Final_Medicines.size() > 0) {
                     Final_Patient.setFinal_Medicines(Final_Medicines);
+                }
+                else{
+                    tempcount++;
+                    Speak("Medicines cannot be zero in a prescription!", VR_MEDICINE_NULL_DATA, 3000);
+                    //Toast.makeText(this, "Medicines cannot be zero in a prescription !", Toast.LENGTH_SHORT).show();
+                }
                 String text = "";
                 for (int i = 0; i < Final_Medicines.size(); i++) {
                     if (!CheckMedicineNullData(Final_Medicines.get(i))) {
@@ -2853,6 +3078,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                 Final_Patient.setF_date(f_date);
                 Final_Patient.setF_time(f_time);
             } else if (f_date.equals("") && (f_time[0] == -1)) {
+                Speak("Please provide followup details", VR_MEDICINE_NULL_DATA, 3000);
             } else if (f_date.equals("") || (f_time[0] == -1)) {
                 tempcount++;
                 Speak("Please provide complete details for followup ", VR_MEDICINE_NULL_DATA, 3000);
@@ -2895,10 +3121,9 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                                 rv_main_drawer.setHasFixedSize(true);*/
                                 FetchPatients();
                                 startActivity(i);
-                            } else
-                                {
+                            } else {
                                 Toast.makeText(Home.this, "" + responseStr, Toast.LENGTH_SHORT).show();
-                                }
+                            }
 
                         } catch (Exception e) {
                             Toast.makeText(Home.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -3129,8 +3354,9 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             }
 
 
-            ll_patient_drawer.setVisibility(View.GONE);
-            ll_main_patient_rx.setVisibility(View.VISIBLE);
+            transitions.SlideUpDown(rl_home_main, ll_patient_drawer, true, 4);
+            transitions.SlideUpDown(rl_home_main, ll_main_patient_rx, false, 0);
+            //ll_main_patient_rx.setVisibility(View.VISIBLE);
             //Toast.makeText(this, SelectedPatient.getFname()+" Selected", Toast.LENGTH_SHORT).show();
 
             SetPatientDetails();
@@ -3382,13 +3608,13 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
             }
         }
 
-        if(Final_Vitals != null){
+        if (Final_Vitals != null) {
 
-            tv_bmi.setText(""+Final_Vitals.getBMI());
-            tv_hc.setText(""+Final_Vitals.getHead());
-            tv_height.setText(""+Final_Vitals.getHeight());
-            tv_weight.setText(""+Final_Vitals.getWeight());
-            tv_temperature.setText(""+Final_Vitals.getTemperature());
+            tv_bmi.setText("" + Final_Vitals.getBMI());
+            tv_hc.setText("" + Final_Vitals.getHead()+" CM");
+            tv_height.setText("" + Final_Vitals.getHeight()+" CM");
+            tv_weight.setText("" + Final_Vitals.getWeight()+" KG");
+            tv_temperature.setText("" + Final_Vitals.getTemperature()+" °");
         }
 
         if (Final_Advice != null) {
@@ -3416,8 +3642,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
             tv_followup_datetime.setText(date_1 + " | " + time_1);
 
-        }
-        else{
+        } else {
             tv_followup_datetime.setText("No Follow Up Added.");
         }
 
@@ -3481,12 +3706,102 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     @Override
     public void onBackPressed() {
-        if(ll_main_patient_rx.getVisibility() == View.VISIBLE){
-            ll_main_patient_rx.setVisibility(View.GONE);
-        }
-        else
+        if (ll_main_patient_rx.getVisibility() == View.VISIBLE) {
+            transitions.SlideUpDown(rl_home_main, ll_main_patient_rx, true, 0);
+            //ll_main_patient_rx.setVisibility(View.GONE);
+        } else
             super.onBackPressed();
     }
+
+
+    public class fetchpatients extends AsyncTask{
+
+        Dialog progress_dialog1;
+        @Override
+        protected void onPreExecute() {
+
+
+            progress_dialog1 = new Dialog(Home.this);
+            progress_dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            progress_dialog1.setContentView(R.layout.progress_dialog_layout);
+            progress_dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            progress_dialog1.setCancelable(false);
+            progress_dialog1.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            FetchPatients();
+            //fetchdatamap();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            progress_dialog1.dismiss();
+            super.onPostExecute(o);
+        }
+    }
+
+
+
+    private void processmapeddata() {
+        vitals_list = new String[4];
+
+        for (int i = 0 ;i < vitals_map.size();i++)
+        {
+
+            switch (vitals_map.get(i).getMap().toString()){
+
+                case "height":
+                    if(vitals_list[0]==null)
+                    {
+                        vitals_list[0] = vitals_map.get(i).getData()+" ";
+                    }
+                    else {
+                        vitals_list[0] += vitals_map.get(i).getData() + " ";
+                    }
+                    break;
+                case "weight":
+                    if(vitals_list[1]==null)
+                    {
+                        vitals_list[1] = vitals_map.get(i).getData()+" ";
+                    }
+                    else {
+                        vitals_list[1] += vitals_map.get(i).getData() + " ";
+                    }
+                    break;
+                case "head":
+                    if(vitals_list[2]==null)
+                    {
+                        vitals_list[2] = vitals_map.get(i).getData()+" ";
+                    }
+                    else {
+                        vitals_list[2] += vitals_map.get(i).getData()+" ";
+                    }
+
+                    break;
+                case "temperature":
+                    if(vitals_list[3]==null)
+                    {
+                        vitals_list[3] = vitals_map.get(i).getData()+" ";
+                    }
+                    else {
+                        vitals_list[3] += vitals_map.get(i).getData()+" ";
+                    }
+                    break;
+
+            }
+
+        }
+
+
+
+    }
+
+
+
 }
 
 

@@ -21,6 +21,7 @@ public class StaticData {
     public static int VR_UPDATE_ADVICE = 133;
     public static int VR_UPDATE_SYMPTOMS = 134;
     public static int VR_MEDICINE_NULL_DATA = 135;
+    public static int MY_PERMISSIONS_REQUEST = 136;
 
 
     public static String PREF_PATIENT = "PREF_PATIENT";
