@@ -838,12 +838,48 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                         }
                         //Update
                         else if (finalarr[0].equals("update")) {
-                            if (finalarr.length > 2) {
+                            if (finalarr.length > 3) {
                                 if (ExpandedDetail == medicine) {
 
                                     if (finalarr[1].equals("number")) {
                                         if (isNumeric(finalarr[2])) {
+
+                                            if(finalarr[3].equals("times") || finalarr[3].equals("time"))
+                                            {
+                                                String brr[] = new String[finalarr.length+1];
+                                                int a = finalarr[2].length();
+                                                System.out.println(finalarr[2].substring(0,a-1));
+                                                System.out.println(finalarr[2].substring(a-1));
+
+
+
+                                                brr[0] =finalarr[0];
+                                                brr[1] = finalarr[1];
+                                                brr[2]=finalarr[2].substring(0,a-1);
+                                                brr[3] = finalarr[2].substring(a-1);
+
+                                                int count = 4;
+
+
+                                                for (int i=3;i<finalarr.length;i++)
+                                                {
+                                                    brr[count] = finalarr[i];
+                                                    count++;
+                                                }
+
+
+                                                finalarr = brr;
+
+
+
+
+                                            }
+
+
                                             int pos = Integer.parseInt(finalarr[2]);
+
+
+
                                             if (IsInList(pos, Final_Medicines.size())) {
                                                 pos--;
                                                 String[] arr = new String[finalarr.length - 3];
