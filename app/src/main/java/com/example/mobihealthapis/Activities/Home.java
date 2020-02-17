@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -28,6 +30,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -65,6 +69,7 @@ import com.nex3z.flowlayout.FlowLayout;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -77,6 +82,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.FilterDiagnosis;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.FilterDiagnosticTest;
 import static com.example.mobihealthapis.GeneralFunctions.Functions.FilterIssues;
@@ -217,6 +224,15 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     int created = -1;
 
+
+    //Audio Recording
+    MediaRecorder myAudioRecorder;
+    private boolean permissionToRecordAccepted = false;
+    private String [] permissions = {WRITE_EXTERNAL_STORAGE, RECORD_AUDIO};
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    String fileName = null;
+    Boolean b_isRecording = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -331,6 +347,9 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         fetchdatamap();
         //LoadData();
         ExpandedDetail = vitals;
+
+
+
         HomeClickMethods();
     }
 /*
@@ -2995,6 +3014,8 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     //Generate Final Prescription
     private void GeneratePrescription(final String patient_type) {
 
+        stopRecording();
+
         Final_Patient = SelectedPatient;
 
         if (Final_Vitals != null) {
@@ -3153,8 +3174,9 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
                                 rv_main_drawer.setAdapter(patientsadapter);
                                 rv_main_drawer.setHasFixedSize(true);*/
-                                FetchPatients();
                                 transitions.SlideUpDown(rl_home_main, ll_main_patient_rx, true, 0);
+                                SelectedPatient = null;
+                                FetchPatients();
                                 startActivity(i);
                             } else {
                                 Toast.makeText(Home.this, "" + responseStr, Toast.LENGTH_SHORT).show();
@@ -3360,7 +3382,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
             switch (flag_for_patients) {
                 case checkedin:
-
+                    stopRecording();
                     if (SelectedPatient != null) {
                         flag_for_previous_patient = checkedin;
                         previous_patient_position = SelectedPatientPosition;
@@ -3374,7 +3396,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                 case allpatients:
                     break;
                 case draft:
-
+                    stopRecording();
                     if (SelectedPatient != null) {
                         flag_for_previous_patient = draft;
                         previous_patient_position = SelectedPatientPosition;
@@ -3387,6 +3409,13 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
                     ResumePatient();
                     break;
             }
+
+            fileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+            fileName += "/"+SelectedPatient.getPatientDetails().getPatientId()+"_";
+            fileName += new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis());
+            fileName += ".3gp";
+            Toast.makeText(this, ""+fileName, Toast.LENGTH_SHORT).show();
+            startRecording(fileName);
 
 
             transitions.SlideUpDown(rl_home_main, ll_patient_drawer, true, 4);
@@ -3743,6 +3772,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     public void onBackPressed() {
         if (ll_main_patient_rx.getVisibility() == View.VISIBLE) {
             transitions.SlideUpDown(rl_home_main, ll_main_patient_rx, true, 0);
+            stopRecording();
             //ll_main_patient_rx.setVisibility(View.GONE);
         } else
             super.onBackPressed();
@@ -3836,6 +3866,95 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
     }
 
 
+    public boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(),
+                WRITE_EXTERNAL_STORAGE);
+        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(),
+                RECORD_AUDIO);
+        return result == PackageManager.PERMISSION_GRANTED &&
+                result1 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(Home.this, new
+                String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, REQUEST_RECORD_AUDIO_PERMISSION);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_RECORD_AUDIO_PERMISSION:
+                if (grantResults.length > 0) {
+                    boolean StoragePermission = grantResults[0] ==
+                            PackageManager.PERMISSION_GRANTED;
+                    boolean RecordPermission = grantResults[1] ==
+                            PackageManager.PERMISSION_GRANTED;
+
+                    if (StoragePermission && RecordPermission) {
+                        //Toast.makeText(Home.this, "Permission Granted",Toast.LENGTH_LONG).show();
+                    } else {
+                        //Toast.makeText(Home.this, "Permission Denied", Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
+        }
+    }
+
+
+    public void startRecording(String fileName){
+        if(!b_isRecording) {
+
+
+            if (checkPermission()) {
+
+                myAudioRecorder = new MediaRecorder();
+
+                myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+                myAudioRecorder.setOutputFile(fileName);
+
+
+                try {
+                    myAudioRecorder.prepare();
+                    myAudioRecorder.start();
+                    b_isRecording = true;
+                } catch (IllegalStateException e) {
+                    // TODO Auto-generated catch block
+                    Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+
+                //btn_start.setEnabled(false);
+                //btn_stop.setEnabled(true);
+
+                Toast.makeText(Home.this, "Recording started", Toast.LENGTH_LONG).show();
+            } else {
+                requestPermission();
+            }
+        }
+    }
+
+
+    public void stopRecording(){
+
+        //myAudioRecorder.
+
+        if(b_isRecording) {
+
+            fileName = "";
+            myAudioRecorder.stop();
+            b_isRecording = false;
+            Toast.makeText(Home.this, "Recording Completed",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 
 }
 
