@@ -134,7 +134,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
     int ExpandedDetail = -1;
 
-    TextView tv_home_total_patients, tv_patient_draft, tv_patients_checked_in, tv_drawer_title;
+    TextView tv_home_total_patients, tv_patient_draft, tv_patients_checked_in, tv_drawer_title,tv_command;
     List<PatientFinal> Final_PatientChecked;
     ImageView img_patient;
     TextToSpeech textToSpeech;
@@ -325,6 +325,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
         setMedicineRecyclerView();
 
         flow_symptoms = findViewById(R.id.flow_symptoms);
+        tv_command = findViewById(R.id.tv_command);
 
 
         progress_dialog = new Dialog(this);
@@ -1424,7 +1425,7 @@ public class Home extends AppCompatActivity implements PatientInterface, Recogni
 
 
         String finaldata = matches.get(0).toLowerCase();
-
+        tv_command.setText(finaldata);
         char s = finaldata.charAt(finaldata.length()-1);
 
         if(s == '.'){
